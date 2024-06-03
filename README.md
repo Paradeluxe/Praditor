@@ -1,16 +1,19 @@
 ## Praditor: A DBSCAN-Based Automation for Speech Onset Detection
 
-### What to download:
-Refer to **Release** section for the latsest update, or, **dist -> Praditor_GUI.exe**
+### 1. What to download:
 
-### Deploy Yourself:
-If you want to deploy these Python codes on your own, feel free to download them. 
+Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latsest update, or, **dist -> Praditor_GUI.exe**, this .exe should work on its own.
+
+In case you want to do 
+
+### 2. Deploy Yourself:
 
 Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py** are necessary, and maybe **parameters.txt**. Put them in the same folder and they should work
 
 
-#### In case you do not have a CUDA GPU
+### 3. In case you want to try GPU acceleration
+
+Implement the correct versions of **CuPy**, and replace the corresponding files with the ones in the **cupy_version** folder
 
 
-> I'm new to GitHub and I am still learning how to use it.
-> Please forgive me if there is something I missed. Thx XD
+> PS: I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
