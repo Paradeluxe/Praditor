@@ -1,2 +1,2 @@
 # What to download:
-Dist -> Praditor_GUI.exe
+dist -> Praditor_GUI.exe
