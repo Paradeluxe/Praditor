@@ -2,7 +2,7 @@
 
 ### 1. What to download:
 
-Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latsest update, or, **dist -> Praditor_GUI.exe**, this .exe should work on its own.
+Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latsest update, or, **[dist](https://github.com/Paradeluxe/Praditor/tree/master/dist) -> Praditor_GUI.exe**, this .exe should work on its own.
 
 In case you want to do 
 
