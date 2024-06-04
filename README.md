@@ -71,8 +71,8 @@ These two below matter:
 
 ### If you want to change the upper/lower limit of parameters in GUI
 
-- Go to Praditor_GUI.py. 
-- Repack using pyinstaller if you intend to use .exe version of Praditor.
+- Go to **Praditor_GUI.py**. 
+- Repack using *pyinstaller* if you intend to use .exe version of Praditor.
 
 
 ## From Authors
