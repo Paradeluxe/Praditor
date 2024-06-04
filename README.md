@@ -25,6 +25,10 @@ Implement the correct versions of **CuPy**, and replace the corresponding files 
 
 ## Annotation
 
+As designed and tested, there are two ways of fine-tuning Praditor:
 
+> For the record, I intend to provide a general idea of how you should turn up/down certain parameter(s).
+
+- 
 
 > PS: I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
