@@ -31,9 +31,13 @@ As designed and tested, there are two ways of fine-tuning Praditor:
 
 ### If you include inhale (breath) as part of speech
 Praditor is originally designed this way, I believe it's better to consider the **inhale** that is seamlessly followed up by
- other parts of speech should also be considered **speech**.
+ other parts of speech should also be considered **speech**. 
 
-To annotate in this way, I recommend that you start with the original parameters that is written in the Praditor.
+In other words, if noise signals (silence) were in between inhale and speech, Praditor shall be able to detect the silence
+and reject it as part of speech.
+
+To annotate in this way, I recommend that you start with the original parameters that is written in the Praditor, 
+then adjust the parameters following the below guidance:
 
 1. If Praditor annotates a little bit too early than the actual onset:
    - Turn up ***y1_amp_factor***
@@ -44,10 +48,17 @@ To annotate in this way, I recommend that you start with the original parameters
 
 3. If the noise intervals have many spikes:
    - Turn up ***Kernel Size*** (might work) 
+   - Turn down ***Signal_Ratio*** (might work) - e.g., Signal_Ratio = 0.90 -> 10% of points in each window will be discarded
 
-4. Other parameters:
+   > These two shall be a pair, you might want to tune them together to see what works best for the target audio.
+   
+### Other parameters:
    - ***Penalty*** Most of the time changing it won't make any difference. Performance might be worse if it is turned down.
    - ***Ref_Length*** Its getting smaller might help avoid unexpected spiky noise signals.
    - ***eps_Ratio*** Think of it as the water level - the smaller it gets, the more onsets you might get.
+   - ***Filter_Cutoff*** For a typical 44100-Hz 16-bit .wav audio, I use 200-10800 as the starting point. Feel free to test it out yourself.
 
-> PS: I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
+## From Authors
+I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
+
+Feel free to contact me at `paradeluxe3726@gmail.com` or `zhengyuan.liu@connect.um.edu.mo`
