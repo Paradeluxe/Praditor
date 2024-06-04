@@ -10,7 +10,10 @@ If you want to modify these .py files, kindly refer to **2. Deploy Yourself**
 
 ### 2. Deploy Yourself:
 
-Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py** are necessary, and maybe **parameters.txt**. Put them in the same folder and they should work.
+Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py**, **requirements.txt**, **parameters.txt** are necessary. 
+
+Put them in the same folder and they should work.
+
 - If you want to use GUI, run **Praditor_GUI.py**
 - If you want to use process a lot of files automatically, run **clustering_DBSCAN_quick.py**
 
@@ -19,7 +22,7 @@ Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py** are ne
 
 Implement the correct versions of **CuPy**, and replace the corresponding file(s) with the one(s) in the **cupy_version** folder
 
-#### How to pip CuPy in your os
+#### How to pip CuPy in your OS
 - For Nvidia user, kindly refer to [Installing CuPy](https://docs.cupy.dev/en/stable/install.html#installing-cupy)
 - For AMD user, kindly refer to [Using CuPy on AMD GPU (experimental)](https://docs.cupy.dev/en/stable/install.html#using-cupy-on-amd-gpu-experimental)
 
@@ -51,13 +54,24 @@ then adjust the parameters following the below guidance:
    - Turn up ***Kernel Size*** (might work) 
    - Turn down ***Signal_Ratio*** (might work) - e.g., Signal_Ratio = 0.90 -> 10% of points in each window will be discarded
 
-> These two shall be a pair, you might want to tune them together to see what works best for the target audio.
+   > These two shall be a pair, you might want to tune them together to see what works best for the target audio.
    
-### Other parameters:
+4. Other parameters:
    - ***Penalty*** Most of the time changing it won't make any difference. Performance might be worse if it is turned down (smaller than 10).
    - ***Ref_Length*** Its getting smaller might help avoid unexpected spiky noise signals.
    - ***eps_Ratio*** Think of it as the water level - the smaller it gets, the more onsets you might get.
    - ***Filter_Cutoff*** For a typical 44100-Hz 16-bit .wav audio, I use 200-10800 as the starting point. You might want to test it out yourself.
+
+### If you want to exclude inhale (breath)
+These two below matter:
+1. Pick a tiny ***y1_amp_factor*** (like 1.05)
+2. Pick a large ***Num_ValidFrm***
+
+### If you want to change the upper/lower limit of parameters in GUI
+
+- Go to Praditor_GUI.py. 
+- Repack using pyinstaller if you intend to use .exe version of Praditor.
+
 
 ## From Authors
 I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
