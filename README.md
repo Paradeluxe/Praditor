@@ -17,7 +17,7 @@ Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py** are ne
 
 ### 3. In case you want to try GPU acceleration
 
-Implement the correct versions of **CuPy**, and replace the corresponding files with the ones in the **cupy_version** folder
+Implement the correct versions of **CuPy**, and replace the corresponding file(s) with the one(s) in the **cupy_version** folder
 
 #### How to pip CuPy in your os
 - For Nvidia user, kindly refer to [Installing CuPy](https://docs.cupy.dev/en/stable/install.html#installing-cupy)
@@ -27,8 +27,27 @@ Implement the correct versions of **CuPy**, and replace the corresponding files 
 
 As designed and tested, there are two ways of fine-tuning Praditor:
 
-> For the record, I intend to provide a general idea of how you should turn up/down certain parameter(s).
+> For the record, I only intend to provide a general idea of how you should turn up/down certain parameter(s).
 
-- 
+### If you include inhale (breath) as part of speech
+Praditor is originally designed this way, I believe it's better to consider the **inhale** that is seamlessly followed up by
+ other parts of speech should also be considered **speech**.
+
+To annotate in this way, I recommend that you start with the original parameters that is written in the Praditor.
+
+1. If Praditor annotates a little bit too early than the actual onset:
+   - Turn up ***y1_amp_factor***
+   - Turn up ***Num_ValidFrm***
+
+2. If Praditor annotates a little bit too late than the actual onset:
+   - Turn dow
+
+3. If the noise intervals have many spikes:
+   - Turn up ***Kernel Size*** (might work) 
+
+4. Other parameters:
+   - ***Penalty*** Most of the time changing it won't make any difference. Performance might be worse if it is turned down.
+   - ***Ref_Length*** Its getting smaller might help avoid unexpected spiky noise signals.
+   - ***eps_Ratio*** Think of it as the water level - the smaller it gets, the more onsets you might get.
 
 > PS: I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
