@@ -10,7 +10,7 @@ If you want to modify these .py files, kindly refer to **2. Deploy Yourself**
 
 ### 2. Deploy Yourself:
 
-Only **Praditor_GUI.py**, **Praditor.py**, **clustering_DBSCAN_quick.py**, **requirements.txt**, **parameters.txt** are necessary. 
+Only **Praditor_GUI.py**, **Praditor_tool.py**, **Praditor_run.py**, **requirements.txt**, **parameters.txt** are necessary. 
 
 Put them in the same folder and they should work.
 
@@ -63,7 +63,9 @@ then adjust the parameters following the below guidance:
    - ***Filter_Cutoff*** For a typical 44100-Hz 16-bit .wav audio, I use 200-10800 as the starting point. You might want to test it out yourself.
 
 ### If you want to exclude inhale (breath)
+
 These two below matter:
+
 1. Pick a tiny ***y1_amp_factor*** (like 1.05)
 2. Pick a large ***Num_ValidFrm***
 

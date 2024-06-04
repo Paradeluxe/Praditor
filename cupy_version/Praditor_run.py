@@ -8,7 +8,7 @@ from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from Praditor import isAudioFile, lowpass_filter, bandpass_filter, get_current_time
+from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_current_time
 
 # import的第一部分是本地自带的库，第二部分是第三方库，第三部分是自己的代码
 # from cupyx.scipy.signal import butter, filtfilt
