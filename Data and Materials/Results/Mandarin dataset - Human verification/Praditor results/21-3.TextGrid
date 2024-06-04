@@ -1,0 +1,881 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 235.32
+tiers? <exists>
+size = 2
+item []:
+	item [1]:
+		class = "TextTier"
+		name = "onset"
+		xmin = 0.0
+		xmax = 235.32
+		points: size = 144
+			points [1]:
+				time = 1.421179
+				mark = "onset"
+			points [2]:
+				time = 3.195692
+				mark = "onset"
+			points [3]:
+				time = 5.100295
+				mark = "onset"
+			points [4]:
+				time = 5.651542
+				mark = "onset"
+			points [5]:
+				time = 6.955624
+				mark = "onset"
+			points [6]:
+				time = 9.010612
+				mark = "onset"
+			points [7]:
+				time = 9.48
+				mark = "onset"
+			points [8]:
+				time = 10.999274
+				mark = "onset"
+			points [9]:
+				time = 11.396961
+				mark = "onset"
+			points [10]:
+				time = 12.941927
+				mark = "onset"
+			points [11]:
+				time = 15.035283
+				mark = "onset"
+			points [12]:
+				time = 16.85
+				mark = "onset"
+			points [13]:
+				time = 18.590884
+				mark = "onset"
+			points [14]:
+				time = 19.106848
+				mark = "onset"
+			points [15]:
+				time = 20.495964
+				mark = "onset"
+			points [16]:
+				time = 21.124875
+				mark = "onset"
+			points [17]:
+				time = 22.60356
+				mark = "onset"
+			points [18]:
+				time = 24.217982
+				mark = "onset"
+			points [19]:
+				time = 24.800068
+				mark = "onset"
+			points [20]:
+				time = 26.26542
+				mark = "onset"
+			points [21]:
+				time = 28.227823
+				mark = "onset"
+			points [22]:
+				time = 30.087732
+				mark = "onset"
+			points [23]:
+				time = 31.717551
+				mark = "onset"
+			points [24]:
+				time = 33.855624
+				mark = "onset"
+			points [25]:
+				time = 34.335714
+				mark = "onset"
+			points [26]:
+				time = 35.769751
+				mark = "onset"
+			points [27]:
+				time = 36.178073
+				mark = "onset"
+			points [28]:
+				time = 37.630091
+				mark = "onset"
+			points [29]:
+				time = 39.662404
+				mark = "onset"
+			points [30]:
+				time = 41.7122
+				mark = "onset"
+			points [31]:
+				time = 43.910884
+				mark = "onset"
+			points [32]:
+				time = 46.16254
+				mark = "onset"
+			points [33]:
+				time = 48.161497
+				mark = "onset"
+			points [34]:
+				time = 50.140385
+				mark = "onset"
+			points [35]:
+				time = 52.248526
+				mark = "onset"
+			points [36]:
+				time = 54.422812
+				mark = "onset"
+			points [37]:
+				time = 54.950113
+				mark = "onset"
+			points [38]:
+				time = 56.638685
+				mark = "onset"
+			points [39]:
+				time = 58.511406
+				mark = "onset"
+			points [40]:
+				time = 60.716508
+				mark = "onset"
+			points [41]:
+				time = 62.715805
+				mark = "onset"
+			points [42]:
+				time = 64.828503
+				mark = "onset"
+			points [43]:
+				time = 65.349048
+				mark = "onset"
+			points [44]:
+				time = 67.073447
+				mark = "onset"
+			points [45]:
+				time = 67.513311
+				mark = "onset"
+			points [46]:
+				time = 68.950816
+				mark = "onset"
+			points [47]:
+				time = 71.108821
+				mark = "onset"
+			points [48]:
+				time = 72.910748
+				mark = "onset"
+			points [49]:
+				time = 73.343311
+				mark = "onset"
+			points [50]:
+				time = 74.843719
+				mark = "onset"
+			points [51]:
+				time = 76.707098
+				mark = "onset"
+			points [52]:
+				time = 78.447619
+				mark = "onset"
+			points [53]:
+				time = 80.425556
+				mark = "onset"
+			points [54]:
+				time = 82.205261
+				mark = "onset"
+			points [55]:
+				time = 84.511338
+				mark = "onset"
+			points [56]:
+				time = 84.927188
+				mark = "onset"
+			points [57]:
+				time = 86.004966
+				mark = "onset"
+			points [58]:
+				time = 87.768549
+				mark = "onset"
+			points [59]:
+				time = 89.602313
+				mark = "onset"
+			points [60]:
+				time = 91.279977
+				mark = "onset"
+			points [61]:
+				time = 93.065488
+				mark = "onset"
+			points [62]:
+				time = 94.604921
+				mark = "onset"
+			points [63]:
+				time = 96.76059
+				mark = "onset"
+			points [64]:
+				time = 98.714989
+				mark = "onset"
+			points [65]:
+				time = 100.753855
+				mark = "onset"
+			points [66]:
+				time = 102.570045
+				mark = "onset"
+			points [67]:
+				time = 104.574512
+				mark = "onset"
+			points [68]:
+				time = 105.029388
+				mark = "onset"
+			points [69]:
+				time = 106.283197
+				mark = "onset"
+			points [70]:
+				time = 108.352834
+				mark = "onset"
+			points [71]:
+				time = 110.190726
+				mark = "onset"
+			points [72]:
+				time = 111.925215
+				mark = "onset"
+			points [73]:
+				time = 113.666349
+				mark = "onset"
+			points [74]:
+				time = 114.167188
+				mark = "onset"
+			points [75]:
+				time = 115.415692
+				mark = "onset"
+			points [76]:
+				time = 117.462245
+				mark = "onset"
+			points [77]:
+				time = 119.118141
+				mark = "onset"
+			points [78]:
+				time = 121.141723
+				mark = "onset"
+			points [79]:
+				time = 123.12898
+				mark = "onset"
+			points [80]:
+				time = 124.749864
+				mark = "onset"
+			points [81]:
+				time = 126.333832
+				mark = "onset"
+			points [82]:
+				time = 128.498957
+				mark = "onset"
+			points [83]:
+				time = 128.932358
+				mark = "onset"
+			points [84]:
+				time = 130.186735
+				mark = "onset"
+			points [85]:
+				time = 131.897392
+				mark = "onset"
+			points [86]:
+				time = 133.612517
+				mark = "onset"
+			points [87]:
+				time = 135.786168
+				mark = "onset"
+			points [88]:
+				time = 137.432494
+				mark = "onset"
+			points [89]:
+				time = 139.000658
+				mark = "onset"
+			points [90]:
+				time = 140.833197
+				mark = "onset"
+			points [91]:
+				time = 142.61619
+				mark = "onset"
+			points [92]:
+				time = 144.39619
+				mark = "onset"
+			points [93]:
+				time = 146.404943
+				mark = "onset"
+			points [94]:
+				time = 148.132222
+				mark = "onset"
+			points [95]:
+				time = 150.020567
+				mark = "onset"
+			points [96]:
+				time = 151.952177
+				mark = "onset"
+			points [97]:
+				time = 152.399206
+				mark = "onset"
+			points [98]:
+				time = 153.513855
+				mark = "onset"
+			points [99]:
+				time = 155.191293
+				mark = "onset"
+			points [100]:
+				time = 156.871701
+				mark = "onset"
+			points [101]:
+				time = 158.397664
+				mark = "onset"
+			points [102]:
+				time = 160.761338
+				mark = "onset"
+			points [103]:
+				time = 162.310998
+				mark = "onset"
+			points [104]:
+				time = 164.179796
+				mark = "onset"
+			points [105]:
+				time = 165.699116
+				mark = "onset"
+			points [106]:
+				time = 167.189501
+				mark = "onset"
+			points [107]:
+				time = 169.374649
+				mark = "onset"
+			points [108]:
+				time = 171.113764
+				mark = "onset"
+			points [109]:
+				time = 172.913878
+				mark = "onset"
+			points [110]:
+				time = 174.322154
+				mark = "onset"
+			points [111]:
+				time = 175.800159
+				mark = "onset"
+			points [112]:
+				time = 177.820204
+				mark = "onset"
+			points [113]:
+				time = 179.321406
+				mark = "onset"
+			points [114]:
+				time = 180.85678
+				mark = "onset"
+			points [115]:
+				time = 182.695488
+				mark = "onset"
+			points [116]:
+				time = 184.424422
+				mark = "onset"
+			points [117]:
+				time = 186.503447
+				mark = "onset"
+			points [118]:
+				time = 188.172472
+				mark = "onset"
+			points [119]:
+				time = 190.03932
+				mark = "onset"
+			points [120]:
+				time = 191.912426
+				mark = "onset"
+			points [121]:
+				time = 193.684059
+				mark = "onset"
+			points [122]:
+				time = 195.764717
+				mark = "onset"
+			points [123]:
+				time = 197.643719
+				mark = "onset"
+			points [124]:
+				time = 199.200136
+				mark = "onset"
+			points [125]:
+				time = 201.093741
+				mark = "onset"
+			points [126]:
+				time = 202.800771
+				mark = "onset"
+			points [127]:
+				time = 204.670385
+				mark = "onset"
+			points [128]:
+				time = 206.360408
+				mark = "onset"
+			points [129]:
+				time = 208.115714
+				mark = "onset"
+			points [130]:
+				time = 209.570975
+				mark = "onset"
+			points [131]:
+				time = 213.762109
+				mark = "onset"
+			points [132]:
+				time = 215.683515
+				mark = "onset"
+			points [133]:
+				time = 217.927075
+				mark = "onset"
+			points [134]:
+				time = 219.986576
+				mark = "onset"
+			points [135]:
+				time = 221.93483
+				mark = "onset"
+			points [136]:
+				time = 223.919161
+				mark = "onset"
+			points [137]:
+				time = 224.36415
+				mark = "onset"
+			points [138]:
+				time = 225.829229
+				mark = "onset"
+			points [139]:
+				time = 226.286122
+				mark = "onset"
+			points [140]:
+				time = 227.574989
+				mark = "onset"
+			points [141]:
+				time = 228.120952
+				mark = "onset"
+			points [142]:
+				time = 229.771859
+				mark = "onset"
+			points [143]:
+				time = 231.629909
+				mark = "onset"
+			points [144]:
+				time = 233.373379
+				mark = "onset"
+	item [2]:
+		class = "TextTier"
+		name = "offset"
+		xmin = 0.0
+		xmax = 235.32
+		points: size = 143
+			points [1]:
+				time = 2.178866
+				mark = "offset"
+			points [2]:
+				time = 3.904989
+				mark = "offset"
+			points [3]:
+				time = 5.521429
+				mark = "offset"
+			points [4]:
+				time = 5.931859
+				mark = "offset"
+			points [5]:
+				time = 7.765941
+				mark = "offset"
+			points [6]:
+				time = 9.375011
+				mark = "offset"
+			points [7]:
+				time = 9.783719
+				mark = "offset"
+			points [8]:
+				time = 11.285261
+				mark = "offset"
+			points [9]:
+				time = 11.788254
+				mark = "offset"
+			points [10]:
+				time = 13.770635
+				mark = "offset"
+			points [11]:
+				time = 15.826961
+				mark = "offset"
+			points [12]:
+				time = 17.566485
+				mark = "offset"
+			points [13]:
+				time = 18.954603
+				mark = "offset"
+			points [14]:
+				time = 19.557619
+				mark = "offset"
+			points [15]:
+				time = 20.979569
+				mark = "offset"
+			points [16]:
+				time = 21.425601
+				mark = "offset"
+			points [17]:
+				time = 23.39941
+				mark = "offset"
+			points [18]:
+				time = 24.69381
+				mark = "offset"
+			points [19]:
+				time = 25.146644
+				mark = "offset"
+			points [20]:
+				time = 27.017959
+				mark = "offset"
+			points [21]:
+				time = 28.894376
+				mark = "offset"
+			points [22]:
+				time = 30.994558
+				mark = "offset"
+			points [23]:
+				time = 32.758549
+				mark = "offset"
+			points [24]:
+				time = 34.201315
+				mark = "offset"
+			points [25]:
+				time = 34.637211
+				mark = "offset"
+			points [26]:
+				time = 36.585011
+				mark = "offset"
+			points [27]:
+				time = 38.396236
+				mark = "offset"
+			points [28]:
+				time = 40.5461
+				mark = "offset"
+			points [29]:
+				time = 42.567029
+				mark = "offset"
+			points [30]:
+				time = 44.846825
+				mark = "offset"
+			points [31]:
+				time = 47.028617
+				mark = "offset"
+			points [32]:
+				time = 48.828934
+				mark = "offset"
+			points [33]:
+				time = 51.069025
+				mark = "offset"
+			points [34]:
+				time = 53.171814
+				mark = "offset"
+			points [35]:
+				time = 54.823424
+				mark = "offset"
+			points [36]:
+				time = 55.182721
+				mark = "offset"
+			points [37]:
+				time = 57.347574
+				mark = "offset"
+			points [38]:
+				time = 59.386213
+				mark = "offset"
+			points [39]:
+				time = 61.60288
+				mark = "offset"
+			points [40]:
+				time = 63.64195
+				mark = "offset"
+			points [41]:
+				time = 65.21102
+				mark = "offset"
+			points [42]:
+				time = 65.783764
+				mark = "offset"
+			points [43]:
+				time = 67.812086
+				mark = "offset"
+			points [44]:
+				time = 69.824036
+				mark = "offset"
+			points [45]:
+				time = 71.90458
+				mark = "offset"
+			points [46]:
+				time = 73.21195
+				mark = "offset"
+			points [47]:
+				time = 73.799388
+				mark = "offset"
+			points [48]:
+				time = 75.621701
+				mark = "offset"
+			points [49]:
+				time = 77.491156
+				mark = "offset"
+			points [50]:
+				time = 79.328912
+				mark = "offset"
+			points [51]:
+				time = 81.159002
+				mark = "offset"
+			points [52]:
+				time = 82.871519
+				mark = "offset"
+			points [53]:
+				time = 85.440726
+				mark = "offset"
+			points [54]:
+				time = 86.784512
+				mark = "offset"
+			points [55]:
+				time = 88.6339
+				mark = "offset"
+			points [56]:
+				time = 90.236032
+				mark = "offset"
+			points [57]:
+				time = 91.565215
+				mark = "offset"
+			points [58]:
+				time = 92.110748
+				mark = "offset"
+			points [59]:
+				time = 93.944717
+				mark = "offset"
+			points [60]:
+				time = 95.301746
+				mark = "offset"
+			points [61]:
+				time = 97.468503
+				mark = "offset"
+			points [62]:
+				time = 99.222222
+				mark = "offset"
+			points [63]:
+				time = 99.771406
+				mark = "offset"
+			points [64]:
+				time = 101.481134
+				mark = "offset"
+			points [65]:
+				time = 103.442381
+				mark = "offset"
+			points [66]:
+				time = 104.893379
+				mark = "offset"
+			points [67]:
+				time = 105.463628
+				mark = "offset"
+			points [68]:
+				time = 107.085805
+				mark = "offset"
+			points [69]:
+				time = 109.060884
+				mark = "offset"
+			points [70]:
+				time = 110.893084
+				mark = "offset"
+			points [71]:
+				time = 112.765918
+				mark = "offset"
+			points [72]:
+				time = 114.608458
+				mark = "offset"
+			points [73]:
+				time = 116.37576
+				mark = "offset"
+			points [74]:
+				time = 118.259274
+				mark = "offset"
+			points [75]:
+				time = 119.893016
+				mark = "offset"
+			points [76]:
+				time = 121.853537
+				mark = "offset"
+			points [77]:
+				time = 123.819093
+				mark = "offset"
+			points [78]:
+				time = 125.633401
+				mark = "offset"
+			points [79]:
+				time = 127.093741
+				mark = "offset"
+			points [80]:
+				time = 129.310476
+				mark = "offset"
+			points [81]:
+				time = 130.606871
+				mark = "offset"
+			points [82]:
+				time = 131.089864
+				mark = "offset"
+			points [83]:
+				time = 132.782608
+				mark = "offset"
+			points [84]:
+				time = 134.342313
+				mark = "offset"
+			points [85]:
+				time = 136.596689
+				mark = "offset"
+			points [86]:
+				time = 138.131224
+				mark = "offset"
+			points [87]:
+				time = 139.799116
+				mark = "offset"
+			points [88]:
+				time = 141.211043
+				mark = "offset"
+			points [89]:
+				time = 141.594989
+				mark = "offset"
+			points [90]:
+				time = 143.475374
+				mark = "offset"
+			points [91]:
+				time = 145.10619
+				mark = "offset"
+			points [92]:
+				time = 147.419274
+				mark = "offset"
+			points [93]:
+				time = 148.90102
+				mark = "offset"
+			points [94]:
+				time = 150.758912
+				mark = "offset"
+			points [95]:
+				time = 152.536939
+				mark = "offset"
+			points [96]:
+				time = 154.258753
+				mark = "offset"
+			points [97]:
+				time = 155.889728
+				mark = "offset"
+			points [98]:
+				time = 157.570476
+				mark = "offset"
+			points [99]:
+				time = 159.162268
+				mark = "offset"
+			points [100]:
+				time = 161.479796
+				mark = "offset"
+			points [101]:
+				time = 162.945918
+				mark = "offset"
+			points [102]:
+				time = 164.866984
+				mark = "offset"
+			points [103]:
+				time = 166.467392
+				mark = "offset"
+			points [104]:
+				time = 168.027528
+				mark = "offset"
+			points [105]:
+				time = 170.067256
+				mark = "offset"
+			points [106]:
+				time = 171.484717
+				mark = "offset"
+			points [107]:
+				time = 173.568526
+				mark = "offset"
+			points [108]:
+				time = 174.989116
+				mark = "offset"
+			points [109]:
+				time = 176.612948
+				mark = "offset"
+			points [110]:
+				time = 178.271791
+				mark = "offset"
+			points [111]:
+				time = 180.249773
+				mark = "offset"
+			points [112]:
+				time = 181.575465
+				mark = "offset"
+			points [113]:
+				time = 183.505306
+				mark = "offset"
+			points [114]:
+				time = 185.085782
+				mark = "offset"
+			points [115]:
+				time = 187.379909
+				mark = "offset"
+			points [116]:
+				time = 188.964308
+				mark = "offset"
+			points [117]:
+				time = 190.910113
+				mark = "offset"
+			points [118]:
+				time = 192.5922
+				mark = "offset"
+			points [119]:
+				time = 194.546485
+				mark = "offset"
+			points [120]:
+				time = 196.515329
+				mark = "offset"
+			points [121]:
+				time = 198.317483
+				mark = "offset"
+			points [122]:
+				time = 199.94068
+				mark = "offset"
+			points [123]:
+				time = 201.946281
+				mark = "offset"
+			points [124]:
+				time = 203.464603
+				mark = "offset"
+			points [125]:
+				time = 205.36907
+				mark = "offset"
+			points [126]:
+				time = 206.678458
+				mark = "offset"
+			points [127]:
+				time = 207.126553
+				mark = "offset"
+			points [128]:
+				time = 208.779864
+				mark = "offset"
+			points [129]:
+				time = 210.217483
+				mark = "offset"
+			points [130]:
+				time = 214.582132
+				mark = "offset"
+			points [131]:
+				time = 216.70576
+				mark = "offset"
+			points [132]:
+				time = 218.913628
+				mark = "offset"
+			points [133]:
+				time = 220.758458
+				mark = "offset"
+			points [134]:
+				time = 222.72
+				mark = "offset"
+			points [135]:
+				time = 224.212426
+				mark = "offset"
+			points [136]:
+				time = 224.754558
+				mark = "offset"
+			points [137]:
+				time = 226.484172
+				mark = "offset"
+			points [138]:
+				time = 227.991088
+				mark = "offset"
+			points [139]:
+				time = 228.379002
+				mark = "offset"
+			points [140]:
+				time = 230.105283
+				mark = "offset"
+			points [141]:
+				time = 230.600227
+				mark = "offset"
+			points [142]:
+				time = 232.312109
+				mark = "offset"
+			points [143]:
+				time = 234.118027
+				mark = "offset"

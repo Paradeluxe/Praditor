@@ -1,0 +1,56 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 12.509115646258504
+tiers? <exists>
+size = 2
+item []:
+	item [1]:
+		class = "TextTier"
+		name = "onset"
+		xmin = 0.0
+		xmax = 12.509115646258504
+		points: size = 6
+			points [1]:
+				time = 0.293696
+				mark = "onset"
+			points [2]:
+				time = 3.176304
+				mark = "onset"
+			points [3]:
+				time = 3.902177
+				mark = "onset"
+			points [4]:
+				time = 6.315079
+				mark = "onset"
+			points [5]:
+				time = 6.315283
+				mark = "onset"
+			points [6]:
+				time = 9.453764
+				mark = "onset"
+	item [2]:
+		class = "TextTier"
+		name = "offset"
+		xmin = 0.0
+		xmax = 12.509115646258504
+		points: size = 6
+			points [1]:
+				time = 1.349796
+				mark = "offset"
+			points [2]:
+				time = 4.298798
+				mark = "offset"
+			points [3]:
+				time = 4.309116
+				mark = "offset"
+			points [4]:
+				time = 7.39
+				mark = "offset"
+			points [5]:
+				time = 7.390023
+				mark = "offset"
+			points [6]:
+				time = 10.415442
+				mark = "offset"

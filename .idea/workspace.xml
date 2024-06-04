@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc6f7289-9837-4ee2-bcc1-a2ffa032193d" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/Praditor_GUI.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Praditor_GUI.exe" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,6 +17,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -41,17 +45,19 @@
     &quot;Python.Praditor_GUI_4pyinstaller.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/18357/Desktop/Praditor_release&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/18357/Desktop/Praditor_release/cupy_version&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\18357\Desktop\Praditor_release\cupy_version" />
       <recent name="C:\Users\18357\Desktop\Praditor_release" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\18357\Desktop\Praditor_release" />
+      <recent name="C:\Users\18357\Desktop\Praditor_release\build" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -113,7 +119,95 @@
       <option name="project" value="LOCAL" />
       <updated>1717402171783</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717469268909</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1717469268909</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717472950945</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1717472950945</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717474231284</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1717474231284</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717478781941</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1717478781941</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Update requirements.txt">
+      <option name="closed" value="true" />
+      <created>1717479645023</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1717479645023</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Update requirements.txt">
+      <option name="closed" value="true" />
+      <created>1717479668029</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1717479668029</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717482201231</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1717482201231</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Upload cupy version Praditor">
+      <option name="closed" value="true" />
+      <created>1717485584057</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1717485584057</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Rename Praditor files">
+      <option name="closed" value="true" />
+      <created>1717486678705</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1717486678705</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1717486843397</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1717486843397</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Update numpy-version Praditor_GUI.py">
+      <option name="closed" value="true" />
+      <created>1717487020773</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1717487020773</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -121,7 +215,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -138,6 +244,11 @@
     <MESSAGE value="Initial upload pyinstaller files" />
     <MESSAGE value="Add pyinstaller files" />
     <MESSAGE value="Try upload large files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Try upload large files" />
+    <MESSAGE value="Update requirements.txt" />
+    <MESSAGE value="Upload cupy version Praditor" />
+    <MESSAGE value="Rename Praditor files" />
+    <MESSAGE value="Update README.md" />
+    <MESSAGE value="Update numpy-version Praditor_GUI.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update numpy-version Praditor_GUI.py" />
   </component>
 </project>

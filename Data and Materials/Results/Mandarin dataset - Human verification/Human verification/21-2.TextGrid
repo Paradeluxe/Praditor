@@ -1,0 +1,917 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 240.24 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "onset" 
+        xmin = 0 
+        xmax = 240.24 
+        points: size = 128 
+        points [1]:
+            number = 1.689683 
+            mark = "onset" 
+        points [2]:
+            number = 3.307143 
+            mark = "onset" 
+        points [3]:
+            number = 5.082154 
+            mark = "onset" 
+        points [4]:
+            number = 6.746327 
+            mark = "onset" 
+        points [5]:
+            number = 8.532426 
+            mark = "onset" 
+        points [6]:
+            number = 10.385624 
+            mark = "onset" 
+        points [7]:
+            number = 12.011179 
+            mark = "onset" 
+        points [8]:
+            number = 13.919184 
+            mark = "onset" 
+        points [9]:
+            number = 15.480998 
+            mark = "onset" 
+        points [10]:
+            number = 17.3822 
+            mark = "onset" 
+        points [11]:
+            number = 19.385669 
+            mark = "onset" 
+        points [12]:
+            number = 21.350907 
+            mark = "onset" 
+        points [13]:
+            number = 23.057619 
+            mark = "onset" 
+        points [14]:
+            number = 24.748254 
+            mark = "onset" 
+        points [15]:
+            number = 27.189342 
+            mark = "onset" 
+        points [16]:
+            number = 28.982698 
+            mark = "onset" 
+        points [17]:
+            number = 31.005147 
+            mark = "onset" 
+        points [18]:
+            number = 32.846848 
+            mark = "onset" 
+        points [19]:
+            number = 35.069229 
+            mark = "onset" 
+        points [20]:
+            number = 37.096463 
+            mark = "onset" 
+        points [21]:
+            number = 39.11678 
+            mark = "onset" 
+        points [22]:
+            number = 40.832018 
+            mark = "onset" 
+        points [23]:
+            number = 42.791088 
+            mark = "onset" 
+        points [24]:
+            number = 44.751383 
+            mark = "onset" 
+        points [25]:
+            number = 46.731497 
+            mark = "onset" 
+        points [26]:
+            number = 48.701882 
+            mark = "onset" 
+        points [27]:
+            number = 50.660612 
+            mark = "onset" 
+        points [28]:
+            number = 52.509229 
+            mark = "onset" 
+        points [29]:
+            number = 54.575215 
+            mark = "onset" 
+        points [30]:
+            number = 56.50941 
+            mark = "onset" 
+        points [31]:
+            number = 58.58839 
+            mark = "onset" 
+        points [32]:
+            number = 60.523243 
+            mark = "onset" 
+        points [33]:
+            number = 62.444014 
+            mark = "onset" 
+        points [34]:
+            number = 64.202018 
+            mark = "onset" 
+        points [35]:
+            number = 66.112449 
+            mark = "onset" 
+        points [36]:
+            number = 68.084354 
+            mark = "onset" 
+        points [37]:
+            number = 69.781134 
+            mark = "onset" 
+        points [38]:
+            number = 71.638163 
+            mark = "onset" 
+        points [39]:
+            number = 73.277937 
+            mark = "onset" 
+        points [40]:
+            number = 75.276213 
+            mark = "onset" 
+        points [41]:
+            number = 76.935011 
+            mark = "onset" 
+        points [42]:
+            number = 78.66712 
+            mark = "onset" 
+        points [43]:
+            number = 80.880068 
+            mark = "onset" 
+        points [44]:
+            number = 82.54598407831323 
+            mark = "" 
+        points [45]:
+            number = 84.365986 
+            mark = "onset" 
+        points [46]:
+            number = 86.508367 
+            mark = "onset" 
+        points [47]:
+            number = 89.057846 
+            mark = "onset" 
+        points [48]:
+            number = 90.850136 
+            mark = "onset" 
+        points [49]:
+            number = 92.622381 
+            mark = "onset" 
+        points [50]:
+            number = 94.473084 
+            mark = "onset" 
+        points [51]:
+            number = 96.567528 
+            mark = "onset" 
+        points [52]:
+            number = 98.514354 
+            mark = "onset" 
+        points [53]:
+            number = 100.73495306898825 
+            mark = "onset" 
+        points [54]:
+            number = 102.357596 
+            mark = "onset" 
+        points [55]:
+            number = 104.081497 
+            mark = "onset" 
+        points [56]:
+            number = 105.796621 
+            mark = "onset" 
+        points [57]:
+            number = 107.677188 
+            mark = "onset" 
+        points [58]:
+            number = 109.453492 
+            mark = "onset" 
+        points [59]:
+            number = 111.058571 
+            mark = "onset" 
+        points [60]:
+            number = 112.515556 
+            mark = "onset" 
+        points [61]:
+            number = 114.577823 
+            mark = "onset" 
+        points [62]:
+            number = 116.016122 
+            mark = "onset" 
+        points [63]:
+            number = 118.185601 
+            mark = "onset" 
+        points [64]:
+            number = 119.791338 
+            mark = "onset" 
+        points [65]:
+            number = 121.685692 
+            mark = "onset" 
+        points [66]:
+            number = 123.641474 
+            mark = "onset" 
+        points [67]:
+            number = 125.388322 
+            mark = "onset" 
+        points [68]:
+            number = 127.125102 
+            mark = "onset" 
+        points [69]:
+            number = 129.107642 
+            mark = "onset" 
+        points [70]:
+            number = 131.297324 
+            mark = "onset" 
+        points [71]:
+            number = 133.697574 
+            mark = "onset" 
+        points [72]:
+            number = 135.270249 
+            mark = "onset" 
+        points [73]:
+            number = 136.909705 
+            mark = "onset" 
+        points [74]:
+            number = 138.603832 
+            mark = "onset" 
+        points [75]:
+            number = 140.497596 
+            mark = "onset" 
+        points [76]:
+            number = 142.647007 
+            mark = "onset" 
+        points [77]:
+            number = 144.435488 
+            mark = "onset" 
+        points [78]:
+            number = 145.96102 
+            mark = "onset" 
+        points [79]:
+            number = 147.9539 
+            mark = "onset" 
+        points [80]:
+            number = 149.635397 
+            mark = "onset" 
+        points [81]:
+            number = 151.338413 
+            mark = "onset" 
+        points [82]:
+            number = 152.674558 
+            mark = "onset" 
+        points [83]:
+            number = 154.601859 
+            mark = "onset" 
+        points [84]:
+            number = 156.353061 
+            mark = "onset" 
+        points [85]:
+            number = 157.975488 
+            mark = "onset" 
+        points [86]:
+            number = 159.956689 
+            mark = "onset" 
+        points [87]:
+            number = 161.410385 
+            mark = "onset" 
+        points [88]:
+            number = 163.501565 
+            mark = "onset" 
+        points [89]:
+            number = 164.948685 
+            mark = "onset" 
+        points [90]:
+            number = 166.686236 
+            mark = "onset" 
+        points [91]:
+            number = 168.381723 
+            mark = "onset" 
+        points [92]:
+            number = 170.096916 
+            mark = "onset" 
+        points [93]:
+            number = 172.007007 
+            mark = "onset" 
+        points [94]:
+            number = 173.818073 
+            mark = "onset" 
+        points [95]:
+            number = 175.684354 
+            mark = "onset" 
+        points [96]:
+            number = 176.954127 
+            mark = "onset" 
+        points [97]:
+            number = 178.5152259176828 
+            mark = "onset" 
+        points [98]:
+            number = 180.38319271741028 
+            mark = "onset" 
+        points [99]:
+            number = 181.826236 
+            mark = "onset" 
+        points [100]:
+            number = 183.198277 
+            mark = "onset" 
+        points [101]:
+            number = 185.198027 
+            mark = "onset" 
+        points [102]:
+            number = 186.531587 
+            mark = "onset" 
+        points [103]:
+            number = 188.81 
+            mark = "onset" 
+        points [104]:
+            number = 190.476463 
+            mark = "onset" 
+        points [105]:
+            number = 192.397732 
+            mark = "onset" 
+        points [106]:
+            number = 194.159524 
+            mark = "onset" 
+        points [107]:
+            number = 196.03455983379106 
+            mark = "onset" 
+        points [108]:
+            number = 197.820272 
+            mark = "onset" 
+        points [109]:
+            number = 199.689546 
+            mark = "onset" 
+        points [110]:
+            number = 201.384649 
+            mark = "onset" 
+        points [111]:
+            number = 203.464286 
+            mark = "onset" 
+        points [112]:
+            number = 204.946757 
+            mark = "onset" 
+        points [113]:
+            number = 206.613741 
+            mark = "onset" 
+        points [114]:
+            number = 210.336689 
+            mark = "onset" 
+        points [115]:
+            number = 212.198435 
+            mark = "onset" 
+        points [116]:
+            number = 213.885964 
+            mark = "onset" 
+        points [117]:
+            number = 216.006757 
+            mark = "onset" 
+        points [118]:
+            number = 217.858481 
+            mark = "onset" 
+        points [119]:
+            number = 219.819025 
+            mark = "onset" 
+        points [120]:
+            number = 221.685533 
+            mark = "onset" 
+        points [121]:
+            number = 223.661156 
+            mark = "onset" 
+        points [122]:
+            number = 225.879365 
+            mark = "onset" 
+        points [123]:
+            number = 227.924376 
+            mark = "onset" 
+        points [124]:
+            number = 229.997075 
+            mark = "onset" 
+        points [125]:
+            number = 232.120703 
+            mark = "onset" 
+        points [126]:
+            number = 234.054059 
+            mark = "onset" 
+        points [127]:
+            number = 235.957075 
+            mark = "onset" 
+        points [128]:
+            number = 237.978617 
+            mark = "onset" 
+    item [2]:
+        class = "TextTier" 
+        name = "offset" 
+        xmin = 0 
+        xmax = 240.24 
+        points: size = 171 
+        points [1]:
+            number = 2.096281 
+            mark = "offset" 
+        points [2]:
+            number = 2.592812 
+            mark = "offset" 
+        points [3]:
+            number = 4.145079 
+            mark = "offset" 
+        points [4]:
+            number = 5.992585 
+            mark = "offset" 
+        points [5]:
+            number = 7.644989 
+            mark = "offset" 
+        points [6]:
+            number = 9.34424 
+            mark = "offset" 
+        points [7]:
+            number = 10.731791 
+            mark = "offset" 
+        points [8]:
+            number = 11.163628 
+            mark = "offset" 
+        points [9]:
+            number = 12.367188 
+            mark = "offset" 
+        points [10]:
+            number = 12.796712 
+            mark = "offset" 
+        points [11]:
+            number = 14.20932 
+            mark = "offset" 
+        points [12]:
+            number = 14.700091 
+            mark = "offset" 
+        points [13]:
+            number = 16.252313 
+            mark = "offset" 
+        points [14]:
+            number = 17.625918 
+            mark = "offset" 
+        points [15]:
+            number = 18.218118 
+            mark = "offset" 
+        points [16]:
+            number = 20.171247 
+            mark = "offset" 
+        points [17]:
+            number = 21.67034 
+            mark = "offset" 
+        points [18]:
+            number = 22.19254 
+            mark = "offset" 
+        points [19]:
+            number = 23.330204 
+            mark = "offset" 
+        points [20]:
+            number = 23.909546 
+            mark = "offset" 
+        points [21]:
+            number = 25.157007 
+            mark = "offset" 
+        points [22]:
+            number = 25.636327 
+            mark = "offset" 
+        points [23]:
+            number = 27.822517 
+            mark = "offset" 
+        points [24]:
+            number = 29.302222 
+            mark = "offset" 
+        points [25]:
+            number = 29.73517 
+            mark = "offset" 
+        points [26]:
+            number = 31.892268 
+            mark = "offset" 
+        points [27]:
+            number = 33.221429 
+            mark = "offset" 
+        points [28]:
+            number = 33.772132 
+            mark = "offset" 
+        points [29]:
+            number = 35.421542 
+            mark = "offset" 
+        points [30]:
+            number = 35.986757 
+            mark = "offset" 
+        points [31]:
+            number = 37.930794 
+            mark = "offset" 
+        points [32]:
+            number = 39.998027 
+            mark = "offset" 
+        points [33]:
+            number = 41.168662 
+            mark = "offset" 
+        points [34]:
+            number = 41.58678 
+            mark = "offset" 
+        points [35]:
+            number = 43.701497 
+            mark = "offset" 
+        points [36]:
+            number = 45.045737 
+            mark = "offset" 
+        points [37]:
+            number = 45.665238 
+            mark = "offset" 
+        points [38]:
+            number = 47.025782 
+            mark = "offset" 
+        points [39]:
+            number = 47.441746 
+            mark = "offset" 
+        points [40]:
+            number = 49.43746 
+            mark = "offset" 
+        points [41]:
+            number = 51.565147 
+            mark = "offset" 
+        points [42]:
+            number = 52.871497 
+            mark = "offset" 
+        points [43]:
+            number = 53.327506 
+            mark = "offset" 
+        points [44]:
+            number = 55.452744 
+            mark = "offset" 
+        points [45]:
+            number = 56.910408 
+            mark = "offset" 
+        points [46]:
+            number = 57.392971 
+            mark = "offset" 
+        points [47]:
+            number = 59.320431 
+            mark = "offset" 
+        points [48]:
+            number = 61.439524 
+            mark = "offset" 
+        points [49]:
+            number = 62.708141 
+            mark = "offset" 
+        points [50]:
+            number = 63.221497 
+            mark = "offset" 
+        points [51]:
+            number = 64.660952 
+            mark = "offset" 
+        points [52]:
+            number = 65.204853 
+            mark = "offset" 
+        points [53]:
+            number = 66.49746 
+            mark = "offset" 
+        points [54]:
+            number = 67.105147 
+            mark = "offset" 
+        points [55]:
+            number = 68.741429 
+            mark = "offset" 
+        points [56]:
+            number = 70.485329 
+            mark = "offset" 
+        points [57]:
+            number = 72.4561 
+            mark = "offset" 
+        points [58]:
+            number = 74.088957 
+            mark = "offset" 
+        points [59]:
+            number = 76.080998 
+            mark = "offset" 
+        points [60]:
+            number = 77.878118 
+            mark = "offset" 
+        points [61]:
+            number = 79.677596 
+            mark = "offset" 
+        points [62]:
+            number = 81.568322 
+            mark = "offset" 
+        points [63]:
+            number = 83.396644 
+            mark = "offset" 
+        points [64]:
+            number = 85.228163 
+            mark = "offset" 
+        points [65]:
+            number = 87.417075 
+            mark = "offset" 
+        points [66]:
+            number = 89.340703 
+            mark = "offset" 
+        points [67]:
+            number = 89.830499 
+            mark = "offset" 
+        points [68]:
+            number = 91.721746 
+            mark = "offset" 
+        points [69]:
+            number = 93.709932 
+            mark = "offset" 
+        points [70]:
+            number = 94.838435 
+            mark = "offset" 
+        points [71]:
+            number = 95.661156 
+            mark = "offset" 
+        points [72]:
+            number = 97.394104 
+            mark = "offset" 
+        points [73]:
+            number = 99.038209 
+            mark = "offset" 
+        points [74]:
+            number = 99.409297 
+            mark = "offset" 
+        points [75]:
+            number = 102.680408 
+            mark = "offset" 
+        points [76]:
+            number = 103.281678 
+            mark = "offset" 
+        points [77]:
+            number = 104.998209 
+            mark = "offset" 
+        points [78]:
+            number = 106.037324 
+            mark = "offset" 
+        points [79]:
+            number = 106.575374 
+            mark = "offset" 
+        points [80]:
+            number = 108.500385 
+            mark = "offset" 
+        points [81]:
+            number = 109.732358 
+            mark = "offset" 
+        points [82]:
+            number = 110.122336 
+            mark = "offset" 
+        points [83]:
+            number = 111.876054 
+            mark = "offset" 
+        points [84]:
+            number = 112.869229 
+            mark = "offset" 
+        points [85]:
+            number = 113.351066 
+            mark = "offset" 
+        points [86]:
+            number = 115.295533 
+            mark = "offset" 
+        points [87]:
+            number = 116.571315 
+            mark = "offset" 
+        points [88]:
+            number = 117.017324 
+            mark = "offset" 
+        points [89]:
+            number = 118.952177 
+            mark = "offset" 
+        points [90]:
+            number = 120.545329 
+            mark = "offset" 
+        points [91]:
+            number = 122.006372 
+            mark = "offset" 
+        points [92]:
+            number = 122.347438 
+            mark = "offset" 
+        points [93]:
+            number = 123.878798 
+            mark = "offset" 
+        points [94]:
+            number = 124.428821 
+            mark = "offset" 
+        points [95]:
+            number = 126.250522 
+            mark = "offset" 
+        points [96]:
+            number = 127.983878 
+            mark = "offset" 
+        points [97]:
+            number = 129.812698 
+            mark = "offset" 
+        points [98]:
+            number = 132.147687 
+            mark = "offset" 
+        points [99]:
+            number = 134.368277 
+            mark = "offset" 
+        points [100]:
+            number = 135.532336 
+            mark = "offset" 
+        points [101]:
+            number = 135.976667 
+            mark = "offset" 
+        points [102]:
+            number = 137.586576 
+            mark = "offset" 
+        points [103]:
+            number = 139.318821 
+            mark = "offset" 
+        points [104]:
+            number = 141.420159 
+            mark = "offset" 
+        points [105]:
+            number = 143.453016 
+            mark = "offset" 
+        points [106]:
+            number = 144.798481 
+            mark = "offset" 
+        points [107]:
+            number = 145.214467 
+            mark = "offset" 
+        points [108]:
+            number = 146.89805 
+            mark = "offset" 
+        points [109]:
+            number = 148.344082 
+            mark = "offset" 
+        points [110]:
+            number = 148.717891 
+            mark = "offset" 
+        points [111]:
+            number = 150.463628 
+            mark = "offset" 
+        points [112]:
+            number = 152.025669 
+            mark = "offset" 
+        points [113]:
+            number = 153.050363 
+            mark = "offset" 
+        points [114]:
+            number = 153.651179 
+            mark = "offset" 
+        points [115]:
+            number = 155.266077 
+            mark = "offset" 
+        points [116]:
+            number = 157.074308 
+            mark = "offset" 
+        points [117]:
+            number = 158.672245 
+            mark = "offset" 
+        points [118]:
+            number = 160.869206 
+            mark = "offset" 
+        points [119]:
+            number = 162.285442 
+            mark = "offset" 
+        points [120]:
+            number = 164.144739 
+            mark = "offset" 
+        points [121]:
+            number = 165.637868 
+            mark = "offset" 
+        points [122]:
+            number = 167.527755 
+            mark = "offset" 
+        points [123]:
+            number = 169.145057 
+            mark = "offset" 
+        points [124]:
+            number = 170.35585 
+            mark = "offset" 
+        points [125]:
+            number = 170.723832 
+            mark = "offset" 
+        points [126]:
+            number = 172.780975 
+            mark = "offset" 
+        points [127]:
+            number = 174.1661 
+            mark = "offset" 
+        points [128]:
+            number = 174.589615 
+            mark = "offset" 
+        points [129]:
+            number = 176.000295 
+            mark = "offset" 
+        points [130]:
+            number = 176.432426 
+            mark = "offset" 
+        points [131]:
+            number = 177.239728 
+            mark = "offset" 
+        points [132]:
+            number = 177.849048 
+            mark = "offset" 
+        points [133]:
+            number = 178.760159 
+            mark = "offset" 
+        points [134]:
+            number = 179.192336 
+            mark = "offset" 
+        points [135]:
+            number = 181.21644 
+            mark = "offset" 
+        points [136]:
+            number = 182.165828 
+            mark = "offset" 
+        points [137]:
+            number = 182.552653 
+            mark = "offset" 
+        points [138]:
+            number = 183.998798 
+            mark = "offset" 
+        points [139]:
+            number = 186.055964 
+            mark = "offset" 
+        points [140]:
+            number = 187.297506 
+            mark = "offset" 
+        points [141]:
+            number = 189.493061 
+            mark = "offset" 
+        points [142]:
+            number = 191.095533 
+            mark = "offset" 
+        points [143]:
+            number = 193.168322 
+            mark = "offset" 
+        points [144]:
+            number = 194.815601 
+            mark = "offset" 
+        points [145]:
+            number = 196.735873 
+            mark = "offset" 
+        points [146]:
+            number = 198.68746 
+            mark = "offset" 
+        points [147]:
+            number = 200.319116 
+            mark = "offset" 
+        points [148]:
+            number = 202.273787 
+            mark = "offset" 
+        points [149]:
+            number = 203.740884 
+            mark = "offset" 
+        points [150]:
+            number = 204.111927 
+            mark = "offset" 
+        points [151]:
+            number = 205.670975 
+            mark = "offset" 
+        points [152]:
+            number = 207.270159 
+            mark = "offset" 
+        points [153]:
+            number = 210.676757 
+            mark = "offset" 
+        points [154]:
+            number = 211.21483 
+            mark = "offset" 
+        points [155]:
+            number = 212.890431 
+            mark = "offset" 
+        points [156]:
+            number = 214.657619 
+            mark = "offset" 
+        points [157]:
+            number = 216.3 
+            mark = "offset" 
+        points [158]:
+            number = 216.858617 
+            mark = "offset" 
+        points [159]:
+            number = 218.757324 
+            mark = "offset" 
+        points [160]:
+            number = 220.151746 
+            mark = "offset" 
+        points [161]:
+            number = 220.683673 
+            mark = "offset" 
+        points [162]:
+            number = 222.357823 
+            mark = "offset" 
+        points [163]:
+            number = 224.500385 
+            mark = "offset" 
+        points [164]:
+            number = 226.538707 
+            mark = "offset" 
+        points [165]:
+            number = 228.694558 
+            mark = "offset" 
+        points [166]:
+            number = 230.954014 
+            mark = "offset" 
+        points [167]:
+            number = 232.547302 
+            mark = "offset" 
+        points [168]:
+            number = 232.949501 
+            mark = "offset" 
+        points [169]:
+            number = 234.71941 
+            mark = "offset" 
+        points [170]:
+            number = 236.787302 
+            mark = "offset" 
+        points [171]:
+            number = 238.653356 
+            mark = "offset" 
