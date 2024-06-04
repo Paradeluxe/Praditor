@@ -6,9 +6,7 @@ from Praditor_run import process_items_with_params
 from Praditor_tool import get_frm_points_from_textgrid, isAudioFile, get_frm_points_from_01
 
 
-folder_audios = input("Tell me where you store all you audios: ")#  r"D:\Corpus\Project_Praditor\audio2"
-# r"D:\Download\录音材料"  # r"D:\Corpus\录音材料"
-
+folder_audios = input("Tell me where you store all you audios: ")  # r"D:\Corpus\Project_Praditor\audio2"
 
 # Create the figure and the line that we will manipulate
 fig, ax = plt.subplots(
