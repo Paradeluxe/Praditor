@@ -14,6 +14,8 @@ Only **Praditor_GUI.py**, **Praditor_tool.py**, **Praditor_run.py**, **requireme
 
 Put them in the same folder and they should work.
 
+First thing to do: `pip install -r requirements.txt` (For some, it's `python3 -m pip install -r requirements.txt`)
+
 - If you want to use GUI, run **Praditor_GUI.py**
 - If you want to use process a lot of files automatically, run **Praditor_run.py**
 
