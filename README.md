@@ -76,6 +76,10 @@ These two below matter:
 - Go to **Praditor_GUI.py**. 
 - Repack using *pyinstaller* if you intend to use .exe version of Praditor.
 
+## Data and Materials
+
+If you would like to download the datasets that were used in developing Praditor, please refer to [the official OSF storage](https://osf.io/9se8r/)
+.
 
 ## From Authors
 I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
