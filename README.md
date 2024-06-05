@@ -15,7 +15,7 @@ Only **Praditor_GUI.py**, **Praditor_tool.py**, **Praditor_run.py**, **requireme
 Put them in the same folder and they should work.
 
 - If you want to use GUI, run **Praditor_GUI.py**
-- If you want to use process a lot of files automatically, run **clustering_DBSCAN_quick.py**
+- If you want to use process a lot of files automatically, run **Praditor_run.py**
 
 
 ### 3. In case you want to try GPU acceleration
@@ -66,8 +66,8 @@ then adjust the parameters following the below guidance:
 
 These two below matter:
 
-1. Pick a tiny ***y1_amp_factor*** (like 1.05)
-2. Pick a large ***Num_ValidFrm***
+1. Select a tiny ***y1_amp_factor*** (like 1.05)
+2. Select a large ***Num_ValidFrm***
 
 ### If you want to change the upper/lower limit of parameters in GUI
 
