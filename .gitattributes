@@ -1,1 +1,0 @@
-dist/Praditor_GUI.exe filter=lfs diff=lfs merge=lfs -text
