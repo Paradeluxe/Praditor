@@ -10,22 +10,17 @@ from textgrid import TextGrid, PointTier, Point
 
 from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_current_time
 
-# import的第一部分是本地自带的库，第二部分是第三方库，第三部分是自己的代码
-# from cupyx.scipy.signal import butter, filtfilt
-# from concurrent.futures import ThreadPoolExecutor
-
 
 def create_textgrid_with_time_point(audio_file_path, time_points):
     # 获取音频文件的目录和文件名（不包括扩展名）
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
-    # print(audio_dir)
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     audio_extension = os.path.splitext(os.path.basename(audio_file_path))[1]
 
     audio_duration = AudioSegment.from_file(os.path.join(audio_dir, audio_filename+audio_extension)).duration_seconds
 
     tg_filename = os.path.join(audio_dir, audio_filename + ".TextGrid")
-    # print(time_points)
+
     # 创建一个新的TextGrid对象
     tg = TextGrid()
     for set_mode in time_points:
@@ -52,7 +47,7 @@ def process_item(params_procitem, audio_file, reverse):
     except ValueError:
         amp, low_cutoff, high_cutoff, numValid, window_size, ratio, penalty, ref_length = params_procitem
         eps_radius_ratio = 0.015
-    # print(params_procitem)
+
     low_cutoff = int(low_cutoff)
     high_cutoff = int(high_cutoff)
     numValid = int(numValid)
@@ -129,22 +124,10 @@ def process_item(params_procitem, audio_file, reverse):
         if cp.min(cp.sum(points_array[cluster.labels_ == i], axis=1)) < cp.min(cp.sum(points_array[cluster.labels_ == target_label], axis=1)):
             target_label = i
 
-    # max_of_the_view = max(points_array.ravel().get())
-    # points_distance = cp.mean(cp.abs(cp.sum(points_array - cp.max(points_array.ravel())/2, axis=1)))
-    # centroid = cp.array([points_array[i] for i in cluster.core_sample_indices_])  # cluster_centers_
-    # [PLOT] 查看如何
-    # plt.savefig(os.path.join(r"C:\Users\18357\PycharmProjects\RecPac_6", f'pic/[point_map] {os.path.basename(audio_file).split(".")[0]}.png'),
-    #             format='png', dpi=300)
-    # plt.close()
-    # 2024-03-12
-
     points_confirmed = points_array[cluster.labels_ == target_label]
     points_compensation = cp.array(range(len(points_array)))[cp.sum(cp.square(points_array), axis=1) <= cp.mean(cp.sum(cp.square(points_confirmed), axis=1))]
     for i in points_compensation:
         labels[int(i)] = target_label
-    # plt.scatter(points_array.get()[:, 0], points_array.get()[:, 1], s=20)
-    # plt.scatter(points_array.get()[labels==target_label][:, 0], points_array.get()[labels==target_label][:, 1], s=20)
-    # plt.show()
 
 
     labels = [target_label] * 3 + [i for i in labels] + [target_label] * 3

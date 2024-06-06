@@ -11,15 +11,10 @@ from textgrid import TextGrid, PointTier, Point
 from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_current_time
 
 
-# import的第一部分是本地自带的库，第二部分是第三方库，第三部分是自己的代码
-# from cupyx.scipy.signal import butter, filtfilt
-# from concurrent.futures import ThreadPoolExecutor
-
-
 def create_textgrid_with_time_point(audio_file_path, time_points):
     # 获取音频文件的目录和文件名（不包括扩展名）
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
-    # print(audio_dir)
+
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     audio_extension = os.path.splitext(os.path.basename(audio_file_path))[1]
 
@@ -44,6 +39,8 @@ def create_textgrid_with_time_point(audio_file_path, time_points):
     tg.write(tg_filename)
 
     print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
+
+    return None
 
 
 def process_item(params_procitem, audio_file, reverse):
@@ -130,23 +127,11 @@ def process_item(params_procitem, audio_file, reverse):
         if np.min(np.sum(points_array[cluster.labels_ == i], axis=1)) < np.min(np.sum(points_array[cluster.labels_ == target_label], axis=1)):
             target_label = i
 
-    # max_of_the_view = max(points_array.ravel())
-    # points_distance = np.mean(np.abs(np.sum(points_array - np.max(points_array.ravel())/2, axis=1)))
-    # centroid = np.array([points_array[i] for i in cluster.core_sample_indices_])  # cluster_centers_
-    # [PLOT] 查看如何
-    # plt.savefig(os.path.join(r"C:\Users\18357\PycharmProjects\RecPac_6", f'pic/[point_map] {os.path.basename(audio_file).split(".")[0]}.png'),
-    #             format='png', dpi=300)
-    # plt.close()
-    # 2024-03-12
 
     points_confirmed = points_array[cluster.labels_ == target_label]
     points_compensation = np.array(range(len(points_array)))[np.sum(np.square(points_array), axis=1) <= np.mean(np.sum(np.square(points_confirmed), axis=1))]
     for i in points_compensation:
         labels[int(i)] = target_label
-    # plt.scatter(points_array[:, 0], points_array[:, 1], s=20)
-    # plt.scatter(points_array[labels==target_label][:, 0], points_array[labels==target_label][:, 1], s=20)
-    # plt.show()
-
 
     labels = [target_label] * 3 + [i for i in labels] + [target_label] * 3
 
@@ -209,8 +194,7 @@ def process_item(params_procitem, audio_file, reverse):
 
         # -----------------------------------------------
 
-        if offset <= 0:
-            offset = 0
+        offset = 0 if offset <= 0 else offset
 
         candidate_y1_area = abs(np.array(
             target_audio_arr_filtered_[offset * accFactor+1:onset * accFactor] -
@@ -221,7 +205,7 @@ def process_item(params_procitem, audio_file, reverse):
         sample_endpoint = sample_startpoint - ref_length
         if sample_endpoint < 0:
             sample_endpoint = 0
-        # print(sample_endpoint, sample_startpoint)
+
         try:
             candidate_y1_area = abs(np.array(
                 target_audio_arr_filtered_[sample_endpoint+1:sample_startpoint] -
@@ -339,6 +323,7 @@ def process_items_with_params(params_procitems, audio_file) -> dict:
         "offset": process_item(params_procitems["offset"], audio_file, reverse=True)
     }
     print(time_points)
+
     # Generate TEXTGRID
     create_textgrid_with_time_point(
         time_points=time_points,
@@ -346,8 +331,6 @@ def process_items_with_params(params_procitems, audio_file) -> dict:
     )
 
     return time_points
-
-
 
 
 if __name__ == "__main__":
