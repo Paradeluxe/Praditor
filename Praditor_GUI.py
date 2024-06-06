@@ -1,12 +1,26 @@
-import matplotlib.pyplot as plt
 import os
+import platform
+
+import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 from pydub import AudioSegment
+
 from Praditor_run import process_items_with_params
 from Praditor_tool import get_frm_points_from_textgrid, isAudioFile, get_frm_points_from_01
 
+plat = platform.system().lower()
 
-folder_audios = input("Tell me where you store all you audios: ")  # r"D:\Corpus\Project_Praditor\audio2"
+if plat == 'windows':
+    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+elif plat == "darwin":  # macOS
+    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg"
+elif plat == 'linux':
+    pass
+else:
+    pass
+
+
+folder_audios = input("Tell me where you store all you audios: ")  # D:\Corpus\Project_Praditor\audio2
 
 # Create the figure and the line that we will manipulate
 fig, ax = plt.subplots(

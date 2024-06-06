@@ -1,5 +1,6 @@
 import math
 import os
+import platform
 from concurrent.futures import ProcessPoolExecutor
 
 import cupy as cp
@@ -9,6 +10,19 @@ from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
 from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_current_time
+
+plat = platform.system().lower()
+
+if plat == 'windows':
+    AudioSegment.converter = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+elif plat == "darwin":  # macOS
+    AudioSegment.converter = f".\\ffmpeg\\{plat}\\ffmpeg"
+    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg"
+elif plat == 'linux':
+    pass
+else:
+    pass
 
 
 def create_textgrid_with_time_point(audio_file_path, time_points):
