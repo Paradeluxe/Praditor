@@ -4,9 +4,11 @@
 
 ### 1. What to download:
 
-Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latsest update, or, **[dist](https://github.com/Paradeluxe/Praditor/tree/master/dist) -> [Praditor_GUI.exe](https://github.com/Paradeluxe/Praditor/raw/master/dist/Praditor_GUI.exe?download=)**, this .exe should work on its own and bring you the GUI version Praditor.
+Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latest update.
 
-If you want to modify these .py files, kindly refer to **2. Deploy Yourself**
+This .exe should work on its own and bring you the GUI version Praditor.
+
+If you want to modify Praditor (.py files), kindly refer to **2. Deploy Yourself**
 
 ### 2. Deploy Yourself:
 
