@@ -1,0 +1,4 @@
+### Pyinstaller extensions
+build/
+dist/
+
