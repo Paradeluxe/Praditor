@@ -1,2 +1,1 @@
-Praditor_GUI.spec filter=lfs diff=lfs merge=lfs -text
-build/Praditor_GUI/Praditor_GUI.pkg filter=lfs diff=lfs merge=lfs -text
+dist/Praditor_GUI.exe filter=lfs diff=lfs merge=lfs -text
