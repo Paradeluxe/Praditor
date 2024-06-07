@@ -14,9 +14,7 @@ If you want to modify Praditor (.py files), kindly refer to **2. Deploy Yourself
 
 ### 2. Deploy Yourself:
 
-Only **Praditor_GUI.py**, **Praditor_tool.py**, **Praditor_run.py**, **requirements.txt**, **parameters.txt** are necessary. 
-
-Put them in the same folder and they should work.
+Download all the source files (including the *ffmpeg*)
 
 First thing to do: `pip install -r requirements.txt` (For some, it's `python3 -m pip install -r requirements.txt`)
 
@@ -34,7 +32,7 @@ Implement the correct versions of **CuPy**, and replace the corresponding file(s
 
 ### Pack your own executable file
 
-1. Make sure that you have downloaded the ***ffmpeg*** folder. The *ffmpeg* in it can be changed with [the latest version](https://ffmpeg.org/download.html).
+1. Make sure that you have downloaded [the ***ffmpeg*** folder](https://github.com/Paradeluxe/Praditor/tree/master/ffmpeg). The *ffmpeg* in it can be changed with [the latest version](https://ffmpeg.org/download.html).
 
 - For Windows users, try `PyInstaller -F --add-data="./ffmpeg/windows/*:./ffmpeg/windows/" Praditor_GUI.py`
 - For macOS users, try `PyInstaller -F --add-data="./ffmpeg/darwin/*:./ffmpeg/darwin/" Praditor_GUI.py`
