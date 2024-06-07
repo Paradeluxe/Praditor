@@ -6,7 +6,7 @@
 
 Refer to **[Release](https://github.com/Paradeluxe/Praditor/releases)** section for the latest update.
 
-Click here if you want to download [all source files](https://github.com/Paradeluxe/Praditor/archive/refs/heads/master.zip).
+Click [Download ZIP](https://github.com/Paradeluxe/Praditor/archive/refs/heads/master.zip) if you want to download all source files (but it seems to miss out ffmpeg folder).
 
 This .exe should work on its own and bring you the GUI version Praditor.
 
@@ -32,7 +32,7 @@ Implement the correct versions of **CuPy**, and replace the corresponding file(s
 
 ### Pack your own executable file
 
-1. Make sure that you have downloaded [the ***ffmpeg*** folder](https://github.com/Paradeluxe/Praditor/tree/master/ffmpeg). The *ffmpeg* in it can be changed with [the latest version](https://ffmpeg.org/download.html).
+1. Make sure that you have downloaded [the ffmpeg folder](https://github.com/Paradeluxe/Praditor/tree/master/ffmpeg). The *ffmpeg* in it can be changed with [the latest version](https://ffmpeg.org/download.html).
 
 - For Windows users, try `PyInstaller -F --add-data="./ffmpeg/windows/*:./ffmpeg/windows/" Praditor_GUI.py`
 - For macOS users, try `PyInstaller -F --add-data="./ffmpeg/darwin/*:./ffmpeg/darwin/" Praditor_GUI.py`
