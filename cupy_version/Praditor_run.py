@@ -14,9 +14,9 @@ from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_curr
 plat = platform.system().lower()
 
 if plat == 'windows':
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg.exe"
 elif plat == "darwin":  # macOS
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg"
 elif plat == 'linux':
     pass
 else:
@@ -340,8 +340,6 @@ def process_items_with_params(params_procitems, audio_file) -> dict:
     )
 
     return time_points
-
-
 
 
 if __name__ == "__main__":

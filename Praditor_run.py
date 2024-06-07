@@ -14,11 +14,11 @@ from Praditor_tool import isAudioFile, lowpass_filter, bandpass_filter, get_curr
 plat = platform.system().lower()
 
 if plat == 'windows':
-    AudioSegment.converter = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+    AudioSegment.converter = f"./ffmpeg/{plat}/ffmpeg.exe"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg.exe"
 elif plat == "darwin":  # macOS
-    AudioSegment.converter = f".\\ffmpeg\\{plat}\\ffmpeg"
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg"
+    AudioSegment.converter = f"./ffmpeg/{plat}/ffmpeg"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg"
 elif plat == 'linux':
     pass
 else:

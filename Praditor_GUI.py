@@ -11,9 +11,9 @@ from Praditor_tool import get_frm_points_from_textgrid, isAudioFile, get_frm_poi
 plat = platform.system().lower()
 
 if plat == 'windows':
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg.exe"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg.exe"
 elif plat == "darwin":  # macOS
-    AudioSegment.ffmpeg = f".\\ffmpeg\\{plat}\\ffmpeg"
+    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg"
 elif plat == 'linux':
     pass
 else:
