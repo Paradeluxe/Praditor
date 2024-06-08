@@ -30,7 +30,7 @@ Implement the correct versions of **CuPy**, and replace the corresponding file(s
 - For Nvidia user, kindly refer to [Installing CuPy](https://docs.cupy.dev/en/stable/install.html#installing-cupy)
 - For AMD user, kindly refer to [Using CuPy on AMD GPU (experimental)](https://docs.cupy.dev/en/stable/install.html#using-cupy-on-amd-gpu-experimental)
 
-### Pack your own executable file
+### 4. Pack your own executable file
 
 Make sure that you have downloaded [the ffmpeg folder](https://github.com/Paradeluxe/Praditor/tree/master/ffmpeg). The ffmpeg in it can be changed with [the latest version](https://ffmpeg.org/download.html).
 
