@@ -446,7 +446,7 @@ class RecPac:
         default_config_button.color = "0.85"
         # default_config_button.hovercolor = ""
 
-        with open(r".\parameters.txt", "r", encoding="utf-8") as txt:
+        with open(r"./parameters.txt", "r", encoding="utf-8") as txt:
             params = eval(txt.read())
 
         amp_slider.set_val(params["onset"][0])
@@ -702,8 +702,8 @@ class RecPac:
                 r_eps_ratio_slider.val
             ]
         }
-        print(r".\parameters.txt")
-        with open(r".\parameters.txt", "w", encoding="utf-8") as txt:
+        print(r"./parameters.txt")
+        with open(r"./parameters.txt", "w", encoding="utf-8") as txt:
             txt.write(str(self.params_getinfo))
 
     def change_offset_show_status(self, event) -> None:
