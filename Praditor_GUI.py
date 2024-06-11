@@ -445,30 +445,31 @@ class RecPac:
         default_config_button.label.set_text("DefaultConfig")
         default_config_button.color = "0.85"
         # default_config_button.hovercolor = ""
+        try:
+            with open("./parameters.txt", "r", encoding="utf-8") as txt:
+                params = eval(txt.read())
 
-        with open(r"./parameters.txt", "r", encoding="utf-8") as txt:
-            params = eval(txt.read())
+            amp_slider.set_val(params["onset"][0])
+            cutoff0_slider.set_val(params["onset"][1])
+            cutoff1_slider.set_val(params["onset"][2])
+            numValid_slider.set_val(params["onset"][3])
+            window_size_slider.set_val(params["onset"][4])
+            ratio_slider.set_val(params["onset"][5])
+            penalty_slider.set_val(params["onset"][6])
+            ref_length_slider.set_val(params["onset"][7])
+            eps_ratio_slider.set_val(params["onset"][8])
 
-        amp_slider.set_val(params["onset"][0])
-        cutoff0_slider.set_val(params["onset"][1])
-        cutoff1_slider.set_val(params["onset"][2])
-        numValid_slider.set_val(params["onset"][3])
-        window_size_slider.set_val(params["onset"][4])
-        ratio_slider.set_val(params["onset"][5])
-        penalty_slider.set_val(params["onset"][6])
-        ref_length_slider.set_val(params["onset"][7])
-        eps_ratio_slider.set_val(params["onset"][8])
-
-        r_amp_slider.set_val(params["offset"][0])
-        r_cutoff0_slider.set_val(params["offset"][1])
-        r_cutoff1_slider.set_val(params["offset"][2])
-        r_numValid_slider.set_val(params["offset"][3])
-        r_window_size_slider.set_val(params["offset"][4])
-        r_ratio_slider.set_val(params["offset"][5])
-        r_penalty_slider.set_val(params["offset"][6])
-        r_ref_length_slider.set_val(params["offset"][7])
-        r_eps_ratio_slider.set_val(params["offset"][8])
-
+            r_amp_slider.set_val(params["offset"][0])
+            r_cutoff0_slider.set_val(params["offset"][1])
+            r_cutoff1_slider.set_val(params["offset"][2])
+            r_numValid_slider.set_val(params["offset"][3])
+            r_window_size_slider.set_val(params["offset"][4])
+            r_ratio_slider.set_val(params["offset"][5])
+            r_penalty_slider.set_val(params["offset"][6])
+            r_ref_length_slider.set_val(params["offset"][7])
+            r_eps_ratio_slider.set_val(params["offset"][8])
+        except FileNotFoundError:
+            pass
         fig.canvas.draw_idle()  # 刷新fig
 
     def draw_golden_vlines(self, time_points) -> None:
