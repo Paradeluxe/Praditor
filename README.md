@@ -1,5 +1,5 @@
 # Praditor: A DBSCAN-Based Automation for Speech Onset Detection
-
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ## Download
 
 ### 1. What to download:
