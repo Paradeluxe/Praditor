@@ -26,6 +26,7 @@ class SingleSlider(QMainWindow):
             QLabel {
                 font-size: 14px;
                 background-color: RGB(35, 35, 35);
+                font-weight: bold;
                 color: #272727;
             }
 

@@ -10,7 +10,29 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 
 I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
 
-![Instruction](instruction.png "How does Praditor works?")
+## How to use Praditor?
+
+### 1. Import your audio
+
+File -> Read files... -> Select the folder path where you store all the audios
+
+![importAudio](instructions/importAudio.png)
+
+### 2. Play with Praditor
+
+![displaySignalArray.png](instructions/displaySignalArray.png)
+
+- `Run`Apply Praditor Algorithm on the current Audio
+- `Prev` & `Next` Go to previous/next Audio
+- `Read` Read time points from current Audio's .TextGrid file
+- `Clear` Clear time points that are being displayed
+- `Onset` & `Offset` Show/Hide Onsets/Offsets
+- `Current/Default` Display default parameters or parameters for the current file
+- `Save` Save the displayed parameters as Current/Default
+- `Reset` Reset the displayed parameters to the last time you saved it.
+
+## How to tune your parameters?
+![Instruction](instructions/instruction.png "How does Praditor works?")
 
 ## Data and Materials
 
