@@ -1,5 +1,13 @@
 # Praditor: A DBSCAN-Based Automation for Speech Onset Detection
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+
+## From Authors
+I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
+
+Feel free to contact me at `paradeluxe3726@gmail.com` or `zhengyuan.liu@connect.um.edu.mo`.
+
+
 ## Download
 
 ### 1. What to download:
@@ -90,7 +98,4 @@ These two below matter:
 If you would like to download the datasets that were used in developing Praditor, please refer to [the official OSF storage](https://osf.io/9se8r/)
 .
 
-## From Authors
-I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
 
-Feel free to contact me at `paradeluxe3726@gmail.com` or `zhengyuan.liu@connect.um.edu.mo`.
