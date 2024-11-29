@@ -10,7 +10,7 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 
 I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
 
-![示例图片](instruction.png "这是一张示例图片")
+![Instruction](instruction.png "How does Praditor works?")
 
 ## Data and Materials
 
