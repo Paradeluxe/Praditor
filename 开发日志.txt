@@ -1,0 +1,27 @@
+2024/11/22
+ √ 保存成.TextGrid
+ √ xset可跟随显示/隐藏
+
+2024/11/23
+ √ 缩放
+ √ clear xsets
+ - 显示文件名和第几个文件
+
+2024/11/24
+ √ 滑动刷新时xset显示/隐藏设置不跟随
+ - 信号与槽
+
+2024/11/25
+ √ 时间窗缩放的最小限制
+ √ 导入时候的default current
+ √ 显示xset位置的数据精度问题（避免浮点数
+
+
+2024/11/26
+* 如果数组太大（采样率太高+时间太长），DBSCAN会消耗大量CPU的RAM
+
+2024/11/27
+ - 左右←→微调时间
+ - Run Current Page
+ - Report fail-to-run message in status bar
+ - 限制内存使用量
