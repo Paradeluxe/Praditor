@@ -1,0 +1,2 @@
+ffmpeg/nt/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
+ffmpeg/posix/ffmpeg filter=lfs diff=lfs merge=lfs -text
