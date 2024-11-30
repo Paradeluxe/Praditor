@@ -14,7 +14,7 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ### 1. Import your audio
 
-File -> Read files... -> Select the folder path where you store all the audios
+`File` -> `Read files...` -> Select **the folder path** where you store all the audios
 
 ![importAudio](instructions/importAudio.png)
 
@@ -22,14 +22,18 @@ File -> Read files... -> Select the folder path where you store all the audios
 
 ![displaySignalArray.png](instructions/displaySignalArray.png)
 
-- `Run`Apply Praditor Algorithm on the current Audio
+- `Run` Apply Praditor Algorithm on the current Audio
 - `Prev` & `Next` Go to previous/next Audio
-- `Read` Read time points from current Audio's .TextGrid file
+- `Read` Read time points from current Audio's .TextGrid results
 - `Clear` Clear time points that are being displayed
 - `Onset` & `Offset` Show/Hide Onsets/Offsets
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
+
+On the menu...
+- `File` > `Read files...` > Select a folder path
+- `Help` > `Parameters` > Show instructions on how to our parameters work
 
 ## How to tune your parameters?
 ![Instruction](instructions/instruction.png "How does Praditor works?")
