@@ -33,10 +33,10 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 On the menu...
 - `File` > `Read files...` > Select a folder path
-- `Help` > `Parameters` > Show instructions on how to our parameters work
+- `Help` > `Parameters` > Show instructions on how our parameters work
 
 ## How to tune your parameters?
-![Instruction](instructions/instruction.png "How does Praditor works?")
+![Instruction](instruction.png "How does Praditor works?")
 
 ## Data and Materials
 
