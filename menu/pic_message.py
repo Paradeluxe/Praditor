@@ -17,7 +17,7 @@ class Example(QWidget):
         self.label.setWindowIcon(QIcon())
 
         # 加载图片
-        pixmap = QPixmap(r".\instructions\instruction.png")  # 替换为你的图片路径
+        pixmap = QPixmap("instruction.png")  # 替换为你的图片路径
 
         # print(pixmap.size())
         # 设置QLabel显示图片
