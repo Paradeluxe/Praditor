@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
 from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
 
 
 class Example(QWidget):

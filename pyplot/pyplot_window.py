@@ -1,8 +1,10 @@
 import sys
+
 import matplotlib
+import matplotlib.style as mplstyle
 from PySide6.QtCore import Qt
 from pydub import AudioSegment
-import matplotlib.style as mplstyle
+
 mplstyle.use('fast')
 matplotlib.use('QtAgg')  # 指定渲染后端
 

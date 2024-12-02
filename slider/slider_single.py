@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, QMargins
 from PySide6.QtWidgets import (
-    QGridLayout, QApplication, QLayout, QMainWindow, QSlider, QVBoxLayout, QHBoxLayout, \
+    QApplication, QMainWindow, QSlider, QHBoxLayout, \
     QWidget, QLabel)
 
 from QSS import qss_slider_with_color

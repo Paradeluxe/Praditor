@@ -1,15 +1,8 @@
 import sys
-from PySide6.QtCore import QPointF, QMargins
-from PySide6.QtGui import QPainter, QPen
-from PySide6.QtWidgets import QMainWindow, QApplication, QGraphicsLineItem, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
-    QWidget, QGridLayout
+
 from PySide6.QtCharts import QChart, QChartView, QLineSeries
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget
 from pydub import AudioSegment
-import numpy as np
-
-
-
 
 
 class PlotAudio(QWidget):

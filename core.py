@@ -1,3 +1,4 @@
+import gc
 import math
 import os
 
@@ -7,8 +8,6 @@ from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
 from tool import bandpass_filter, get_current_time
-import gc
-
 
 plat = os.name.lower()
 
