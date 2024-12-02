@@ -7,12 +7,12 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy
 )
 
 from QSS import *
 from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
-from menu.pic_message import Example
+from pic_message import Example
 from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
 
