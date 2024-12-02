@@ -2,7 +2,7 @@ import ctypes
 import os
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QFileInfo
 from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
@@ -429,42 +429,49 @@ class MainWindow(QMainWindow):
         # options.setStatusTip("Folder to store target audios")
 
         # options |= QFileDialog.DontUseNativeDialog  # 禁用原生对话框
-        folder_path = QFileDialog.getExistingDirectory(self,
-                                                       "Open Folder",
-                                                       "",
-                                                       # "All Files (*);;Audio Files (*.wav)",
-                                                       options=options)
-        if folder_path:
+        # folder_path = QFileDialog.getExistingDirectory(self,
+        #                                                "Open Folder",
+        #                                                "",
+        #                                                # "All Files (*);;Audio Files (*.wav)",
+        #                                                options=options)
+        # 设置过滤器，仅显示音频文件
+        audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac)"
+        # 弹出文件选择对话框
+        file_name, _ = QFileDialog.getOpenFileName(None, "Select Audio File", "", audio_filters)
+
+        if file_name:
+            file_name = os.path.normpath(file_name)
+            folder_path = os.path.dirname(file_name)
+
             self.file_paths = [os.path.normpath(os.path.join(folder_path, fpath)) for fpath in os.listdir(folder_path) if isAudioFile(fpath)]
-            # print(self.file_paths)
-            # 可以加一个order设置
-            if self.file_paths:
-                self.file_path = self.file_paths[self.which_one]
-                print(f"Selected file: {self.file_path}")
-                self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
-                if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
-                    self.select_mode.setChecked(False)
-                else:
-                    self.select_mode.setChecked(True)
-                self.showParams()
-                self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+            self.which_one = self.file_paths.index(file_name)
+            self.file_path = self.file_paths[self.which_one]
+            print(f"Selected file: {self.file_path}")
+            self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
+            if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
+                self.select_mode.setChecked(False)
             else:
-                print("Empty folder")
-                popup_window = QMessageBox()
-                popup_window.setText("No Audio File Detected.")
-                # popup_window.setStandardButtons(QMessageBox.OK | QMessageBox.Discard | QMessageBox.Cancel)
-                # popup_window.setDefaultButton(QMessageBox.Save)
-                # popup_window.setStyleSheet("""
-                #     QMessageBox {
-                #         background-color: white;
-                #
-                #     }
-                # """)
-                popup_window.exec()
+                self.select_mode.setChecked(True)
+            self.showParams()
+            self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
 
-                self.setWindowTitle("Praditor")
+        else:
+            print("Empty folder")
+            popup_window = QMessageBox()
+            popup_window.setText("Empty Audio File.")
+            # popup_window.setStandardButtons(QMessageBox.OK | QMessageBox.Discard | QMessageBox.Cancel)
+            # popup_window.setDefaultButton(QMessageBox.Save)
+            # popup_window.setStyleSheet("""
+            #     QMessageBox {
+            #         background-color: white;
+            #
+            #     }
+            # """)
+            popup_window.exec()
+
+            self.setWindowTitle("Praditor")
 
 
 
