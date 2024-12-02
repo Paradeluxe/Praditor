@@ -15,6 +15,7 @@ from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_
 from pic_message import Example
 from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
+from tool import isAudioFile
 
 
 class MainWindow(QMainWindow):
@@ -420,7 +421,8 @@ class MainWindow(QMainWindow):
                                                        # "All Files (*);;Audio Files (*.wav)",
                                                        options=options)
         if folder_path:
-            self.file_paths = [os.path.normpath(os.path.join(folder_path, fpath)) for fpath in os.listdir(folder_path) if fpath.endswith("wav")]
+            self.file_paths = [os.path.normpath(os.path.join(folder_path, fpath)) for fpath in os.listdir(folder_path) if isAudioFile(fpath)]
+            # print(self.file_paths)
             # 可以加一个order设置
             if self.file_paths:
                 self.file_path = self.file_paths[self.which_one]
