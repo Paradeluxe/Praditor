@@ -275,8 +275,7 @@ class AudioViewer(QWidget):
         self.tg_dict_tp = {"onset": [], "offset": []}
         if self.fpath != fpath:
             self.fpath = fpath
-        # print(1, self.fpath)
-        self.audio_obj = AudioSegment.from_file(self.fpath).split_to_mono()[0]
+            self.audio_obj = AudioSegment.from_file(self.fpath).split_to_mono()[0]
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio
 
