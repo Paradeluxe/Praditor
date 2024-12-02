@@ -1,13 +1,15 @@
+import ctypes
 import os
 import sys
 
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
 )
 
 from QSS import *
@@ -15,7 +17,9 @@ from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_
 from pic_message import Example
 from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
-from tool import isAudioFile
+from tool import isAudioFile, resource_path
+
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
 
 
 class MainWindow(QMainWindow):
@@ -28,10 +32,20 @@ class MainWindow(QMainWindow):
         self.which_one = 0
         self.setWindowTitle("Praditor")
         self.setMinimumSize(1500, 850)
-        self.setWindowIcon(QIcon("icon-white.png"))
-        self.setStyleSheet("QMainWindow { background-color: red; }")
+        # self.setWindowIcon(QIcon("Praditor_icon.ico"))
+        # self.setStyleSheet("QMainWindow { background-color: red; }")
         # self.setWindowFlags(Qt.WindowType.FramelessWindowHint)  # 隐藏title bar
-
+        # self.setWindowFlags(Qt.FramelessWindowHint)
+        icon = QIcon()
+        icon.addPixmap(QPixmap("Praditor_icon.png"), QIcon.Normal, QIcon.On)
+        self.setWindowIcon(icon)
+        # 创建一个32x32的透明pixmap
+        # pixmap = QPixmap(32, 32)
+        # pixmap.fill(Qt.GlobalColor.transparent)  # 使用Qt.GlobalColor.transparent来填充透明色
+        #
+        # # 设置窗口图标为透明图标
+        # self.setWindowIcon(QIcon(pixmap))
+        # self.show()
 
         self.setStatusBar(QStatusBar(self))
         self.statusBar().setStyleSheet("""
@@ -351,7 +365,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = resource_path("params.txt")
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
@@ -361,7 +375,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = resource_path("params.txt")
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -390,7 +404,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             if not os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
                 with open(os.path.splitext(self.file_path)[0] + ".txt", "w") as txt_file:
-                    with open("params.txt", "r") as default_txt_file:
+                    with open(resource_path("params.txt"), "r") as default_txt_file:
                         txt_file.write(default_txt_file.read())
         elif self.select_mode.text() == "Default":
             pass
@@ -400,7 +414,7 @@ class MainWindow(QMainWindow):
             with open(os.path.splitext(self.file_path)[0] + ".txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
         elif self.select_mode.text() == "Default":
-            with open("params.txt", 'r') as txt_file:
+            with open(resource_path("params.txt"), 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
 
 
@@ -438,7 +452,20 @@ class MainWindow(QMainWindow):
 
             else:
                 print("Empty folder")
+                popup_window = QMessageBox()
+                popup_window.setText("No Audio File Detected.")
+                # popup_window.setStandardButtons(QMessageBox.OK | QMessageBox.Discard | QMessageBox.Cancel)
+                # popup_window.setDefaultButton(QMessageBox.Save)
+                # popup_window.setStyleSheet("""
+                #     QMessageBox {
+                #         background-color: white;
+                #
+                #     }
+                # """)
+                popup_window.exec()
+
                 self.setWindowTitle("Praditor")
+
 
 
 

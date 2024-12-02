@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+from tool import resource_path
 
 
 class Example(QWidget):
@@ -14,11 +15,13 @@ class Example(QWidget):
         self.label = None
         # 创建QLabel实例
         self.label = QLabel(self)
-        self.label.setWindowIcon(QIcon())
-
+        icon = QIcon()
+        icon.addPixmap(QPixmap("Praditor_icon.png"), QIcon.Normal, QIcon.On)
+        self.setWindowIcon(icon)
         # 加载图片
-        pixmap = QPixmap("instruction.png")  # 替换为你的图片路径
-
+        pixmap = QPixmap(resource_path("instruction.png"))  # 替换为你的图片路径
+        # print(os.path.exists("instruction.png"))
+        # print([f for f in os.listdir(".")])
         # print(pixmap.size())
         # 设置QLabel显示图片
 

@@ -1,8 +1,19 @@
 import os.path
+import sys
 from datetime import datetime
 
 from scipy.signal import butter, filtfilt
 from textgrid import TextGrid
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 
 def get_current_time():

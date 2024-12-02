@@ -7,16 +7,16 @@ from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from tool import bandpass_filter, get_current_time
+from tool import bandpass_filter, get_current_time, resource_path
 
 plat = os.name.lower()
 
 if plat == 'nt':  # Windows
-    AudioSegment.converter = f"./ffmpeg/{plat}/ffmpeg.exe"
-    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg.exe"
+    AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
+    AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
 elif plat == 'posix':  # Unix-like systems (Linux, macOS)
-    AudioSegment.converter = f"./ffmpeg/{plat}/ffmpeg"
-    AudioSegment.ffmpeg = f"./ffmpeg/{plat}/ffmpeg"
+    AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg")
+    AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg")
 else:
     pass
 
