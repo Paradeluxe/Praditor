@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Praditor")
         self.setMinimumSize(1500, 850)
         # icon = QIcon()
-        # icon.addPixmap(QPixmap(resource_path("Praditor_icon.png")), QIcon.Normal, QIcon.On)
+        # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
         # self.setWindowIcon(icon)
         self.setStatusBar(QStatusBar(self))
         self.statusBar().setStyleSheet("""
@@ -513,7 +513,7 @@ window = MainWindow()
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
 
 # 设置窗口图标
-window.setWindowIcon(QIcon(resource_path('Praditor_icon.ico')))
+window.setWindowIcon(QIcon(resource_path('icon.ico')))
 window.show()
 
 app.exec()

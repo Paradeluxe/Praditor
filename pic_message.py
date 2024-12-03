@@ -16,9 +16,9 @@ class Example(QWidget):
         # 创建QLabel实例
         self.label = QLabel(self)
         # icon = QIcon()
-        # icon.addPixmap(QPixmap(resource_path("Praditor_icon.png")), QIcon.Normal, QIcon.On)
+        # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
         # self.setWindowIcon(icon)
-        self.setWindowIcon(QIcon(resource_path("Praditor_icon.ico")))
+        self.setWindowIcon(QIcon(resource_path("icon.ico")))
         # 加载图片
         pixmap = QPixmap(resource_path(resource_path("instruction.png")))  # 替换为你的图片路径
 
