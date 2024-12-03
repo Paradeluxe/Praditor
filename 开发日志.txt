@@ -25,5 +25,6 @@
  - Report fail-to-run message in status bar
  - 限制内存使用量
 
-2024/12/2
- √ 无文件弹窗
+2024/12/3
+ - 无文件弹窗
+ - icon auto scaling
