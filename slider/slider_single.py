@@ -7,7 +7,7 @@ from QSS import qss_slider_with_color
 
 
 class SingleSlider(QMainWindow):
-    def __init__(self, param_name, minimum, step, maximum, color="#1991D3", scale=1, default=None):
+    def __init__(self, param_name, minimum, step, maximum, font_color='#272727', color="#1991D3", scale=1, default=None):
         super().__init__()
         # self.setWindowTitle('Slider App')
         self.scale = scale
@@ -21,14 +21,14 @@ class SingleSlider(QMainWindow):
         self.name_label = QLabel(param_name)
         self.name_label.setFixedSize(90, 20)
         self.name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.name_label.setStyleSheet("""
+        self.name_label.setStyleSheet(f"""
 
-            QLabel {
+            QLabel {{
                 font-size: 14px;
                 background-color: RGB(35, 35, 35);
                 font-weight: bold;
-                color: #272727;
-            }
+                color: {font_color};
+            }}
 
 
         """)
