@@ -2,14 +2,13 @@ import ctypes
 import os
 import sys
 
-from PySide6.QtCore import Qt, QFileInfo
 from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy
 )
 
 from QSS import *
@@ -32,21 +31,9 @@ class MainWindow(QMainWindow):
         self.which_one = 0
         self.setWindowTitle("Praditor")
         self.setMinimumSize(1500, 850)
-        # self.setWindowIcon(QIcon("Praditor_icon.ico"))
-        # self.setStyleSheet("QMainWindow { background-color: red; }")
-        # self.setWindowFlags(Qt.WindowType.FramelessWindowHint)  # 隐藏title bar
-        # self.setWindowFlags(Qt.FramelessWindowHint)
-        icon = QIcon()
-        icon.addPixmap(QPixmap("Praditor_icon.png"), QIcon.Normal, QIcon.On)
-        self.setWindowIcon(icon)
-        # 创建一个32x32的透明pixmap
-        # pixmap = QPixmap(32, 32)
-        # pixmap.fill(Qt.GlobalColor.transparent)  # 使用Qt.GlobalColor.transparent来填充透明色
-        #
-        # # 设置窗口图标为透明图标
-        # self.setWindowIcon(QIcon(pixmap))
-        # self.show()
-
+        # icon = QIcon()
+        # icon.addPixmap(QPixmap(resource_path("Praditor_icon.png")), QIcon.Normal, QIcon.On)
+        # self.setWindowIcon(icon)
         self.setStatusBar(QStatusBar(self))
         self.statusBar().setStyleSheet("""
             QStatusBar {
@@ -435,7 +422,7 @@ class MainWindow(QMainWindow):
         #                                                # "All Files (*);;Audio Files (*.wav)",
         #                                                options=options)
         # 设置过滤器，仅显示音频文件
-        audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac)"
+        audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac *.flac *.amr *.wma *.aiff)"
         # 弹出文件选择对话框
         file_name, _ = QFileDialog.getOpenFileName(None, "Select Audio File", "", audio_filters)
 
@@ -459,17 +446,9 @@ class MainWindow(QMainWindow):
 
         else:
             print("Empty folder")
-            popup_window = QMessageBox()
-            popup_window.setText("Empty Audio File.")
-            # popup_window.setStandardButtons(QMessageBox.OK | QMessageBox.Discard | QMessageBox.Cancel)
-            # popup_window.setDefaultButton(QMessageBox.Save)
-            # popup_window.setStyleSheet("""
-            #     QMessageBox {
-            #         background-color: white;
-            #
-            #     }
-            # """)
-            popup_window.exec()
+            # popup_window = QMessageBox()
+            # popup_window.setText("Empty Audio File.")
+            # popup_window.exec()
 
             self.setWindowTitle("Praditor")
 
@@ -534,7 +513,7 @@ window = MainWindow()
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
 
 # 设置窗口图标
-# window.setWindowIcon(icon)
+window.setWindowIcon(QIcon(resource_path('Praditor_icon.ico')))
 window.show()
 
 app.exec()

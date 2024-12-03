@@ -15,15 +15,12 @@ class Example(QWidget):
         self.label = None
         # 创建QLabel实例
         self.label = QLabel(self)
-        icon = QIcon()
-        icon.addPixmap(QPixmap("Praditor_icon.png"), QIcon.Normal, QIcon.On)
-        self.setWindowIcon(icon)
+        # icon = QIcon()
+        # icon.addPixmap(QPixmap(resource_path("Praditor_icon.png")), QIcon.Normal, QIcon.On)
+        # self.setWindowIcon(icon)
+        self.setWindowIcon(QIcon(resource_path("Praditor_icon.ico")))
         # 加载图片
-        pixmap = QPixmap(resource_path("instruction.png"))  # 替换为你的图片路径
-        # print(os.path.exists("instruction.png"))
-        # print([f for f in os.listdir(".")])
-        # print(pixmap.size())
-        # 设置QLabel显示图片
+        pixmap = QPixmap(resource_path(resource_path("instruction.png")))  # 替换为你的图片路径
 
         self.label.setPixmap(pixmap)
         self.setFixedSize(pixmap.size())

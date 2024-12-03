@@ -5,3 +5,5 @@
 /.venv/
 /.idea/
 /png2ico.py
+/打包参数.txt
+/Praditor.spec
