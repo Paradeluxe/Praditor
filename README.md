@@ -14,9 +14,12 @@
 A DBSCAN-Based Automation for Speech Onset Detection
 </p>
 
-## From Authors
+## Features
 Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections.
+ - Onset/Offset Detection
+ - Silence Detection
 
+## From Authors
 If you have any questions in terms of how to use Praditor or its algorithm details,
 feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
 
