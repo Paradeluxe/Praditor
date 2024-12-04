@@ -3,6 +3,7 @@
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 
 <br/>
+<br/>
 
 
 <p align="center">
@@ -29,7 +30,10 @@ A DBSCAN-Based Automation for Speech Onset Detection
 
 ## Features
 Praditor is a **speech onset detector** that helps you find out all the possible boundaries between silence and sound sections **automatically**.
-Praditor works for both single-onset and multi-onset audio files with no language limitations.
+
+![audio2textgrid.png](instructions/audio2textgrid.png)
+
+Praditor works for both single-onset and multi-onset audio files with no language limitations. 
 It generates output as PointTiers in .TextGrid format. To get a better performance, you can also adjust parameters in the Dashboard.
 
  - Onset/Offset Detection
