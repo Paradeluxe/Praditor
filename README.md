@@ -1,4 +1,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
+![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
+
 
 <p align="center">
   <a href="https://github.com/Paradeluxe/Praditor">
@@ -16,7 +19,6 @@ A DBSCAN-Based Automation for Speech Onset Detection
 
 
   <p align="center">
-    <br/>
     <a href="https://github.com/Paradeluxe/Praditor/releases"><strong>Download Praditor</strong></a>
     <br/>
 
