@@ -14,6 +14,15 @@
 A DBSCAN-Based Automation for Speech Onset Detection
 </p>
 
+
+  <p align="center">
+    <br/>
+    <a href="https://github.com/Paradeluxe/Praditor/releases"><strong>Download Praditor</strong></a>
+    <br/>
+
+  </p>
+
+
 ## Features
 Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections,
 and generates output as PointTiers in .TextGrid file.
