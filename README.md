@@ -1,6 +1,13 @@
-# Praditor: A DBSCAN-Based Automation for Speech Onset Detection
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center">
+<img align="center" src="icon.png" alt="示例图片" width="100" height="100">
+</p>
+
+<h3 align="center">Praditor</h3>
+<div style="text-align: center;">
+A DBSCAN-Based Automation for Speech Onset Detection
+</div>
 
 ## From Authors
 Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections.
