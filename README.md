@@ -1,8 +1,12 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-<img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
+  <a href="https://github.com/gtreshchev/AudioAnalysisTools">
+    <img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
+  </a>
 </p>
+
+
 
 <h3 align="center">Praditor</h3>
 
