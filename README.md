@@ -15,7 +15,9 @@ A DBSCAN-Based Automation for Speech Onset Detection
 </p>
 
 ## Features
-Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections.
+Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections,
+and generates output as PointTiers in .TextGrid file.
+
  - Onset/Offset Detection
  - Silence Detection
 
