@@ -7,10 +7,8 @@
 <h3 align="center">Praditor</h3>
 
 <p align="center">
-    <div style="text-align: center;">
-    A DBSCAN-Based Automation for Speech Onset Detection
-    </div>
-
+A DBSCAN-Based Automation for Speech Onset Detection
+</p>
 
 ## From Authors
 Praditor is a **speech onset detector** that automatically detects all the possible boundaries between silence and sound sections.
