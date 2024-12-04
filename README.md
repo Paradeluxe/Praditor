@@ -2,6 +2,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 
+<br/>
+
 
 <p align="center">
   <a href="https://github.com/Paradeluxe/Praditor">
