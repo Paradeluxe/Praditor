@@ -29,7 +29,7 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ### 1. Import your audio
 
-`File` -> `Read files...` -> Select **the folder path** where you store all the audios
+`File` -> `Read files...` -> Select your target audio file
 
 ![importAudio](instructions/importAudio.png)
 
@@ -47,7 +47,7 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
 On the menu...
-- `File` > `Read files...` > Select a folder path
+- `File` > `Read files...` > Select an audio file
 - `Help` > `Parameters` > Show instructions on how our parameters work
 
 ## How to tune your parameters?
