@@ -17,7 +17,7 @@
  √ 显示xset位置的数据精度问题（避免浮点数
 
 2024/11/26
-* 如果数组太大（采样率太高+时间太长），DBSCAN会消耗大量CPU的RAM
+ * 如果数组太大（采样率太高+时间太长），DBSCAN会消耗大量CPU的RAM
 
 2024/11/27
  - 左右←→微调时间
@@ -26,5 +26,7 @@
  - 限制内存使用量
 
 2024/12/3
- - 无文件弹窗
- - icon auto scaling
+ √ 无文件弹窗
+ √ icon auto scaling
+ - menu style
+ - param font color
