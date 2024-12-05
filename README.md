@@ -76,7 +76,7 @@ On the menu...
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
 
 ## How does Praditor's parameters work?
-![import_audio.png](instructions/import_audio.png)
+![Instruction](instruction.png "How does Praditor works?")
 
 ## Data and Materials
 
