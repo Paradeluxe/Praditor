@@ -75,7 +75,7 @@ On the menu...
 - `File` > `Read files...` > Select an audio file
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
 
-## How to tune your parameters?
+## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
 
 ## Data and Materials
