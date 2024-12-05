@@ -57,7 +57,7 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ### 2. Play with Praditor
 
-![displaySignalArray.png](instructions/displaySignalArray.png)
+![gui.png](instructions/gui.png)
 
 **For onset/offset...**
 - `Run` Apply Praditor algorithm on the current audio
@@ -84,7 +84,12 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ### Parameters
 #### HighPass/LowPass
+Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
+The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
 
+![choose_freq.png](instructions/choose_freq.png)
+
+What we need is the middle part that has high contrast between silence and sound.
 
 #### Threshold
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
@@ -100,6 +105,8 @@ That is why **_Threshold_** is usually **slightly larger than 1.00**.
 
 Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
 Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want).
+
+If an audio starting with aspirated sound is cut halfway in the aspiration, it can sound really weird like a burst, rather than smooth in.
 
 ## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
