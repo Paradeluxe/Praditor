@@ -88,14 +88,18 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 #### Threshold
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
-Whenever a talker speaks, the (absolute) amplitude is going up and creates a "cliff" (in amplitude, or other features).
+Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
 
 ![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
 
 **_Threshold_** has a minimum limitation at **1.00**, which is based on the mean amplitudes of background-noise reference.
-The actual background noise is not this "smoothy" but "spiky".
+However, background noise is not "smoothy" but actually "spiky". 
+That is why **_Threshold_** is usually **slightly larger than 1.00**.
 
+![asp_sound.png](instructions/asp_sound.png)
 
+Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
+Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want).
 
 ## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
