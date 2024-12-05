@@ -1,9 +1,5 @@
 
-<a href="https://github.com/Paradeluxe/Praditor">
-    <img src="instructions/header.png" alt="Praditor">
-</a>
-
-
+![Header](instructions/header.png)
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
