@@ -77,9 +77,9 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 **In case you want to zoom in/out**
 
- - <kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out in **timeline**
- - <kbd>Ctrl</kbd>+<kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out (for Windows users)
- - <kbd>Command</kbd>+<kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out (for Mac users)
+ - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out in **timeline**
+ - <kbd>Ctrl</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Windows users)
+ - <kbd>Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Mac users)
 
 
 ### Parameters
@@ -87,12 +87,15 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 
 #### Threshold
-It is the most used parameter. "Hitting a cliff"
-I would always use this metaphor to describe Threshold, or the thresholding method
+It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
+Whenever a talker speaks, the (absolute) amplitude is going up and creates a "cliff" (in amplitude, or other features).
 
 ![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
 
-Threshold has a minimum limitation at 1.00. 
+**_Threshold_** has a minimum limitation at **1.00**, which is based on the mean amplitudes of background-noise reference.
+The actual background noise is not this "smoothy" but "spiky".
+
+
 
 ## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
