@@ -91,6 +91,19 @@ The idea is that we do not need all the frequencies. Too high and too low freque
 
 What we need is the middle part that has high contrast between silence and sound.
 
+Be reminded that the **_LowPass_** should not surpass the highest valid frequency (half of the sample rate, refer to _Nyquist theorem_).
+
+#### EPS%
+
+DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, taking it as the circle center, 
+draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
+
+![DBSCAN.png](instructions/DBSCAN.png)
+
+Praditor allows user to adjust **_EPS%_**. Since every audio file can have different amplitude level/silence-sound contrast,
+Praditor determines **EPS** = Largest Amplitude * **_EPS%_**.
+
+
 #### Threshold
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
 Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
