@@ -53,7 +53,7 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 `File` -> `Read files...` -> Select your target audio file
 
-![importAudio](instructions/importAudio.png)
+![import_audio.png](instructions/import_audio.png)
 
 ### 2. Play with Praditor
 
