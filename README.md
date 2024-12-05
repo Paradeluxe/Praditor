@@ -86,6 +86,14 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 #### HighPass/LowPass
 
 
+#### Threshold
+It is the most used parameter. "Hitting a cliff"
+I would always use this metaphor to describe Threshold, or the thresholding method
+
+![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
+
+Threshold has a minimum limitation at 1.00. 
+
 ## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
 
