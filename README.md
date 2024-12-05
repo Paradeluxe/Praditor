@@ -33,11 +33,13 @@ Praditor is a **speech onset detector** that helps you find out all the possible
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
-Praditor works for both single-onset and multi-onset audio files without any language limitations. 
-It generates output as PointTiers in .TextGrid format. To get a better performance, you can also adjust parameters in the Dashboard.
+Praditor works for both single-onset and multi-onset audio files without any language limitation. 
+It generates output as PointTiers in .TextGrid format. 
 
  - Onset/Offset Detection
  - Silence Detection
+
+To get a better performance, Praditor can also allow users to adjust parameters in the Dashboard.
 
 ## From Authors
 If you have any questions in terms of how to use Praditor or its algorithm details,
