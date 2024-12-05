@@ -77,9 +77,9 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 **In case you want to zoom in/out**
 
- - <kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out in **timeline**
- - <kbd>Ctrl</kbd>+<kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out (for Windows users)
- - <kbd>Command</kbd>+<kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out (for Mac users)
+ - <kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out in **timeline**
+ - <kbd>Ctrl</kbd>+<kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out (for Windows users)
+ - <kbd>Command</kbd>+<kbd>Wheel-↑</kbd>/<kbd>Wheel-↓</kbd> to zoom-in/zoom-out (for Mac users)
 
 
 ### Parameters
