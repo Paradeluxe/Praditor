@@ -59,18 +59,21 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ![displaySignalArray.png](instructions/displaySignalArray.png)
 
+For onset/offset,
 - `Run` Apply Praditor Algorithm on the current Audio
 - `Prev` & `Next` Go to previous/next Audio
 - `Read` Read time points from current Audio's .TextGrid results
-- `Clear` Clear time points that are being displayed
+- `Clear` Clear time points that are being displayed (but no change to .TextGrid)
 - `Onset` & `Offset` Show/Hide Onsets/Offsets
+
+For parameters,
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
 On the menu...
 - `File` > `Read files...` > Select an audio file
-- `Help` > `Parameters` > Show instructions on how our parameters work
+- `Help` > `Parameters` > Show quick instruction on how our parameters work
 
 ## How to tune your parameters?
 ![Instruction](instruction.png "How does Praditor works?")
