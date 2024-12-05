@@ -83,8 +83,12 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
  - <kbd>Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Mac users)
 
 
-## Parameters
-### HighPass/LowPass
+# How does Praditor work?
+![Instruction](instruction.png "How does Praditor works?")
+
+
+# Parameters
+## HighPass/LowPass
 Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
 The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
 
@@ -94,7 +98,7 @@ What we need is the middle part that has high contrast between silence and sound
 
 Be reminded that the **_LowPass_** should not surpass the highest valid frequency (half of the sample rate, refer to _Nyquist theorem_).
 
-### EPS%
+## EPS%
 
 DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, take it as the circle center, 
 and draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
@@ -104,17 +108,21 @@ and draw a circle with a radius **EPS** in length. Within that circle, calculate
 Praditor allows user to adjust **_EPS%_**. Since every audio file can have different amplitude level/silence-sound contrast,
 Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
 
-### RefLen
+## RefLen
+After Praditor has confirmed target areas, the original amplitudes is the transformed into absolute first-derivatives. 
+For each target area, Praditor would set up a _Reference Area_, whose mean value serves as the baseline for later thresholding.
+
+The length of this reference area is determined by _**RefLen**_. 
+When you want to capture silence that has very short length, it is better that you turn down _**RefLen**_ a little bit as well.
 
 
-
-### Threshold
+## Threshold
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
 Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
 
 ![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
 
-**_Threshold_** has a minimum limitation at **1.00**, which is based on the mean amplitudes of background-noise reference.
+**_Threshold_** has a minimum limitation at **1.00**, which is based on the mean value of background-noise reference.
 However, background noise is not "smoothy" but actually "spiky". 
 That is why **_Threshold_** is usually **slightly larger than 1.00**.
 
@@ -126,8 +134,26 @@ Too large **_Threshold_** can end up in the middle of that "slope" (which is som
 If an audio starting with aspirated sound is cut halfway in the aspiration, it can sound really weird, like a burst, 
 rather than gradually smooth in.
 
-# How does Praditor work?
-![Instruction](instruction.png "How does Praditor works?")
+## KernelSize, KernelFrm%
+After reference area and threshold are set, Praditor will begin scan frame by frame (starting from the frame right next to ref area). 
+
+Usually we would compare the value (abs 1st derivative) with threshold, but Praditor does it a little bit differently, using **kernel smoothing**.
+Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**,
+
+To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). 
+If there is actually extreme values, then we successfully avoid them; If there is not, then it would not hurt since they are
+among other values at similar level.
+
+
+## CountValid, Penalty
+As Praditor scans frame by frame (window by window, or kernel by kernel), it is either going to be **above** or **below** the threshold. 
+
+If the current frame surpass the threshold, then it's counted as **+1**; 
+If it fails to surpass, then it's counted as **-1 * _Penalty_**. 
+
+Then, Praditor would add them up, until it hits your standard, **_CountValid_**. 
+There you go, this is the exact **time point (onset/offset)** we want.
+
 
 # Data and Materials
 
