@@ -59,21 +59,32 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 ![displaySignalArray.png](instructions/displaySignalArray.png)
 
-For onset/offset,
-- `Run` Apply Praditor Algorithm on the current Audio
-- `Prev` & `Next` Go to previous/next Audio
-- `Read` Read time points from current Audio's .TextGrid results
+**For onset/offset...**
+- `Run` Apply Praditor algorithm on the current audio
+- `Prev`/`Next` Go to previous/next audio
+- `Read` Read time points from current audio's .TextGrid results
 - `Clear` Clear time points that are being displayed (but no change to .TextGrid)
-- `Onset` & `Offset` Show/Hide Onsets/Offsets
+- `Onset`/`Offset` Show/Hide onsets/offsets
 
-For parameters,
+**For parameters...**
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
-On the menu...
+**On the menu...**
 - `File` > `Read files...` > Select an audio file
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
+
+**In case you want to zoom in/out**
+
+ - <kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out in **timeline**
+ - <kbd>Ctrl</kbd>+<kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out (for Windows users)
+ - <kbd>Command</kbd>+<kbd>Wheel-&#x2B06;</kbd>/<kbd>Wheel-&#x2B07;</kbd> to zoom-in/zoom-out (for Mac users)
+
+
+### Parameters
+#### HighPass/LowPass
+
 
 ## How does Praditor's parameters work?
 ![Instruction](instruction.png "How does Praditor works?")
