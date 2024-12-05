@@ -1,3 +1,10 @@
+<h1 align="center">
+    <a href="https://github.com/Paradeluxe/Praditor">
+        <img src="instructions/header.png" alt="Praditor">
+    </a>
+</h1>
+
+
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
@@ -28,12 +35,12 @@ A DBSCAN-Based Automation for Speech Onset Detection
   </p>
 
 
-## Features
+# Features
 Praditor is a **speech onset detector** that helps you find out all the possible boundaries between silence and sound sections **automatically**.
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
-Praditor works for both single-onset and multi-onset audio files without any language limitation. 
+Praditor works for both **single-onset** and **multi-onset** audio files without any language limitation. 
 It generates output as PointTiers in .TextGrid format. 
 
  - Onset/Offset Detection
@@ -41,21 +48,21 @@ It generates output as PointTiers in .TextGrid format.
 
 To get a better performance, Praditor can also allow users to adjust parameters in the Dashboard.
 
-## From Authors
+# From Authors
 If you have any questions in terms of how to use Praditor or its algorithm details,
 feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
 
 I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
 
-## How to use Praditor?
+# How to use Praditor?
 
-### 1. Import your audio
+## 1. Import your audio
 
 `File` -> `Read files...` -> Select your target audio file
 
 ![import_audio.png](instructions/import_audio.png)
 
-### 2. Play with Praditor
+## 2. Play with Praditor
 
 ![gui.png](instructions/gui.png)
 
@@ -82,8 +89,8 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
  - <kbd>Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Mac users)
 
 
-### Parameters
-#### HighPass/LowPass
+## Parameters
+### HighPass/LowPass
 Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
 The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
 
@@ -93,18 +100,21 @@ What we need is the middle part that has high contrast between silence and sound
 
 Be reminded that the **_LowPass_** should not surpass the highest valid frequency (half of the sample rate, refer to _Nyquist theorem_).
 
-#### EPS%
+### EPS%
 
-DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, taking it as the circle center, 
-draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
+DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, take it as the circle center, 
+and draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
 
 ![DBSCAN.png](instructions/DBSCAN.png)
 
 Praditor allows user to adjust **_EPS%_**. Since every audio file can have different amplitude level/silence-sound contrast,
-Praditor determines **EPS** = Largest Amplitude * **_EPS%_**.
+Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
+
+### RefLen
 
 
-#### Threshold
+
+### Threshold
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
 Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
 
@@ -119,12 +129,13 @@ That is why **_Threshold_** is usually **slightly larger than 1.00**.
 Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
 Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want).
 
-If an audio starting with aspirated sound is cut halfway in the aspiration, it can sound really weird like a burst, rather than smooth in.
+If an audio starting with aspirated sound is cut halfway in the aspiration, it can sound really weird, like a burst, 
+rather than gradually smooth in.
 
-## How does Praditor's parameters work?
+# How does Praditor work?
 ![Instruction](instruction.png "How does Praditor works?")
 
-## Data and Materials
+# Data and Materials
 
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/)
 .
