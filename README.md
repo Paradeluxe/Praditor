@@ -91,6 +91,8 @@ Then, it is down sampled with max-pooling strategy (i.e., using the max value to
 DBSCAN requires two dimensions at least. How do we transform 1-D audio signal into 2-D array?
 For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
 
+![DBSCAN_small.png](instructions/DBSCAN_small.png)
+
 On this point array, Praditor applies DBSCAN clustering to these points. 
 Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
 
