@@ -165,8 +165,9 @@ Praditor would borrow information from later frames, like setting up a window (k
 
 ![kernel.png](instructions/kernel.png)
 
-To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). 
-If there is actually extreme values, then we successfully avoid them; If there is not, then it would not hurt since they are
+To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). Or, we only retain 
+**_KernelFrm%_** of all frames (e.g., 80% of all).
+If there is actually extreme values, then we successfully avoid them; if not, then it would not hurt since they are
 among other values at similar level.
 
 
