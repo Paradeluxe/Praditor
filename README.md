@@ -84,10 +84,10 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 
 # How does Praditor work?
-The audio signal is first band-pass filtered with _**HighPass**_ and _**LowPass**_. 
+The audio signal is first band-pass filtered to remove some high/low frequency noise. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
 
-DBSCAN requires two dimensions at least. How do we transform 1-D audio signal into 2-D array?
+DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
 For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
 
 ![DBSCAN_small.png](instructions/DBSCAN_small.png)
@@ -100,9 +100,12 @@ At this point, noise areas are found, which means we have roughly pinpoint the p
 We do not continue to use the original amplitudes, but first derivatives. First-derivative thresholding is a common technique
 in other signal processing areas (e.g., ECG). It keeps the trend but remove the noisy ("spiky") part, which helps to improve the performance.
 
+![scan.png](instructions/scan.png)
+
 For every target area, we do the same procedure as below:
 1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
-2. Start scanning from the very next frame. We use kernel smoothing to see if the current frame (or actually kernel/window) is **valid/invalid**.
+2. Scan from the very next frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
+3. Until we gather enough **valid** frames, the exact frame/time point we stop is the answer we want.
 
 
 
@@ -130,6 +133,8 @@ Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
 ## RefLen
 After Praditor has confirmed target areas, the original amplitudes is the transformed into absolute first-derivatives. 
 For each target area, Praditor would set up a _Reference Area_, whose mean value serves as the baseline for later thresholding.
+
+![threshold_example.png](instructions/threshold_example.png)
 
 The length of this reference area is determined by _**RefLen**_. 
 When you want to capture silence that has very short length, it is better that you turn down _**RefLen**_ a little bit as well.
