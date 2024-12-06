@@ -84,7 +84,6 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 
 # How does Praditor work?
-![Instruction](instruction.png "How does Praditor works?")
 The audio signal is first band-pass filtered with _**HighPass**_ and _**LowPass**_. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
 
