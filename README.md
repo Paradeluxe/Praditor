@@ -172,13 +172,25 @@ among other values at similar level.
 
 
 ## CountValid, Penalty
-As Praditor scans frame by frame (window by window, or kernel by kernel), it is either going to be **above** or **below** the threshold. 
+How do we say an onset is an onset? After that onset, lots of consecutive frames continue to be above threshold.
+
+As Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
 
 If the current frame surpass the threshold, then it's counted as **+1**; 
 If it fails to surpass, then it's counted as **-1 * _Penalty_**. 
 
-Then, Praditor would add them up, until it hits your standard, **_CountValid_**. 
-There you go, this is the exact **time point (onset/offset)** we want.
+Then, Praditor adds them up frame by frame (i.e., scanning) to get a **sum**. 
+Whenever the **sum** hits zero or below zero, the scanning aborts, and we move on to the next starting frame.
+On other words, we only want a starting frame whose **scanning sum stays positive**. 
+
+**_Penalty_** here is like a "knob" for tuning noise sensitivity. Higher **_Penalty_** means higher sensitivity to below-threshold frames.
+
+![count_valid.png](instructions/count_valid.png)
+
+All in all, each scan has a starting frame (i.e., onset candidate). What we do is to check if this "starting frame" is "valid". 
+By saying it "valid", we are saying that scanning sum stays positive and hits **_CountValid_** in the end.
+
+Then, we can say, this is the exact **time point (onset/offset)** we want.
 
 
 # Data and Materials
