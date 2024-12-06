@@ -34,7 +34,7 @@ Praditor is a **speech onset detector** that helps you find out all the possible
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
-Praditor works for both **single-onset** and **multi-onset** audio files without any language limitation. 
+Praditor works for both **single-onset** and **multi-onset** audio files **without any language limitation**. 
 It generates output as PointTiers in .TextGrid format. 
 
  - Onset/Offset Detection
@@ -85,6 +85,24 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 
 # How does Praditor work?
 ![Instruction](instruction.png "How does Praditor works?")
+The audio signal is first band-pass filtered with _**HighPass**_ and _**LowPass**_. 
+Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
+
+DBSCAN requires two dimensions at least. How do we transform 1-D audio signal into 2-D array?
+For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
+
+On this point array, Praditor applies DBSCAN clustering to these points. 
+Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
+
+At this point, noise areas are found, which means we have roughly pinpoint the probable locations of onsets (i.e., target area).
+
+We do not continue to use the original amplitudes, but first derivatives. First-derivative thresholding is a common technique
+in other signal processing areas (e.g., ECG). It keeps the trend but remove the noisy ("spiky") part, which helps to improve the performance.
+
+For every target area, we do the same procedure as below:
+1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
+2. Start scanning from the very next frame. We use kernel smoothing to see if the current frame (or actually kernel/window) is **valid/invalid**.
+
 
 
 # Parameters
@@ -129,15 +147,14 @@ That is why **_Threshold_** is usually **slightly larger than 1.00**.
 ![asp_sound.png](instructions/asp_sound.png)
 
 Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
-Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want).
-
-If an audio starting with aspirated sound is cut halfway in the aspiration, it can sound really weird, like a burst, 
-rather than gradually smooth in.
+Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want). 
+If that's the case, it can sound really weird, like a burst, rather than gradually smooth in.
 
 ## KernelSize, KernelFrm%
 After reference area and threshold are set, Praditor will begin scan frame by frame (starting from the frame right next to ref area). 
 
-Usually we would compare the value (abs 1st derivative) with threshold, but Praditor does it a little bit differently, using **kernel smoothing**.
+Usually we would compare the value (abs 1st derivative) with threshold. If it surpasses, we call it _valid_; if not, then _invalid_.
+But, Praditor does it a little bit differently, using **kernel smoothing**.
 Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**,
 
 To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). 
