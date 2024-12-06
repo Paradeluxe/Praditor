@@ -134,7 +134,7 @@ Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
 After Praditor has confirmed target areas, the original amplitudes is the transformed into absolute first-derivatives. 
 For each target area, Praditor would set up a _Reference Area_, whose mean value serves as the baseline for later thresholding.
 
-![threshold_example.png](instructions/threshold_example.png)
+![reflen.png](instructions/reflen.png)
 
 The length of this reference area is determined by _**RefLen**_. 
 When you want to capture silence that has very short length, it is better that you turn down _**RefLen**_ a little bit as well.
@@ -162,6 +162,8 @@ After reference area and threshold are set, Praditor will begin scan frame by fr
 Usually we would compare the value (abs 1st derivative) with threshold. If it surpasses, we call it _valid_; if not, then _invalid_.
 But, Praditor does it a little bit differently, using **kernel smoothing**.
 Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**,
+
+![kernel.png](instructions/kernel.png)
 
 To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). 
 If there is actually extreme values, then we successfully avoid them; If there is not, then it would not hurt since they are
