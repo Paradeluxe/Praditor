@@ -23,69 +23,71 @@ A DBSCAN-Based Automation for Speech Onset Detection
 
 
   <p align="center">
-    <a href="https://github.com/Paradeluxe/Praditor/releases"><strong>Download Praditor</strong></a>
+    <a href="https://github.com/Paradeluxe/Praditor/releases"><strong>下载 Praditor</strong></a>
      | 
     <a href="https://github.com/Paradeluxe/Praditor/blob/master/README.md"><strong>English</strong></a>
      · 
     <a href="https://github.com/Paradeluxe/Praditor/blob/master/README_zh.md"><strong>中文</strong></a>
 
   </p>
-
 <br/>
 
 
-# Features
-Praditor is a **speech onset detector** that helps you find out boundaries between silence and sound **automatically**.
+# 特点
+作为**语音起始检测器**， Praditor可以帮助你自动地找到所有的**有声**和**无声**的边界。
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
-Praditor works for both **single-onset** and **multi-onset** audio files **without any language limitation**. 
-It generates output as PointTiers in .TextGrid format. 
+Praditor可以处理**单起始点**和**多起始点**音频文件，无论你的音频文件是什么语言。
 
- - Onset/Offset Detection
- - Silence Detection
+ - 起始点/结束点检测
+ - 有声/无声检测
 
-Praditor also allows users to adjust parameters in the Dashboard to get a better performance.
+Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用户调整参数以获得更好的结果。
 
-# From Authors
-If you have any questions in terms of how to use Praditor or its algorithm details,
-feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
+# 来自作者
 
-I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
+如果你想知道如何使用Praditor，或者Praditor的原理，可以联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`。
 
-# How to use Praditor?
+因为Praditor的给出的结果文件是PointTier，如果你需要：
 
-## 1. Import your audio
+- 导出单个音频文件
+- 导出时间戳为表格文件（e.g., .xlsx, .csv)
 
-`File` -> `Read files...` -> Select your target audio file
+
+# 如何使用Praditor?
+
+## 1. 导出音频
+
+`File` -> `Read files...` -> 选择目标音频文件
 
 ![import_audio.png](instructions/import_audio.png)
 
-## 2. Play with Praditor
+## 2. 使用Praditor
 
 ![gui.png](instructions/gui.png)
 
-**For onset/offset...**
-- `Run` Apply Praditor algorithm on the current audio
-- `Prev`/`Next` Go to previous/next audio
-- `Read` Read time points from current audio's .TextGrid results
-- `Clear` Clear time points that are being displayed (but no change to .TextGrid)
-- `Onset`/`Offset` Show/Hide onsets/offsets
+**对于起始点/终止点...**
+- `Run` 应用 Praditor 算法于当前音频
+- `Prev`/`Next` 上一个/下一个音频
+- `Read` 从当前音频的.TextGrid结果文件里读取时间戳
+- `Clear` 清除已显示的时间戳
+- `Onset`/`Offset` 显示/隐藏起始点/终止点
 
-**For parameters...**
+**对于参数...**
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
-**On the menu...**
+**对于菜单...**
 - `File` > `Read files...` > Select an audio file
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
 
-**In case you want to zoom in/out**
+**如果你想要放大/缩小视图**
 
- - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out in **timeline**
- - <kbd>Ctrl</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Windows users)
- - <kbd>Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Mac users)
+ - <kbd>滚轮 ↑</kbd>/<kbd>滚轮 ↓</kbd> 在**时间线**上放大/缩小
+ - <kbd>Ctrl</kbd>+<kbd>滚轮 ↑</kbd>/<kbd>滚轮 ↓</kbd> 在**波幅**上放大/缩小 (针对 Windows 用户)
+ - <kbd>Command</kbd>+<kbd>滚轮 ↑</kbd>/<kbd>滚轮 ↓</kbd> 在**波幅**上放大/缩小 (针对 Mac 用户)
 
 
 # How does Praditor work?
