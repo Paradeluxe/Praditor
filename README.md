@@ -169,7 +169,7 @@ It will repeat this process until the valid starting frame (i.e., onset) is foun
 
 Usually we would compare the value (absolute 1st derivative) with threshold. If it surpasses, we call it **valid**; if not, then **invalid**.
 But, Praditor does it a little bit differently, using **kernel smoothing**.
-Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**,
+Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**.
 
 ![kernel.png](instructions/kernel.png)
 
@@ -180,10 +180,10 @@ among other values at similar level.
 
 
 ## CountValid, Penalty
-How do we say an onset is an onset? After that onset, lots of consecutive frames are **above threshold**.
+**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold** consecutively.
 Just as mentioned above, ss Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
-If the current frame surpass the threshold, then it's counted as **+1**; 
-If it fails to surpass, then it's counted as **-1 * _Penalty_**. 
+If the current frame (kernel) surpass the threshold, then it's **valid** and  counted as **+1**; 
+If it fails to surpass, then it's **invalid** and counted as **-1 * _Penalty_**. 
 
 Then, Praditor adds them up to get a **sum**. 
 Whenever the **sum** hits zero or below zero, the scanning aborts, and we move on to the next starting frame.
