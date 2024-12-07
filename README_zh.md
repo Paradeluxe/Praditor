@@ -16,10 +16,11 @@
   <a href="https://github.com/Paradeluxe/Praditor">
     <img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
   </a>
-</p>
-
+<p align="center">
 Praditor
+</p>
 </h3>
+
 
 <p align="center">
 基于DBSCAN聚类的自动语音起始点检测器
@@ -106,7 +107,7 @@ DBSCAN需要数据集具有**两个维度**，而音频信号是一维的时许�
 我们试着把每两个连续的（降采样）区块组合成一个**点**，那么，这个**点**就具有了两个维度：前一帧、后一帧。
 
 根据这样的转换逻辑，我们就得到了一个音频信号的二维点阵。
-接着，Praditor 就将 DBSCAN 聚类算法应用于这个点阵，并成功地将靠近原点的噪声点成功聚集（因为噪声点的振幅通常较小）。
+接着，Praditor 就将 DBSCAN 聚类算法应用于这个点阵，并成功地将靠近原点的噪声点聚集（因为噪声点的振幅通常较小）。
 
 
 ![DBSCAN_small.png](instructions/DBSCAN_small.png)
@@ -127,14 +128,13 @@ DBSCAN需要数据集具有**两个维度**，而音频信号是一维的时许�
 
 # 参数
 ## HighPass/LowPass
-Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
-The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
+在开始对音频信号进行降采样+聚类之前，我们首先对于原始信号进行带通滤波。原因是，其实我们并不需要这么完整的频段，太高或者太低的频段可能被污染。
 
 ![choose_freq.png](instructions/choose_freq.png)
 
-What we need is the middle part that has high contrast between silence and sound.
+我们需要的其实就是中间这部分频段，**无声**和**有声**的**对比度最大**。
 
-Be reminded that the **_LowPass_** should not surpass the highest valid frequency (half of the sample rate, refer to _Nyquist theorem_).
+请注意，参数**_LowPass_**不可以超过该音频的最高有效频率，即采样率的一般（具体原理请参考**奈奎斯特定理**）。
 
 ## EPS%
 

@@ -15,7 +15,9 @@
   </a>
 </p>
 
+<p align="center">
 Praditor
+</p>
 </h3>
 
 <p align="center">
