@@ -52,15 +52,14 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 # 来自作者
 
 
-因为Praditor的给出的结果文件是PointTier，而PointTier通常不好操作。如果你需要：
+因为Praditor的给出的结果文件是PointTier，而PointTier通常不好操作。如果你需要一些**后续脚本**：
 
 - 导出单个音频文件
 - 导出时间戳为表格文件（e.g., .xlsx, .csv)
 - 其他需求
 
-我有编写此类脚本的经验。
-如果你需要**后续脚本**，或者单纯想知道如何使用Praditor，欢迎联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`，
-我很乐意开展此类合作。
+或者单纯想知道如何使用Praditor，欢迎联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`，
+我们可以聊聊具体的合作事宜。
 
 # 如何使用Praditor?
 
@@ -98,7 +97,7 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 
 
 # Praditor 的算法
-音频信号首先经过**带通滤波**降噪，以滤除高频/低频的噪声。然后，音频信号会以**最大池化 (max-pooling)**的策略**降采样 (down sampling)**，
+音频信号首先经过**带通滤波**降噪，以滤除高频/低频的噪声。然后，音频信号会进行**最大池化 (max-pooling)降采样 (down sampling)**，
 即用最大值来代表每一个区块。
 
 ![ds_maxp.png](instructions/ds_maxp.png)
