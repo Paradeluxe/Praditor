@@ -137,23 +137,23 @@ DBSCAN需要数据集具有**两个维度**，而音频信号是一维的时许�
 请注意，参数**_LowPass_**不可以超过该音频的最高有效频率，即采样率的一般（具体原理请参考**奈奎斯特定理**）。
 
 ## EPS%
-
-DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, take it as the circle center, 
-and draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
+DBSCAN 聚类需要两个参数：**EPS** 和 **MinPt**。
+DBSCAN 的聚类逻辑是：检查每一个点，以该点为圆心，**EPS** 为半径画圆。如果这个圆里有足够多数量的点（即，达到**MinPt**），那么这些点都属于同一个簇（cluster）。
 
 ![DBSCAN.png](instructions/DBSCAN.png)
 
-Praditor allows user to adjust **_EPS%_**. Since every audio file can have different amplitude level/silence-sound contrast,
-Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
+Praditor 允许用户调整 _**EPS%**_。该参数的运作逻辑是：每一个音频的振幅变动范围都是不一样的。我们根据每一个音频的最大波幅，乘以一个百分比 _**EPS%**_，
+得到了最终可以放入DBSCAN的 **EPS** 参数。
 
 ## RefLen
-After Praditor has confirmed target areas, the original amplitudes is the transformed into absolute first-derivatives. 
-For each target area, Praditor would set up a _Reference Area_, whose mean value serves as the baseline for later thresholding.
+当 Praditor 确认了**目标区域**的时间，我们不再使用原始的波幅，而是将其求导并绝对值化，得到音频信号一阶导的绝对值。
+这个操作被称作**一阶导数阈值法（First Derivative Thresholding）**.
+
+对于每一个目标区域，Praditor会设置一个**参考区域**。这个区域通常位于噪声区，其均值将被作为阈值法的基线；而该区域的长度由参数 **_RefLen_** 决定。
 
 ![reflen.png](instructions/reflen.png)
 
-The length of this reference area is determined by _**RefLen**_. 
-When you want to capture silence that has very short length, it is better that you turn down _**RefLen**_ a little bit as well.
+针对 **_RefLen_** 的调参建议是：如果需要捕捉**较小长度的静音段**（例如几百毫秒），你需要考虑**调小 _RefLen_** 以使其不超过静音段的长度。
 
 
 ## Threshold
