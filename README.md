@@ -96,7 +96,7 @@ Then, it is down sampled with max-pooling strategy (i.e., using the max value to
 ![ds_maxp.png](instructions/ds_maxp.png)
 
 DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
-For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
+For every two consecutive pieces, they are grouped into a **point**. The point has two dimensions, previous and next frame.
 On this point array, Praditor applies DBSCAN clustering to these points. 
 Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
 
@@ -111,8 +111,9 @@ in other signal processing areas (e.g., ECG). It keeps the trend but remove the 
 
 For every target area, we do the same procedure as below:
 1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
-2. Scan from the very next frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
-3. Until we gather enough **valid** frames, the exact frame/time point we stop is the answer we want.
+2. Set up a **starting frame** as the onset candidate (start from the very next frame from the noise reference).
+3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
+4. When we gather enough **valid** frames, the exact frame/time point we stop is the answer we want. Otherwise, we move on to the next starting frame.
 
 
 
@@ -180,10 +181,12 @@ among other values at similar level.
 
 
 ## CountValid, Penalty
-**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold** consecutively.
-Just as mentioned above, ss Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
+**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold consecutively**.
+
+Just as mentioned above, as Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
 If the current frame (kernel) surpass the threshold, then it's **valid** and  counted as **+1**; 
 If it fails to surpass, then it's **invalid** and counted as **-1 * _Penalty_**. 
+
 
 Then, Praditor adds them up to get a **sum**. 
 Whenever the **sum** hits zero or below zero, the scanning aborts, and we move on to the next starting frame.

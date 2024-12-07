@@ -102,28 +102,30 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 
 ![ds_maxp.png](instructions/ds_maxp.png)
 
-DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
-For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
-On this point array, Praditor applies DBSCAN clustering to these points. 
-Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
+DBSCAN需要数据集具有**两个维度**，而音频信号是一维的时许信号。我们应该如何把一维的音频信号转化为二维的数组？
+我们试着把每两个连续的（降采样）区块组合成一个**点**，那么，这个**点**就具有了两个维度：前一帧、后一帧。
+
+根据这样的转换逻辑，我们就得到了一个音频信号的二维点阵。
+接着，Praditor 就将 DBSCAN 聚类算法应用于这个点阵，并成功地将靠近原点的噪声点成功聚集（因为噪声点的振幅通常较小）。
+
 
 ![DBSCAN_small.png](instructions/DBSCAN_small.png)
 
-At this point, noise areas are found, which means we have roughly pinpoint the probable locations of onsets (i.e., target area).
+到了这个阶段，我们已经找到了所有的噪声区域，意味着可能存在起始点的**目标区域**已经大致定位到了（即，噪声区域的边缘）。
 
-We do not continue to use the original amplitudes, but first derivatives. First-derivative thresholding is a common technique
-in other signal processing areas (e.g., ECG). It keeps the trend but remove the noisy ("spiky") part, which helps to improve the performance.
+接着，我们将对信号求导，得到音频信号的一阶导。一阶导阈值法是一种常见的信号处理手段（例如，心电 ECG），可以用于平滑信号/降噪。
+求导的操作使得信号的**趋势**得以保留，去除了毛糙的部分。这对阈值法的表现的提升十分重要。
 
 ![scan.png](instructions/scan.png)
 
-For every target area, we do the same procedure as below:
-1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
-2. Scan from the very next frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
-3. Until we gather enough **valid** frames, the exact frame/time point we stop is the answer we want.
+对于每一个**目标区域**，我们重复以下之流程：
+1. 设置一个噪声参考区域。该段信号的**一阶导的绝对值的均值**将作为基线。
+2. 从参考区域的下一帧开始，逐一作为**开始帧（starting frame）**，也就是**起始点候选**。
+3. 从开始帧开始，往后逐帧扫描。Praditor 使用**核平滑（kernel smoothing）** 的方法来检查当前帧（或者说，当前核/时间窗）是**有效的/无效的**。
+4. 当我们得到了足够的**有效帧**，此时的开始帧/时间戳即我们想要的**起始点（onset）**。否则，我们进入到下一个**开始帧**的验证。
 
 
-
-# Parameters
+# 参数
 ## HighPass/LowPass
 Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
 The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
@@ -188,8 +190,9 @@ among other values at similar level.
 
 
 ## CountValid, Penalty
-**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold** consecutively.
-Just as mentioned above, ss Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
+**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold consecutively**.
+
+Just as mentioned above, as Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
 If the current frame (kernel) surpass the threshold, then it's **valid** and  counted as **+1**; 
 If it fails to surpass, then it's **invalid** and counted as **-1 * _Penalty_**. 
 
