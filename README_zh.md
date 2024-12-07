@@ -76,8 +76,8 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 
 **对于参数...**
 - `Current/Default` 显示默认/当前参数（即，独属于当前文件的参数）
-- `Save` Save the displayed parameters as Current/Default
-- `Reset` Reset the displayed parameters to the last time you saved it.
+- `Save` 把仪表盘显示的参数保存为默认/当前参数
+- `Reset` 重置参数（清除显示的参数，并显示已保存的默认/当前参数）
 
 **对于菜单...**
 - `File` > `Read files...` > 选择音频文件
@@ -90,9 +90,9 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
  - <kbd>Command</kbd>+<kbd>滚轮 ↑</kbd>/<kbd>滚轮 ↓</kbd> 在**波幅**上放大/缩小 (针对 Mac 用户)
 
 
-# How does Praditor work?
-The audio signal is first band-pass filtered to remove some high/low frequency noise. 
-Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
+# Praditor 的算法
+音频信号首先经过**带通滤波**降噪，以滤除高频/低频的噪声。然后，音频信号会以**最大池化 (max-pooling)**的策略**降采样 (down sampling)**，
+即用最大值来代表每一个区块。
 
 ![ds_maxp.png](instructions/ds_maxp.png)
 
