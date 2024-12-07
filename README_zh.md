@@ -18,7 +18,7 @@
 <h3 align="center">Praditor</h3>
 
 <p align="center">
-A DBSCAN-Based Automation for Speech Onset Detection
+基于DBSCAN聚类的自动语音起始点检测器
 </p>
 
 
@@ -75,13 +75,13 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 - `Onset`/`Offset` 显示/隐藏起始点/终止点
 
 **对于参数...**
-- `Current/Default` Display default parameters or parameters for the current file
+- `Current/Default` 显示默认/当前参数（即，独属于当前文件的参数）
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
 **对于菜单...**
-- `File` > `Read files...` > Select an audio file
-- `Help` > `Parameters` > Show quick instruction on how our parameters work
+- `File` > `Read files...` > 选择音频文件
+- `Help` > `Parameters` > 显示**如何调整参数**的快速指导
 
 **如果你想要放大/缩小视图**
 
