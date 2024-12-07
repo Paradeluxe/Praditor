@@ -87,6 +87,8 @@ I'm new to GitHub and still learning how to use it. Please forgive me if there i
 The audio signal is first band-pass filtered to remove some high/low frequency noise. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
 
+![ds_maxp.png](instructions/ds_maxp.png)
+
 DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
 For every two consecutive pieces, they are grouped into a _point_. The point has two dimensions, previous and next frame.
 
