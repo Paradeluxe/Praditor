@@ -51,13 +51,16 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 
 # 来自作者
 
-如果你想知道如何使用Praditor，或者Praditor的原理，可以联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`。
 
-因为Praditor的给出的结果文件是PointTier，如果你需要：
+因为Praditor的给出的结果文件是PointTier，而PointTier通常不好操作。如果你需要：
 
 - 导出单个音频文件
 - 导出时间戳为表格文件（e.g., .xlsx, .csv)
+- 其他需求
 
+我有编写此类脚本的经验。
+如果你需要**后续脚本**，或者单纯想知道如何使用Praditor，欢迎联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`，
+我很乐意开展此类合作。
 
 # 如何使用Praditor?
 
