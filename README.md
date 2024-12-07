@@ -7,15 +7,13 @@
 <br/>
 
 
+<h3 align="center">
 <p align="center">
   <a href="https://github.com/Paradeluxe/Praditor">
     <img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
   </a>
 </p>
 
-
-
-<h3 align="center">Praditor</h3>
 
 <p align="center">
 A DBSCAN-Based Automation for Speech Onset Detection
