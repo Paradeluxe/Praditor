@@ -158,27 +158,24 @@ Praditor 允许用户调整 _**EPS%**_。该参数的运作逻辑是：每一个
 
 
 ## Threshold
-这是最常用的参数。
-
-阈值法的核心概念可以看作是“击中断崖（Hitting the cliff）”。说话者说话会使得音频信号的波幅（或是其他信号特征的数值）上升，就像是创造了一个“断崖”。
-
-**_Threshold_** 的最小值限制在1.00（相对于噪声参考区域的基线值）。录制到的说话声应当大于背景噪声——信号的波幅应当大于噪声参考的波幅。
+这是最常用的参数。 阈值法的核心概念可以看作是“击中断崖（Hitting the cliff）”。说话者说话会使得音频信号的波幅（或是其他信号特征的数值）上升，就像是创造了一个“断崖”。
 
 ![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
 
+**_Threshold_** 的最小值限制在1.00（相对于噪声参考区域的基线值）。录制到的说话声应当大于背景噪声——信号的波幅应当大于噪声参考的波幅。
 然而，背景噪声通常不是“平滑的”，而是“毛糙的”；也就是，基线值通常小于毛糙部分的顶点（因为基线值是平均得来的）。
 所以，实际情况是 **_Threshold_** 应当稍微大于1.00（永远不会等于1.00，这就违背了最基础的假设“说话声大于噪声”）。
 
 ![asp_sound.png](instructions/asp_sound.png)
 
-同时，我会建议你着重关注 **送气音**。当一个单词以 **送气音** 开头，它并不形成一个“断崖（cliff）”，而是一个“缓坡（very slow slope）”——
+同时，我会建议你着重关注 **送气音**。当一个单词以送气音开头，它并不形成一个 **“断崖（cliff）”** ，而是一个 **“缓坡（very slow slope）”** ——
 这种差异导致了正常情况击中“断崖”而落下得到的**起始点**，会停留在“缓坡”的**半坡**上。 当**送气音**被斩断，音频会听起来像是“突然爆炸（burst）”，
 有一种突兀感；而非完整截取时得到的渐进。
 
 
 ## KernelSize, KernelFrm%
-After reference area and threshold are set, Praditor will (1) set up a starting frame (2) begin scan frame by frame (starting from the frame right next to ref area). 
-It will repeat this process until the valid starting frame (i.e., onset) is found.
+在设定好**阈值**和**参考基线**之后，Praditor 将会（1）设置一个**开始帧**；（2）从**开始帧**开始，往后逐帧扫描。
+这个流程会重复，直到我们找到了一个**有效**的**开始帧**。
 
 Usually we would compare the value (absolute 1st derivative) with threshold. If it surpasses, we call it **valid**; if not, then **invalid**.
 But, Praditor does it a little bit differently, using **kernel smoothing**.
