@@ -52,6 +52,11 @@ Praditor可以处理**单起始点**和**多起始点**音频文件，无论你�
 Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用户调整参数以获得更好的结果。
 
 # 作者
+我是[澳门大学认知与脑科学中心](https://ccbs.ici.um.edu.mo/?lang=zh-hant)的Tony，Praditor的编写者。
+我的研究方向是心理语言学（Psycholinguistics）。对，写Python是业余的XD。我喜欢把**繁琐复杂的流程**转化为**标准化的脚本**，懒惰（某种意义上）是我的第一生产力。
+
+Praditor是一个帮助**语音研究**方向的科研人节省时间的项目。它基于简单粗暴但又十分有效的**阈值法**（再加上一点点平滑和降噪），让你能够一个人在几分钟内得到好几个人标注数个星期的工作成果。
+我撰写这个软件的初衷是：科研工作者需要投资时间的地方是**思考实验设计/分析数据**；这种繁琐、重复、枯燥的重复劳动应当交给**编程**来解放你。
 
 因为Praditor的给出的结果文件是PointTier，而PointTier通常不好操作。如果你需要一些**后续脚本**：
 
@@ -59,8 +64,8 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 - 导出时间戳为表格文件（e.g., .xlsx, .csv)
 - 其他需求
 
-或者单纯想知道如何使用Praditor，欢迎联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`，
-我们可以聊聊具体的合作事宜。
+或者，单纯想知道如何使用Praditor/Praditor是如何实现检测算法的，欢迎联系我的邮箱 `zhengyuan.liu@connect.um.edu.mo` 或 `paradeluxe3726@gmail.com`。
+目前Praditor正在**测试阶段**，欢迎大家传播、分享、合作！
 
 # 如何使用Praditor?
 
