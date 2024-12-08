@@ -51,8 +51,7 @@ Praditor可以处理**单起始点**和**多起始点**音频文件，无论你�
 
 Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用户调整参数以获得更好的结果。
 
-# 来自作者
-
+# 作者
 
 因为Praditor的给出的结果文件是PointTier，而PointTier通常不好操作。如果你需要一些**后续脚本**：
 
@@ -159,20 +158,22 @@ Praditor 允许用户调整 _**EPS%**_。该参数的运作逻辑是：每一个
 
 
 ## Threshold
-It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
-Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
+这是最常用的参数。
+
+阈值法的核心概念可以看作是“击中断崖（Hitting the cliff）”。说话者说话会使得音频信号的波幅（或是其他信号特征的数值）上升，就像是创造了一个“断崖”。
+
+**_Threshold_** 的最小值限制在1.00（相对于噪声参考区域的基线值）。录制到的说话声应当大于背景噪声——信号的波幅应当大于噪声参考的波幅。
 
 ![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
 
-**_Threshold_** has a minimum limitation at **1.00**, which is based on the mean value of background-noise reference.
-However, background noise is not "smoothy" but actually "spiky". 
-That is why **_Threshold_** is usually **slightly larger than 1.00**.
+然而，背景噪声通常不是“平滑的”，而是“毛糙的”；也就是，基线值通常小于毛糙部分的顶点（因为基线值是平均得来的）。
+所以，实际情况是 **_Threshold_** 应当稍微大于1.00（永远不会等于1.00，这就违背了最基础的假设“说话声大于噪声”）。
 
 ![asp_sound.png](instructions/asp_sound.png)
 
-Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
-Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want). 
-If that's the case, it can sound really weird, like a burst, rather than gradually smooth in.
+同时，我会建议你着重关注 **送气音**。当一个单词以 **送气音** 开头，它并不形成一个“断崖（cliff）”，而是一个“缓坡（very slow slope）”——
+这种差异导致了正常情况击中“断崖”而落下得到的**起始点**，会停留在“缓坡”的**半坡**上。 当**送气音**被斩断，音频会听起来像是“突然爆炸（burst）”，
+有一种突兀感；而非完整截取时得到的渐进。
 
 
 ## KernelSize, KernelFrm%

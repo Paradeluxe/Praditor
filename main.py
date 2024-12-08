@@ -1,8 +1,9 @@
 import ctypes
 import os
 import sys
+import webbrowser
 
-from PySide6.QtGui import QAction, QIcon, QPixmap
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -13,7 +14,7 @@ from PySide6.QtWidgets import (
 
 from QSS import *
 from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
-from pic_message import Example
+# from pic_message import Example
 from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path
@@ -71,9 +72,9 @@ class MainWindow(QMainWindow):
         """)
 
         file_menu = menu.addMenu("&Help")
-        button_action = QAction("&Parameters", self)
+        button_action = QAction("&Instructions", self)
         button_action.setStatusTip("Folder to store target audios")
-        button_action.triggered.connect(self.showParamInstruction)
+        button_action.triggered.connect(self.browseInstruction)
         file_menu.addAction(button_action)
         file_menu.setStyleSheet("""
             QMenu {
@@ -405,14 +406,14 @@ class MainWindow(QMainWindow):
                 self.MySliders.resetParams(eval(txt_file.read()))
 
 
-    def showParamInstruction(self):
-        # QMessageBox.information(None, "标题", "这是一个信息消息框。")
-        self.popup = Example()
-        self.popup.show()
+    # def showParamInstruction(self):
+    #     # QMessageBox.information(None, "标题", "这是一个信息消息框。")
+    #     self.popup = Example()
+    #     self.popup.show()
 
     def openFileDialog(self):
         # 打开文件对话框，让用户选择一个文件
-        options = QFileDialog.Options()
+        # options = QFileDialog.Options()
         # options.setStatusTip("Folder to store target audios")
 
         # options |= QFileDialog.DontUseNativeDialog  # 禁用原生对话框
@@ -452,8 +453,9 @@ class MainWindow(QMainWindow):
 
             self.setWindowTitle("Praditor")
 
-
-
+    def browseInstruction(self):
+        # 使用webbrowser模块打开默认浏览器并导航到指定网址
+        webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#--------')
 
     def runPraditorOnAudio(self):
         if not self.run_onset.isChecked():
