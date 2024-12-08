@@ -134,7 +134,7 @@ DBSCAN需要数据集具有**两个维度**，而音频信号是一维的时许�
 
 我们需要的其实就是中间这部分频段，**无声**和**有声**的**对比度最大**。
 
-请注意，参数**_LowPass_**不可以超过该音频的最高有效频率，即采样率的一般（具体原理请参考**奈奎斯特定理**）。
+请注意，参数 **_LowPass_**不可以超过该音频的最高有效频率，即采样率的一般（具体原理请参考**奈奎斯特定理**）。
 
 ## EPS%
 DBSCAN 聚类需要两个参数：**EPS** 和 **MinPt**。
@@ -177,42 +177,37 @@ Praditor 允许用户调整 _**EPS%**_。该参数的运作逻辑是：每一个
 在设定好**阈值**和**参考基线**之后，Praditor 将会（1）设置一个**开始帧**；（2）从**开始帧**开始，往后逐帧扫描。
 这个流程会重复，直到我们找到了一个**有效**的**开始帧**。
 
-Usually we would compare the value (absolute 1st derivative) with threshold. If it surpasses, we call it **valid**; if not, then **invalid**.
-But, Praditor does it a little bit differently, using **kernel smoothing**.
-Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**.
+具体的，“逐帧扫描”指的是，把这一帧的数值（即一阶导的绝对值）和阈值进行对比。如果在阈值之上，我们便称其为“有效”；反之则“无效”。
+
+Praditor的算法略有不同，我们加入了 **核平滑（kernel smoothing）** 的操作，即在扫描的过程中，从被扫描帧后续的帧中借取信息——
+我们会设立一个大小为 **_KernelSize_** 的时间窗， 并平均时间窗内的值；也就是说，“逐帧扫描”的对象是时间窗的平均值。
 
 ![kernel.png](instructions/kernel.png)
 
-To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). Or, we only retain 
-**_KernelFrm%_** of all frames (e.g., 80% of all).
-If there is actually extreme values, then we successfully avoid them; if not, then it would not hurt since they are
-among other values at similar level.
+在“逐帧扫描”的过程中，为了防止极端值，Praditor会忽略掉最大的几个值。反过来说，我们会保存这个时间窗/核内 **_KernelFrm%_** 部分数量的值（比如，80%）。
+如果真的有极端值存在，那么这个操作就成功避免掉了它们的影响；如果极端值不存在，也无伤大雅，因为它们和其他值很接近。
 
 
 ## CountValid, Penalty
-**How do we say an onset is an onset?** After that onset, lots of frames are **above threshold consecutively**.
+我们如何定义**起始点**？在该时间点之后，连续的有很多帧都高于阈值。
 
-Just as mentioned above, as Praditor scans frame by frame (window by window, or kernel by kernel), each frame is either going to be **above** or **below** the threshold. 
-If the current frame (kernel) surpass the threshold, then it's **valid** and  counted as **+1**; 
-If it fails to surpass, then it's **invalid** and counted as **-1 * _Penalty_**. 
+正如上面提到的，确认了**开始帧**后，Praditor会逐帧扫描（逐窗/核扫描），其结果无非是**高于**或**低于**阈值。
+如果高于阈值，则称作**有效**，计为 **+1**；如果低于阈值，则称作**无效**，计为 **-1 * _Penalty_**。
 
-Then, Praditor adds them up to get a **sum**. 
-Whenever the **sum** hits zero or below zero, the scanning aborts, and we move on to the next starting frame.
-On other words, we only want a starting frame whose **scanning sum stays positive**. 
+在扫描的过程中，我们实时地累计、求和这些值，得到一个动态的**扫描和（scanning sum）**。
+当**扫描和**小于等于0时，扫描中止，我们转入下一个 **开始帧** （换句话说，我们只想要一个扫描和保持为正数的**开始帧**）。
 
-**_Penalty_** here is like a "knob" for tuning **noise sensitivity**. **Higher** **_Penalty_** means higher sensitivity to **below-threshold frames.**
+在这里，**_Penalty_** 像是一个调节 **噪声灵敏度** 的“旋钮”。**_Penalty_** 调的越高，对低于阈值的帧越敏感——越强调“连续性地大于阈值”的要求。
 
 ![count_valid.png](instructions/count_valid.png)
 
-In summary, each scan has a starting frame (i.e., onset candidate). What we do is to check if this "starting frame" is "valid". 
-By saying it "valid", we are saying that scanning sum stays positive and hits **_CountValid_** in the end.
+总结来说，每次扫描都有一个**开始帧**（即，起始点的候选）。扫描的目的是：验证这个开始帧是否**有效**。
+有效的标准是，**扫描和**保持为正数，直到其最终达到标准 **_CountValid_**。由此，该**开始帧**便可以认定为是**起始点**。
 
-Then, we can say, this is the exact **time point (onset/offset)** we want.
+这样的设定能够帮助我们忽略背景噪声中短暂但波幅极高的噪声。此类噪声通常是**短促的**，且并不和真正的说话声连接；只要它在正式说话之前消停了
 
 
-# Data and Materials
-
-If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/)
-.
+# 材料和数据
+如果你想要下载我们用于开发和测试 Praditor 的音频数据，可以参考 [我们的 OSF 仓库](https://osf.io/9se8r/)。
 
 
