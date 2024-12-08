@@ -3,9 +3,10 @@
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 
-<br/>
-<br/>
-
+<h3>
+    <br/>
+    <br/>
+</h3>
 
 
 
@@ -154,6 +155,7 @@ Praditor 允许用户调整 _**EPS%**_。该参数的运作逻辑是：每一个
 ![reflen.png](instructions/reflen.png)
 
 针对 **_RefLen_** 的调参建议是：如果需要捕捉**较小长度的静音段**（例如几百毫秒），你需要考虑**调小 _RefLen_** 以使其不超过静音段的长度。
+当然，我的经验是通常你不太需要动这个参数。
 
 
 ## Threshold

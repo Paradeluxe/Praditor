@@ -3,12 +3,16 @@
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 
-<br/>
-<br/>
 
+<h3>
+    <br/>
+    <br/>
+</h3>
 
 
 <h3 align="center">
+
+
 <p align="center">
   <a href="https://github.com/Paradeluxe/Praditor">
     <img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
@@ -50,11 +54,12 @@ It generates output as PointTiers in .TextGrid format.
 
 Praditor also allows users to adjust parameters in the Dashboard to get a better performance.
 
-# From Authors
-If you have any questions in terms of how to use Praditor or its algorithm details,
-feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
+# Authors
+Praditor is written and maintained by Tony, Liu Zhengyuan from Centre for Cognitive and Brain Sciences, University of Macau.
 
-I'm new to GitHub and still learning how to use it. Please forgive me if there is something I missed. Thx XD
+If you have any questions in terms of how to use Praditor or its algorithm details, or you want me to help you write some additional
+scripts like **export audio files**, **export Excel tables**,
+feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
 
 # How to use Praditor?
 
