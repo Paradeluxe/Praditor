@@ -31,14 +31,14 @@ item []:
 		xmax = 7.762879818594104
 		points: size = 4
 			points [1]:
-				time = 1.1435374149659865
+				time = 1.1608843537414966
 				mark = "offset"
 			points [2]:
-				time = 3.039251700680272
+				time = 3.065419501133787
 				mark = "offset"
 			points [3]:
-				time = 4.710725623582767
+				time = 4.715736961451247
 				mark = "offset"
 			points [4]:
-				time = 6.672562358276644
+				time = 6.721609977324263
 				mark = "offset"
