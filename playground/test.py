@@ -18,9 +18,9 @@ class Example(QWidget):
         # icon = QIcon()
         # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
         # self.setWindowIcon(icon)
-        self.setWindowIcon(QIcon(resource_path("icon.ico")))
+        self.setWindowIcon(QIcon(resource_path("../icon.ico")))
         # 加载图片
-        pixmap = QPixmap(resource_path(resource_path("instructions/instruction.png")))  # 替换为你的图片路径
+        pixmap = QPixmap(resource_path(resource_path("../instructions/instruction.png")))  # 替换为你的图片路径
 
         self.label.setPixmap(pixmap)
         self.setFixedSize(pixmap.size())

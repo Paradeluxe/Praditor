@@ -2,14 +2,12 @@
 Pyside6中提供的QSplitter控件的使用案例。
 '''
 import sys
-from PySide6.QtCore import *
-from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
-from button.param_button import ParamButtons, OnOnffCheckBoxs
+from button.param_button import ParamButtons
 # from pyplot.pyplot_window import AudioSignalChart
 from slider.slider_section import MySliders
-from test import AudioPlot
+from playground.test import AudioPlot
 
 
 class MySplitter(QWidget):

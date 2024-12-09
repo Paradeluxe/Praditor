@@ -5,7 +5,7 @@
 /.venv/
 /.idea/
 /png2ico.py
-/打包参数.txt
+/playground/打包参数.txt
 /Praditor.spec
 /icon.pptx
 /flyer*
