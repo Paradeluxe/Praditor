@@ -1,35 +1,41 @@
-import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QMenuBar
-import webbrowser
-from PySide6.QtGui import QAction
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+from tool import resource_path
 
 
-class MainWindow(QMainWindow):
+class Example(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.setStyleSheet("""
+            QWidget {
+                background: white;
+            }
+        """)
+        self.label = None
+        # 创建QLabel实例
+        self.label = QLabel(self)
+        # icon = QIcon()
+        # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
+        # self.setWindowIcon(icon)
+        self.setWindowIcon(QIcon(resource_path("icon.ico")))
+        # 加载图片
+        pixmap = QPixmap(resource_path(resource_path("instructions/instruction.png")))  # 替换为你的图片路径
 
-    def initUI(self):
-        self.menuBar = QMenuBar(self)
-        self.setMenuBar(self.menuBar)
+        self.label.setPixmap(pixmap)
+        self.setFixedSize(pixmap.size())
+        # self.setWindowIcon(QIcon())
+        # 创建布局并添加QLabel
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
-        # 创建一个菜单
-        menu = self.menuBar.addMenu('&文件')
-
-        # 创建一个动作（QAction），并设置其触发时执行的操作
-        openWebAction = QAction('打开网页', self)
-        openWebAction.triggered.connect(self.openWebPage)
-
-        # 将动作添加到菜单中
-        menu.addAction(openWebAction)
-
-    def openWebPage(self):
-        # 使用webbrowser模块打开默认浏览器并导航到指定网址
-        webbrowser.open('https://www.example.com')
-
+        # 设置窗口标题和大小
+        self.setWindowTitle('Parameters')
+        self.setWindowFlags(Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint)
+        self.show()
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    mainWin = MainWindow()
-    mainWin.show()
-    sys.exit(app.exec())
+    app = QApplication([])
+    ex = Example()
+    app.exec()
