@@ -28,8 +28,12 @@ def bandpass_filter(data, lowcut, highcut, fs, order=4):
     nyquist = 0.5 * fs
     low = lowcut / nyquist
     high = highcut / nyquist
-    b, a = butter(order, [low, high], btype='bandpass', output="ba")
-    filtered_data = filtfilt(b, a, data)
+    try:
+        b, a = butter(order, [low, high], btype='bandpass', output="ba")
+        filtered_data = filtfilt(b, a, data)
+    except ValueError:  # 如果设置的最高频率大于了可接受的范围，则变为（实际意义上的）高通滤波
+        b, a = butter(order, [low, 1], btype='bandpass', output="ba")
+        filtered_data = filtfilt(b, a, data)
     return filtered_data
 
 

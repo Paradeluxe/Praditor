@@ -52,6 +52,7 @@ def runPraditor(params, audio_obj, which_set):
         fs=_audio_obj.frame_rate
     )
 
+    # warning or auto change?
     if which_set == "offset":
         _audio_arr_filtered = np.flip(_audio_arr_filtered)
 
