@@ -1,4 +1,3 @@
-import ctypes
 import os
 import sys
 import webbrowser
@@ -19,7 +18,19 @@ from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path
 
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
+
+
+plat = os.name.lower()
+
+if plat == 'nt':  # Windows
+    import ctypes
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
+
+elif plat == 'posix':  # Unix-like systems (Linux, macOS)
+    pass
+else:
+    pass
+
 
 
 class MainWindow(QMainWindow):
@@ -265,7 +276,11 @@ class MainWindow(QMainWindow):
 
         """)
 
-
+        # 初始化参数txt
+        # 检查是否存在default mode
+        if not os.path.exists("params.txt"):
+            with open("params.txt", 'w') as txt_file:
+                txt_file.write(f"{self.MySliders.getParams()}")
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -350,10 +365,11 @@ class MainWindow(QMainWindow):
 
 
     def saveParams(self):
+        # print(resource_path("params.txt"))
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = resource_path("params.txt")
+            txt_file_path = "params.txt"
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
@@ -363,7 +379,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = resource_path("params.txt")
+            txt_file_path = "params.txt"
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -372,8 +388,11 @@ class MainWindow(QMainWindow):
 
         except FileNotFoundError:
             self.select_mode.setChecked(False)
-            self.showParams()
+
             print("Go back to Default mode")
+
+
+            self.showParams()
 
 
     def showParams(self):
