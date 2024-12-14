@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt, QMargins
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QSlider, QHBoxLayout, \
     QWidget, QLabel)
@@ -24,7 +25,7 @@ class SingleSlider(QMainWindow):
         self.name_label.setStyleSheet(f"""
 
             QLabel {{
-                font-size: 14px;
+                font-size: 13px;
                 background-color: RGB(35, 35, 35);
                 font-weight: bold;
                 color: {font_color};
@@ -65,7 +66,7 @@ class SingleSlider(QMainWindow):
         self.value_label.setStyleSheet("""
 
             QLabel {
-                font-size: 14px;
+                font-size: 13px;
                 background-color: RGB(35, 35, 35);
                 color: #272727;
             }

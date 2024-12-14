@@ -16,13 +16,13 @@ item []:
 				time = 0.30142857142857143
 				mark = "onset"
 			points [2]:
-				time = 2.1681859410430837
+				time = 2.168208616780045
 				mark = "onset"
 			points [3]:
 				time = 4.034036281179138
 				mark = "onset"
 			points [4]:
-				time = 5.812789115646258
+				time = 5.812902494331066
 				mark = "onset"
 	item [2]:
 		class = "TextTier"

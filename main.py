@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
-        self.setMinimumSize(1500, 850)
+        self.setMinimumSize(1500, 780)
         # icon = QIcon()
         # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
         # self.setWindowIcon(icon)
@@ -275,6 +275,7 @@ class MainWindow(QMainWindow):
             }
 
         """)
+
 
         # 初始化参数txt
         # 检查是否存在default mode

@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 from PySide6.QtCore import Qt, QMargins
-from PySide6.QtGui import QPen, QColor
+from PySide6.QtGui import QPen, QColor, QPainter, QBrush
 from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
     QWidget
 from pydub import AudioSegment
@@ -109,13 +109,13 @@ class AudioViewer(QWidget):
         self.label_etime.setAlignment(Qt.AlignCenter)
 
         self._chart = QChart()
-
-        self._chart.layout().setContentsMargins(0, 0, 0, 0)
-        self._chart.setMargins(QMargins(0, 0, 0, 0))
         self._chart.setBackgroundRoundness(1)
-
+        # self._chart.setBorderColor(QColor('red'))
+        self._chart.layout().setContentsMargins(0, 0, 0, 0)
+        # self._chart.setM
+        # self._chart.setBackgroundBrush(QBrush(QColor("black")))
+        self._chart.setMargins(QMargins(0, 0, 0, 0))
         # self._chart.setBackgroundVisible(False)
-
 
         self._chart.legend().hide()
         self._axis_x = QValueAxis()
@@ -128,6 +128,8 @@ class AudioViewer(QWidget):
 
 
         self.chart_view = QChartView(self._chart)
+        self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
+        # self.chart_view.setRenderHint(QPainter.TextAntialiasing)
 
         # --------------------------------------------
         # --------------------------------------------
@@ -149,10 +151,6 @@ class AudioViewer(QWidget):
         self.layout.addLayout(layout)
 
         self.setStyleSheet("""
-            QChart {
-                border: 1px solid black;
-            
-            }
             QLabel {
 
                 color: black;
@@ -421,7 +419,7 @@ class AudioViewer(QWidget):
                 else:
                     pen = QPen(QColor("#2AD25E"))
 
-                pen.setWidth(2)  # 设置线条宽度为3像素
+                pen.setWidth(0)  # 设置线条宽度为3像素
                 test_series.setPen(pen)  # 应用这个笔刷到线条系列
 
                 test_series.append(xset, -self.max_amp)
