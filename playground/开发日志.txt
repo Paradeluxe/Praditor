@@ -30,3 +30,6 @@
  √ icon auto scaling
  - menu style
  - param font color
+
+2024/12/15
+ - AudioSegment有 Resample 功能
