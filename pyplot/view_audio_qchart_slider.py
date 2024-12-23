@@ -64,8 +64,8 @@ class AudioViewer(QWidget):
         self.max_amp = None
         self.audio_clip = None
         self.time_unit = 441
-        # self.setMaximumHeight(300)
-        self.setMinimumSize(1200, 200)
+        # self.setMinimumHeight(200)
+        # self.setMinimumSize(800, 200)
         self.interval_ms = 1
         self.fpath = ""
         self.resolution = 1
@@ -112,8 +112,6 @@ class AudioViewer(QWidget):
         self._chart.setBackgroundRoundness(1)
         # self._chart.setBorderColor(QColor('red'))
         self._chart.layout().setContentsMargins(0, 0, 0, 0)
-        # self._chart.setM
-        # self._chart.setBackgroundBrush(QBrush(QColor("black")))
         self._chart.setMargins(QMargins(0, 0, 0, 0))
         # self._chart.setBackgroundVisible(False)
 
@@ -128,7 +126,7 @@ class AudioViewer(QWidget):
 
 
         self.chart_view = QChartView(self._chart)
-        self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
+        # self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
         # self.chart_view.setRenderHint(QPainter.TextAntialiasing)
 
         # --------------------------------------------

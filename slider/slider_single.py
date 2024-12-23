@@ -16,11 +16,20 @@ class SingleSlider(QMainWindow):
             self.digit = len(str(self.scale).split(".")[1])
         except IndexError:
             self.digit = 0
-        self.setMaximumHeight(40)
+        # self.setMaximumHeight(40)
+        self.setMinimumHeight(20)
+        # self.setMaximumHeight(25)
 
 
         self.name_label = QLabel(param_name)
-        self.name_label.setFixedSize(90, 20)
+        self.name_label.setFixedWidth(90)
+        # self.name_label.setFixedSize(90, 20)
+
+        # if param_name:
+        #     self.name_label.setFixedSize(90, 20)
+        # else:
+        #     self.name_label.setFixedSize(0, 20)
+
         self.name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.name_label.setStyleSheet(f"""
 
@@ -43,7 +52,8 @@ class SingleSlider(QMainWindow):
         # }
 
         self.param_slider = QSlider(Qt.Orientation.Horizontal)
-        self.param_slider.setFixedHeight(20)
+
+        # self.param_slider.setFixedHeight(20)
         self.param_slider.setMinimum(minimum)
         self.param_slider.setSingleStep(step)
         self.param_slider.setMaximum(maximum)
@@ -61,7 +71,8 @@ class SingleSlider(QMainWindow):
         # self.param_slider.sliderReleased.connect(self.slider_released_h)
 
         self.value_label = QLabel(f"{self.param_slider.sliderPosition()}")
-        self.value_label.setFixedSize(50, 20)
+        self.value_label.setFixedWidth(50)
+        # self.value_label.setFixedSize(50, 20)
         self.value_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.value_label.setStyleSheet("""
 

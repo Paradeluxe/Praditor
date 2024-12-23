@@ -42,7 +42,8 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
-        self.setMinimumSize(1500, 780)
+        self.setMinimumSize(900, 720)
+
         # icon = QIcon()
         # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
         # self.setWindowIcon(icon)
@@ -54,45 +55,49 @@ class MainWindow(QMainWindow):
             }
         
         """)
-        self.statusBar().setFixedHeight(25)
-
-
-
+        self.statusBar().setFixedHeight(20)
 
 
         # MENU
         # --------------------------------------
-        menu = self.menuBar()
-        menu.setStyleSheet("""            
-        QMenuBar {
-            background-color: #E9EDF1;
-            font-size: 15px;
-            color: black;
-        }""")
-        file_menu = menu.addMenu("&File")
+        # self.menuBar().setFixedHeight(35)
+
+        file_menu = self.menuBar().addMenu("&File")
         button_action = QAction("&Read file...", self)
         button_action.setStatusTip("Folder to store target audios")
         button_action.triggered.connect(self.openFileDialog)
         file_menu.addAction(button_action)
-        file_menu.setStyleSheet("""
-            QMenu {
-                color: black; 
-                background-color: white;
-                
-            }
-        """)
+        # file_menu.setStyleSheet("""
+        #     QMenu {
+        #         color: black;
+        #         background-color: white;
+        #
+        #     }
+        # """)
 
-        file_menu = menu.addMenu("&Help")
+        file_menu = self.menuBar().addMenu("&Help")
         button_action = QAction("&Instructions", self)
         button_action.setStatusTip("Folder to store target audios")
         button_action.triggered.connect(self.browseInstruction)
         file_menu.addAction(button_action)
-        file_menu.setStyleSheet("""
-            QMenu {
-                color: black; 
-                background-color: white;
+        # file_menu.setStyleSheet("""
+        #
+        # """)
+        self.menuBar().setStyleSheet("""            
+        QMenuBar {
+            background-color: #E9EDF1;
+            font-size: 10px;
+            color: black;
+        }
 
-            }
+        QMenu {
+            color: black; 
+            background-color: #EFEFEF;
+            border: 1px solid #676767;
+            height: 25px;
+
+        }
+
         """)
         # --------------------------------------
 
@@ -255,6 +260,7 @@ class MainWindow(QMainWindow):
         # file_menu.addAction(button_action2)
         # ---------------------------------------------------
         self.AudioViewer = AudioViewer()
+        self.AudioViewer.setMinimumHeight(100)
         layout.addWidget(self.AudioViewer)
         # ---------------------------------------------------
 
