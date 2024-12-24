@@ -11,14 +11,14 @@ from tool import bandpass_filter, get_current_time, resource_path
 
 plat = os.name.lower()
 
-if plat == 'nt':  # Windows
-    AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
-    AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
-elif plat == 'posix':  # Unix-like systems (Linux, macOS)
-    AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg")
-    AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg")
-else:
-    pass
+# if plat == 'nt':  # Windows
+#     AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
+#     AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg.exe")
+# elif plat == 'posix':  # Unix-like systems (Linux, macOS)
+#     AudioSegment.converter = resource_path(f"./ffmpeg/{plat}/ffmpeg")
+#     AudioSegment.ffmpeg = resource_path(f"./ffmpeg/{plat}/ffmpeg")
+# else:
+#     pass
 
 
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):

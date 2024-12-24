@@ -17,12 +17,14 @@ class SingleSlider(QMainWindow):
         except IndexError:
             self.digit = 0
         # self.setMaximumHeight(40)
-        self.setMinimumHeight(20)
-        # self.setMaximumHeight(25)
-
+        self.setFixedHeight(35)
+        # self.setMinimumHeight(20)
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.name_label = QLabel(param_name)
         self.name_label.setFixedWidth(90)
+        self.name_label.setFixedHeight(25)
+        self.name_label.setContentsMargins(0, 0, 0, 0)
         # self.name_label.setFixedSize(90, 20)
 
         # if param_name:
@@ -53,7 +55,7 @@ class SingleSlider(QMainWindow):
 
         self.param_slider = QSlider(Qt.Orientation.Horizontal)
 
-        # self.param_slider.setFixedHeight(20)
+        self.param_slider.setFixedHeight(20)
         self.param_slider.setMinimum(minimum)
         self.param_slider.setSingleStep(step)
         self.param_slider.setMaximum(maximum)
@@ -63,6 +65,7 @@ class SingleSlider(QMainWindow):
 
         # #2AD25E #1991D3
         self.param_slider.setStyleSheet(qss_slider_with_color(color))
+        self.param_slider.setContentsMargins(0, 0, 0, 0)
 
 
 
@@ -72,6 +75,7 @@ class SingleSlider(QMainWindow):
 
         self.value_label = QLabel(f"{self.param_slider.sliderPosition()}")
         self.value_label.setFixedWidth(50)
+        self.value_label.setFixedHeight(25)
         # self.value_label.setFixedSize(50, 20)
         self.value_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.value_label.setStyleSheet("""
@@ -84,6 +88,7 @@ class SingleSlider(QMainWindow):
 
 
         """)
+        self.value_label.setContentsMargins(0, 0, 0, 0)
 
         if default is not None:
             self.param_slider.setValue(default)

@@ -260,7 +260,7 @@ class MainWindow(QMainWindow):
         # file_menu.addAction(button_action2)
         # ---------------------------------------------------
         self.AudioViewer = AudioViewer()
-        self.AudioViewer.setMinimumHeight(100)
+        self.AudioViewer.setMinimumHeight(200)
         layout.addWidget(self.AudioViewer)
         # ---------------------------------------------------
 
@@ -418,7 +418,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             if not os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
                 with open(os.path.splitext(self.file_path)[0] + ".txt", "w") as txt_file:
-                    with open(resource_path("params.txt"), "r") as default_txt_file:
+                    with open("params.txt", "r") as default_txt_file:
                         txt_file.write(default_txt_file.read())
         elif self.select_mode.text() == "Default":
             pass
@@ -428,7 +428,7 @@ class MainWindow(QMainWindow):
             with open(os.path.splitext(self.file_path)[0] + ".txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
         elif self.select_mode.text() == "Default":
-            with open(resource_path("params.txt"), 'r') as txt_file:
+            with open("params.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
 
 
@@ -539,7 +539,7 @@ window = MainWindow()
 
 # 加载图标文件
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
-
+print(resource_path('icon.ico'))
 # 设置窗口图标
 window.setWindowIcon(QIcon(resource_path('icon.ico')))
 window.show()
