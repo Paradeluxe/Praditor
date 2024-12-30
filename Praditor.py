@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 
 from QSS import *
 from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
-from pyplot.view_audio_qchart_slider import AudioViewer
+from pyplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path
 
@@ -133,15 +133,15 @@ class MainWindow(QMainWindow):
         self.addToolBar(toolbar)
         # ---------------------------------------------------------------
         toolbar.addSeparator()
-        
+
         clear_xset = QPushButton("Clear", self)
         clear_xset.setFixedSize(50, 25)
         clear_xset.setStatusTip("Clear Onsets and Offsets")
         clear_xset.setStyleSheet(qss_button_normal)
         clear_xset.pressed.connect(self.clearXset)
         toolbar.addWidget(clear_xset)
-        
-        
+
+
         read_xset = QPushButton("Read", self)
         read_xset.setFixedSize(50, 25)
         read_xset.setStatusTip("Import Onsets and Offsets")
@@ -327,7 +327,7 @@ class MainWindow(QMainWindow):
         self.MySliders.penalty_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         self.MySliders.ref_len_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         self.MySliders.eps_ratio_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
-        
+
         self.MySliders.amp_slider_onset.param_slider.setDisabled(slider_status)
         self.MySliders.cutoff0_slider_onset.param_slider.setDisabled(slider_status)
         self.MySliders.cutoff1_slider_onset.param_slider.setDisabled(slider_status)

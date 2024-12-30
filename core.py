@@ -246,13 +246,13 @@ def runPraditor(params, audio_obj, which_set):
 
                 __countValidPiece += 1
             else:
-                __countBadPiece += 1
+                __countBadPiece += params["penalty"]
 
-            if __countValidPiece - __countBadPiece * params["penalty"] <= 0:
+            if __countValidPiece - __countBadPiece  <= 0:
                 __countValidPiece = 0
                 __countBadPiece = 0
 
-            elif __countValidPiece - __countBadPiece * params["penalty"] >= params["numValid"]:
+            elif __countValidPiece - __countBadPiece >= params["numValid"]:
                 _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
 
                 if which_set == "offset":

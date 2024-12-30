@@ -16,7 +16,7 @@ class MySliders(QMainWindow):
         self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97)
         self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
         self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000, font_color="#7F7F7F")
-        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 1000, scale=0.001, default=20, font_color="#7F7F7F")
+        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20, font_color="#7F7F7F")
 
         self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
         self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
@@ -26,7 +26,7 @@ class MySliders(QMainWindow):
         self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
         self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
         self.ref_len_slider_offset = SingleSlider("", 1, 1, 2000, color="#2AD25E", default=1000)
-        self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 1000, scale=0.001, color="#2AD25E", default=15)
+        self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
         layout = QGridLayout()
         layout.setSpacing(0)
