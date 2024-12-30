@@ -1,8 +1,9 @@
 import os
 import sys
 import webbrowser
+import ctypes
 
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -12,19 +13,15 @@ from PySide6.QtWidgets import (
 )
 
 from QSS import *
-from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
-# from pic_message import Example
+from core_qp import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
 from pyplot.view_audio_qchart_slider import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path
 
-
-
 plat = os.name.lower()
 
 if plat == 'nt':  # Windows
-    import ctypes
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'QuickPraditor')  # arbitrary string
 
 elif plat == 'posix':  # Unix-like systems (Linux, macOS)
     pass
@@ -32,12 +29,15 @@ else:
     pass
 
 
-
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
 
+        # load window icon
+        # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
+
+        self.setWindowIcon(QIcon(resource_path('icon.ico')))
         self.file_paths = []
         self.file_path = None
         self.which_one = 0
@@ -51,12 +51,11 @@ class MainWindow(QMainWindow):
         self.statusBar().setStyleSheet("""
             QStatusBar {
                 background-color: #7f0020;
-                
+
             }
-        
+
         """)
         self.statusBar().setFixedHeight(20)
-
 
         # MENU
         # --------------------------------------
@@ -101,8 +100,6 @@ class MainWindow(QMainWindow):
         """)
         # --------------------------------------
 
-
-
         # TOOLBAR
         # ---------------------
 
@@ -126,19 +123,17 @@ class MainWindow(QMainWindow):
         """)  # 使用对象名称设置样式
         # toolbar.setIconSize(QSize(16, 16))
 
-
         self.addToolBar(toolbar)
         # ---------------------------------------------------------------
         toolbar.addSeparator()
-        
+
         clear_xset = QPushButton("Clear", self)
         clear_xset.setFixedSize(50, 25)
         clear_xset.setStatusTip("Clear Onsets and Offsets")
         clear_xset.setStyleSheet(qss_button_normal)
         clear_xset.pressed.connect(self.clearXset)
         toolbar.addWidget(clear_xset)
-        
-        
+
         read_xset = QPushButton("Read", self)
         read_xset.setFixedSize(50, 25)
         read_xset.setStatusTip("Import Onsets and Offsets")
@@ -174,7 +169,6 @@ class MainWindow(QMainWindow):
         # ----------------------------------------------
         # ----------------------------------------------
 
-
         self.run_onset = QPushButton("Onset", self)
         self.run_onset.setStatusTip("Extract Onsets")
         self.run_onset.setFixedSize(60, 25)
@@ -193,14 +187,9 @@ class MainWindow(QMainWindow):
         # self.run_offset.setChecked(False)
         toolbar.addWidget(self.run_offset)
 
-
-
-
         spacer_left = QWidget()
         spacer_left.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         toolbar.addWidget(spacer_left)
-
-
 
         self.select_mode = QPushButton("Default", self)
         self.select_mode.setStatusTip("Choose to show Default or Current params")
@@ -212,12 +201,10 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(self.select_mode)
         # print(self.select_mode.isChecked())
 
-
         toolbar.addSeparator()
         # ----------------------------------------------
         # ----------------------------------------------
         # ----------------------------------------------
-
 
         self.save_param = QPushButton("Save", self)
         self.save_param.setFixedSize(50, 25)
@@ -234,22 +221,16 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(self.reset_param)
         toolbar.addSeparator()
 
-
         # spacer_right = QWidget()
         # spacer_right.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         # toolbar.addWidget(spacer_right)
 
-
         # ----------------------------------------------
         # ----------------------------------------------
         # ----------------------------------------------
-
 
         # ---------------------
         # TOOLBAR
-
-
-
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -282,7 +263,6 @@ class MainWindow(QMainWindow):
 
         """)
 
-
         # 初始化参数txt
         # 检查是否存在default mode
         if not os.path.exists("params.txt"):
@@ -296,16 +276,13 @@ class MainWindow(QMainWindow):
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=not self.run_onset.isChecked())
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=not self.run_offset.isChecked())
 
-
     def clearXset(self):
-        self.AudioViewer.tg_dict_tp= get_frm_points_from_textgrid(self.file_path)
+        self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
         if not self.run_offset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["offset"])
-
-
 
     def turnOnset(self):
         if not self.run_onset.isChecked():
@@ -324,7 +301,7 @@ class MainWindow(QMainWindow):
         self.MySliders.penalty_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         self.MySliders.ref_len_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         self.MySliders.eps_ratio_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
-        
+
         self.MySliders.amp_slider_onset.param_slider.setDisabled(slider_status)
         self.MySliders.cutoff0_slider_onset.param_slider.setDisabled(slider_status)
         self.MySliders.cutoff1_slider_onset.param_slider.setDisabled(slider_status)
@@ -337,7 +314,6 @@ class MainWindow(QMainWindow):
 
         self.AudioViewer.showOnset = not slider_status
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=self.AudioViewer.showOnset)
-
 
     def turnOffset(self):
         if not self.run_offset.isChecked():
@@ -370,7 +346,6 @@ class MainWindow(QMainWindow):
         self.AudioViewer.showOffset = not slider_status
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=self.AudioViewer.showOffset)
 
-
     def saveParams(self):
         # print(resource_path("params.txt"))
         if self.select_mode.text() == "Current":
@@ -380,7 +355,6 @@ class MainWindow(QMainWindow):
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
-
 
     def resetParams(self):
         if self.select_mode.text() == "Current":
@@ -398,9 +372,7 @@ class MainWindow(QMainWindow):
 
             print("Go back to Default mode")
 
-
             self.showParams()
-
 
     def showParams(self):
         # 第一步 如果音频文件本身就不存在，不运行
@@ -431,7 +403,6 @@ class MainWindow(QMainWindow):
             with open("params.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
 
-
     # def showParamInstruction(self):
     #     # QMessageBox.information(None, "标题", "这是一个信息消息框。")
     #     self.popup = Example()
@@ -457,7 +428,8 @@ class MainWindow(QMainWindow):
             file_name = os.path.normpath(file_name)
             folder_path = os.path.dirname(file_name)
 
-            self.file_paths = [os.path.normpath(os.path.join(folder_path, fpath)) for fpath in os.listdir(folder_path) if isAudioFile(fpath)]
+            self.file_paths = [os.path.normpath(os.path.join(folder_path, fpath)) for fpath in os.listdir(folder_path)
+                               if isAudioFile(fpath)]
 
             self.which_one = self.file_paths.index(file_name)
             self.file_path = self.file_paths[self.which_one]
@@ -469,7 +441,7 @@ class MainWindow(QMainWindow):
             else:
                 self.select_mode.setChecked(True)
             self.showParams()
-            self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+            self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
 
         else:
             print("Empty folder")
@@ -486,25 +458,27 @@ class MainWindow(QMainWindow):
     def runPraditorOnAudio(self):
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
-            self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+            self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
+                                                                            self.AudioViewer.audio_obj, "onset")
         else:
             self.AudioViewer.tg_dict_tp["onset"] = []
 
         if not self.run_offset.isChecked():
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
-            self.AudioViewer.tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+            self.AudioViewer.tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
+                                                                             self.AudioViewer.audio_obj, "offset")
         else:
             self.AudioViewer.tg_dict_tp["offset"] = []
 
-        create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
+        create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"],
+                                        self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
-
 
     def prevAudio(self):
         self.which_one -= 1
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
         if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
@@ -517,7 +491,7 @@ class MainWindow(QMainWindow):
         self.which_one += 1
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
         if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
@@ -525,9 +499,6 @@ class MainWindow(QMainWindow):
         else:
             self.select_mode.setChecked(True)
         self.showParams()
-
-
-
 
 
 app = QApplication(sys.argv)
@@ -540,8 +511,9 @@ window = MainWindow()
 # 加载图标文件
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
 print(resource_path('icon.ico'))
+print(os.path.exists(resource_path("icon.ico")))
 # 设置窗口图标
-window.setWindowIcon(QIcon(resource_path('icon.ico')))
+# window.setWindowIcon(QIcon(resource_path('icon.ico')))
 window.show()
 
 app.exec()

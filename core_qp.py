@@ -216,10 +216,8 @@ def runPraditor(params, audio_obj, which_set):
         # print(np.argmin(candidate_y1_area), ref_midpoint)
 
         # ----------------- Processing onset area --------------
-        # print(f"\r{audio_file}\t|\t{get_current_time()}\t|\tProcessing >> onset {onset} + offset {offset}", end="")
 
 
-        # print(y1_threshold)
 
         __countValidPiece = 0
         __countBadPiece = 0
@@ -312,9 +310,4 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     tg.write(tg_filename)  # 将TextGrid对象写入文件
 
     print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
-
-
-
-
-
 

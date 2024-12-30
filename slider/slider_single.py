@@ -1,5 +1,4 @@
 from PySide6.QtCore import Qt, QMargins
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QSlider, QHBoxLayout, \
     QWidget, QLabel)
