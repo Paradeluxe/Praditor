@@ -56,9 +56,9 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 
 > We have prepared [test_audio.wav](https://github.com/Paradeluxe/Praditor/raw/master/test_audio.wav) for you to give it a try.
 
-<video controls width="600">
-  <source src="https://github.com/Paradeluxe/Praditor/blob/master/Praditor_intro.mp4" type="video/mp4">
-</video>
+# Video instruction (bilibili)
+[![Praditor_intro_cover.png](Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
+
 
 # Authors
 Praditor is written and maintained by Tony, Liu Zhengyuan from Centre for Cognitive and Brain Sciences, University of Macau.

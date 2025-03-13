@@ -52,9 +52,10 @@ Praditor可以处理**单起始点**和**多起始点**音频文件，无论你�
 Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用户调整参数以获得更好的结果。
 
 
-<video controls>
-  <source src="https://github.com/Paradeluxe/Praditor/blob/master/Praditor_intro.mp4" type="video/mp4">
-</video>
+# 视频教程 (bilibili)
+[![Praditor_intro_cover.png](Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
+
+
 
 # 作者
 我是[澳门大学认知与脑科学中心](https://ccbs.ici.um.edu.mo/?lang=zh-hant)的Tony，Praditor的编写者。
