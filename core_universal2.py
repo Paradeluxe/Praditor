@@ -4,8 +4,10 @@ import os
 
 import numpy as np
 from pydub import AudioSegment
-from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
+from pyclustering.cluster.dbscan import dbscan
+from pyclustering.utils import distance_metric
+from pyclustering.utils.metric import type_metric
 from tool import bandpass_filter, get_current_time, resource_path
 
 
@@ -84,12 +86,32 @@ def runPraditor(params, audio_obj, which_set):
 
     _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
     try:
-        _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
+        # 创建 DBSCAN 实例并指定曼哈顿距离
+        dbscan_instance = dbscan(
+            _points_array,
+            eps=_eps,
+            neighbors=_min_samples,
+            metric=distance_metric(type_metric.MANHATTAN)
+        )
+
+        # 执行聚类
+        dbscan_instance.process()
+
+        # 转换为 sklearn 格式的标签数组
+        clusters = dbscan_instance.get_clusters()
+        noise = dbscan_instance.get_noise()
+        _labels = np.full(len(_points_array), -1, dtype=int)
+
+        for cluster_id, indices in enumerate(clusters):
+            _labels[indices] = cluster_id
+
+        _labels[noise] = -1  # 覆盖噪声点
+        # print(_labels)
 
     except MemoryError:
         print("not enough memory")
         return []
-    _labels = _cluster.labels_
+
 
 
 
