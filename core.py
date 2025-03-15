@@ -9,6 +9,11 @@ from textgrid import TextGrid, PointTier, Point
 from tool import bandpass_filter, get_current_time, resource_path
 
 
+plat = os.name.lower()
+
+# AudioSegment.converter = os.path.abspath(os.listdir(f".\\ffmpeg\\{plat}")[0])
+
+
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     if etime == -1:
         ans_tps = runPraditor(params, audio_obj, which_set)
