@@ -192,7 +192,7 @@ def runPraditor(params, audio_obj, which_set):
         if __onset <= 0 - 3:
             continue
 
-        if __offset >= len(_cluster.labels_) + 3:
+        if __offset >= len(_labels) + 3:
             continue
 
         # -----------------------------------------------
