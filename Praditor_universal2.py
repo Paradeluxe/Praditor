@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from QSS import *
-from core import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
+from core_universal2 import runPraditorWithTimeRange, create_textgrid_with_time_point, get_frm_points_from_textgrid
 from pyplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path
