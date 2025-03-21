@@ -11,6 +11,7 @@ from pydub import AudioSegment
 from core import get_frm_points_from_textgrid
 
 
+
 def formatted_time(ms):
     # 将毫秒转换成秒和毫秒
     seconds = ms // 1000
@@ -271,6 +272,7 @@ class AudioViewer(QWidget):
         self.tg_dict_tp = {"onset": [], "offset": []}
         if self.fpath != fpath:
             self.fpath = fpath
+            print(self.fpath)
             self.audio_obj = AudioSegment.from_file(self.fpath).split_to_mono()[0]
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio

@@ -4,6 +4,7 @@ import os
 
 import numpy as np
 from pydub import AudioSegment
+from pydub.utils import which
 from textgrid import TextGrid, PointTier, Point
 from pyclustering.cluster.dbscan import dbscan
 from pyclustering.utils import distance_metric
@@ -11,8 +12,11 @@ from pyclustering.utils.metric import type_metric
 from tool import bandpass_filter, get_current_time, resource_path
 
 
+plat = os.name.lower()
+# check if ffmpeg exists in the system path or the pydub package can find it
+os.environ["PATH"] += os.pathsep + resource_path(f".\\ffmpeg\\{plat}")
+print(resource_path(f".\\ffmpeg\\{plat}"))
 
-# AudioSegment.converter = os.path.abspath(os.listdir(f".\\ffmpeg\\{plat}")[0])
 
 
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
