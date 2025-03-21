@@ -1,9 +1,11 @@
 import os
+import subprocess
+
 import sys
 import webbrowser
 import ctypes
 
-from PySide6.QtGui import QAction, QIcon, QPixmap
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -25,11 +27,11 @@ plat = os.name.lower()
 if plat == 'nt':  # Windows
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
 
+
 elif plat == 'posix':  # Unix-like systems (Linux, macOS)
     pass
 else:
     pass
-
 
 
 class MainWindow(QMainWindow):

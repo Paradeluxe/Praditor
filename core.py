@@ -7,12 +7,13 @@ from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 from tool import bandpass_filter, get_current_time, resource_path
-
+import subprocess
 
 plat = os.name.lower()
 # check if ffmpeg exists in the system path or the pydub package can find it
 os.environ["PATH"] += os.pathsep + resource_path(f".\\ffmpeg\\{plat}")
-print(resource_path(f".\\ffmpeg\\{plat}"))
+# print(resource_path(f".\\ffmpeg\\{plat}"))
+
 
 
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):

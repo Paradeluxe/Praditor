@@ -33,3 +33,7 @@
 
 2024/12/15
  - AudioSegment有 Resample 功能
+
+
+2025/03/21
+解决ffmpeg+subprocess弹窗的问题
