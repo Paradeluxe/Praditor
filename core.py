@@ -3,6 +3,7 @@ import math
 import os
 
 import numpy as np
+import patch_subprocess
 from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
