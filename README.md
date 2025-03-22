@@ -54,7 +54,9 @@ It generates output as PointTiers in .TextGrid format.
 
 Praditor also allows users to adjust parameters in the Dashboard to get a better performance.
 
-> We have prepared [test_audio.wav](https://github.com/Paradeluxe/Praditor/raw/master/test_audio.wav) for you to give it a try.
+> You can try [test_audio.wav](https://github.com/Paradeluxe/Praditor/raw/master/test_audio.wav) and 
+> [test_audio.mp3](https://github.com/Paradeluxe/Praditor/raw/master/test_audio.mp3)
+> on _Praditor_.
 
 # Video instruction (bilibili)
 [![Praditor_intro_cover.png](Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
