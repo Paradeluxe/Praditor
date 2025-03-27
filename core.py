@@ -3,15 +3,15 @@ import math
 import os
 
 import numpy as np
-from pydub import AudioSegment
+# from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from tool import bandpass_filter, get_current_time, resource_path
+from tool import bandpass_filter, get_current_time, resource_path, ReadSound
 
-plat = os.name.lower()
+# plat = os.name.lower()
 # check if ffmpeg exists in the system path or the pydub package can find it
-os.environ["PATH"] += os.pathsep + resource_path(f".\\ffmpeg\\{plat}")
+# os.environ["PATH"] += os.pathsep + resource_path(f".\\ffmpeg\\{plat}")
 # print(resource_path(f".\\ffmpeg\\{plat}"))
 
 
@@ -92,26 +92,27 @@ def runPraditor(params, audio_obj, which_set):
     _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
     try:
         _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
-
     except MemoryError:
         print("not enough memory")
         return []
-    _labels = _cluster.labels_
+
 
 
 
     # To look for the label with which the coordinate is closet to the zero point
     # xy值加起来最小值 -> 最接近零点
     noise_label = 0
-    for i in range(0, len(set(_labels))-1):
-        if np.min(np.sum(_points_array[_labels == i], axis=1)) < np.min(np.sum(_points_array[_labels == noise_label], axis=1)):
+    for i in range(0, len(set(_cluster.labels_))-1):
+        if np.min(np.sum(_points_array[_cluster.labels_ == i], axis=1)) < np.min(np.sum(_points_array[_cluster.labels_ == noise_label], axis=1)):
             noise_label = i
-    _points_confirmed = _points_array[_labels == noise_label]
+    _points_confirmed = _points_array[_cluster.labels_ == noise_label]
     # print(_labels, noise_label)
 
     # 把最小cluster以下的所有点都囊括进来
     _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
     # print(_points_confirmed)
+
+    _labels = _cluster.labels_
 
     for i in _points_compensation:
         _labels[int(i)] = noise_label
@@ -170,6 +171,7 @@ def runPraditor(params, audio_obj, which_set):
     # np.cuda.device = 1
     # print("---↘")
     for __offset, __onset in _onoffsets:
+        print(1111111)
 
         # -------------------------------------------------
         # 强制跳过条件 Skip Condition
@@ -289,7 +291,7 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     audio_extension = os.path.splitext(os.path.basename(audio_file_path))[1]
-    audio_obj = AudioSegment.from_file(os.path.join(audio_dir, audio_filename+audio_extension))
+    audio_obj = ReadSound(os.path.join(audio_dir, audio_filename+audio_extension))
     audio_duration = audio_obj.duration_seconds
     audio_samplerate = audio_obj.frame_rate
 

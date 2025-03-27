@@ -6,10 +6,10 @@ from PySide6.QtCore import Qt, QMargins
 from PySide6.QtGui import QPen, QColor, QPainter, QBrush
 from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
     QWidget
-from pydub import AudioSegment
+# from pydub import AudioSegment
 
 from core import get_frm_points_from_textgrid
-
+from tool import ReadSound
 
 
 def formatted_time(ms):
@@ -272,7 +272,8 @@ class AudioViewer(QWidget):
         self.tg_dict_tp = {"onset": [], "offset": []}
         if self.fpath != fpath:
             self.fpath = fpath
-            self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
+            # self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
+            self.audio_obj = ReadSound(self.fpath)
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio
 

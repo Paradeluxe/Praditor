@@ -2,25 +2,53 @@ import os.path
 import sys
 from datetime import datetime
 
+import numpy as np
 from scipy.signal import butter, filtfilt
 from textgrid import TextGrid
 import soundfile as sf
 
 
-class ReadSound(object):
-    def __init__(self, fpath):
-        self.fpath = fpath
-        self.info = sf.info(fpath)
+class ReadSound:
+    def __init__(self, fpath=None, arr=None, duration_seconds=None, frame_rate=None):
 
-        self.duration_seconds = self.info.duration
 
-        self.arr, self.frame_rate = sf.read(fpath, dtype='int16')
+        if fpath is None:
+            if arr is None:
+                raise ValueError("Need audio input. Receive None.")
+            else:
+                self.arr = arr
+                self.duration_seconds = duration_seconds
+                self.frame_rate = frame_rate
+
+        else:  # 如果有fpath
+            self.info = sf.info(fpath)
+
+            self.duration_seconds = self.info.duration
+            self.arr, self.frame_rate = sf.read(fpath, dtype='int16')
+
+
+
+        try:
+            self.arr = self.arr[:, 0]
+        except IndexError:
+            pass
+
+        self.max = np.max(np.abs(self.arr))
+
+    def __getitem__(self, ms):
+
+
+        start = int(ms.start * self.frame_rate / 1000) if ms.start is not None else 0
+        end = int(ms.stop * self.frame_rate / 1000) if ms.stop is not None else len(self.arr)
+
+        start = min(start, len(self.arr))
+        end = min(end, len(self.arr))
+
+
+        return ReadSound(arr=self.arr[start:end], duration_seconds=(end - start) / 1000, frame_rate=self.frame_rate)
 
     def get_array_of_samples(self):
         return self.arr
-
-
-
 
 
 

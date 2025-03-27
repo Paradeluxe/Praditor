@@ -3,13 +3,14 @@ import math
 import os
 
 import numpy as np
-from pydub import AudioSegment
+# from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from tool import bandpass_filter, get_current_time, resource_path
+from tool import bandpass_filter, get_current_time, resource_path, ReadSound
 
-AudioSegment.converter = os.path.abspath(os.listdir(f".\\ffmpeg\\{plat}")[0])
+
+# AudioSegment.converter = os.path.abspath(os.listdir(f".\\ffmpeg\\{plat}")[0])
 
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     if etime == -1:
@@ -281,7 +282,7 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     audio_extension = os.path.splitext(os.path.basename(audio_file_path))[1]
-    audio_obj = AudioSegment.from_file(os.path.join(audio_dir, audio_filename+audio_extension))
+    audio_obj = ReadSound(os.path.join(audio_dir, audio_filename+audio_extension))
     audio_duration = audio_obj.duration_seconds
     audio_samplerate = audio_obj.frame_rate
 
