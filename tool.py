@@ -4,6 +4,24 @@ from datetime import datetime
 
 from scipy.signal import butter, filtfilt
 from textgrid import TextGrid
+import soundfile as sf
+
+
+class ReadSound(object):
+    def __init__(self, fpath):
+        self.fpath = fpath
+        self.info = sf.info(fpath)
+
+        self.duration_seconds = self.info.duration
+
+        self.arr, self.frame_rate = sf.read(fpath, dtype='int16')
+
+    def get_array_of_samples(self):
+        return self.arr
+
+
+
+
 
 
 def resource_path(relative_path):

@@ -4,13 +4,12 @@ import os
 
 import numpy as np
 from pydub import AudioSegment
-from pydub.utils import which
 from textgrid import TextGrid, PointTier, Point
+
 from pyclustering.cluster.dbscan import dbscan
 from pyclustering.utils import distance_metric
 from pyclustering.utils.metric import type_metric
 from tool import bandpass_filter, get_current_time, resource_path
-
 
 plat = os.name.lower()
 # check if ffmpeg exists in the system path or the pydub package can find it
