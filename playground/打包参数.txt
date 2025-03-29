@@ -1,6 +1,12 @@
 pyinstaller --onefile --windowed --hidden-import=importlib.resources --icon=icon.ico --add-data "ffmpeg/nt;ffmpeg/nt" --add-data "icon.ico;." Praditor.py
 
 
-pyinstaller --onefile --hidden-import=importlib.resources --icon=icon.ico --add-data "ffmpeg/nt;ffmpeg/nt" --add-data "icon.ico;." Praditor.py
+
+pyinstaller --onefile --hidden-import=importlib.resources --icon=icon.ico --hidden-import=sklearn.tree._partitioner --hidden-import=sklearn.neighbors._partition_nodes --hidden-import=sklearn.utils._vector_sentinel --hidden-import=sklearn.utils._sorting --hidden-import=sklearn.utils._heap --hidden-import=sklearn.metrics._pairwise_distances_reduction._datasets_pair --hidden-import=sklearn.metrics._pairwise_distances_reduction._middle_term_computer --add-data "icon.ico;." Praditor.py
+
+
+pyinstaller --onedir --hidden-import=importlib.resources --icon=icon.ico --hidden-import=sklearn.tree._partitioner --hidden-import=sklearn.neighbors._partition_nodes --hidden-import=sklearn.utils._vector_sentinel --hidden-import=sklearn.utils._sorting --hidden-import=sklearn.utils._heap --hidden-import=sklearn.metrics._pairwise_distances_reduction._datasets_pair --hidden-import=sklearn.metrics._pairwise_distances_reduction._middle_term_computer --add-data "icon.ico;." Praditor.py
+
+
 
 
