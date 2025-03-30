@@ -3,7 +3,6 @@ import math
 import os
 
 import numpy as np
-# from pydub import AudioSegment
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
@@ -92,6 +91,10 @@ def runPraditor(params, audio_obj, which_set):
     _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
     try:
         _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
+        # print(_cluster.labels_)
+
+        # _cluster = DBSCAN_(eps=_eps, min_samples=_min_samples).fit(_points_array)
+        # print(_cluster.labels_)
     except MemoryError:
         print("not enough memory")
         return []

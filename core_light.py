@@ -3,16 +3,10 @@ import math
 import os
 
 import numpy as np
-from sklearn.cluster import DBSCAN
-# from pydub import AudioSegment
+from dbscan import DBSCAN as DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from pyclustering.cluster.dbscan import dbscan
-from pyclustering.utils import distance_metric
-from pyclustering.utils.metric import type_metric
 from tool import bandpass_filter, get_current_time, resource_path, ReadSound
-np.set_printoptions(threshold=20000)
-
 
 # plat = os.name.lower()
 # check if ffmpeg exists in the system path or the pydub package can find it
@@ -93,59 +87,38 @@ def runPraditor(params, audio_obj, which_set):
 
     del _audio_arr_ds
     gc.collect()
+
     _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
     try:
-        # 创建 DBSCAN 实例并指定曼哈顿距离
-        dbscan_instance = dbscan(
-            _points_array,
-            eps=_eps,
-            neighbors=_min_samples,
-            metric=distance_metric(type_metric.MANHATTAN)
-        )
-
-        # 执行聚类
-        dbscan_instance.process()
-
-        # 转换为 sklearn 格式的标签数组
-        clusters = dbscan_instance.get_clusters()
-        noise = dbscan_instance.get_noise()
-        _labels = np.full(len(_points_array), -1, dtype=int)
-
-        for cluster_id, indices in enumerate(clusters):
-            _labels[indices] = cluster_id
-
-        _labels[noise] = -1  # 覆盖噪声点
-        # print(_labels)
         _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
+        # print(_cluster.labels_)
 
+        # _cluster = DBSCAN_(eps=_eps, min_samples=_min_samples).fit(_points_array)
+        # print(_cluster.labels_)
     except MemoryError:
         print("not enough memory")
         return []
 
-    cluster_labels = _labels  # 20250327 1516
-    print(cluster_labels)
-    print(_cluster.labels_)
-    print(cluster_labels == _cluster.labels_)
 
-    exit()
+
 
     # To look for the label with which the coordinate is closet to the zero point
     # xy值加起来最小值 -> 最接近零点
     noise_label = 0
-    for i in range(0, len(set(_labels))-1):
-        if np.min(np.sum(_points_array[_labels == i], axis=1)) < np.min(np.sum(_points_array[_labels == noise_label], axis=1)):
+    for i in range(0, len(set(_cluster.labels_))-1):
+        if np.min(np.sum(_points_array[_cluster.labels_ == i], axis=1)) < np.min(np.sum(_points_array[_cluster.labels_ == noise_label], axis=1)):
             noise_label = i
-    _points_confirmed = _points_array[_labels == noise_label]
+    _points_confirmed = _points_array[_cluster.labels_ == noise_label]
     # print(_labels, noise_label)
 
     # 把最小cluster以下的所有点都囊括进来
     _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
     # print(_points_confirmed)
 
+    _labels = _cluster.labels_
+
     for i in _points_compensation:
         _labels[int(i)] = noise_label
-
-
 
     _labels = [noise_label] * 3 + [i for i in _labels] + [noise_label] * 3  # 这句干啥用的？？？
     _indices_confirmed = [i-3 for i in range(len(_labels)) if _labels[i] == noise_label]  # or labels[i] == -1]
@@ -209,7 +182,7 @@ def runPraditor(params, audio_obj, which_set):
         if __onset <= 0 - 3:
             continue
 
-        if __offset >= len(cluster_labels) + 3:
+        if __offset >= len(_cluster.labels_) + 3:
             continue
 
         # -----------------------------------------------
@@ -298,7 +271,6 @@ def runPraditor(params, audio_obj, which_set):
                     _final_answer = len(_audio_arr_filtered) - _final_answer
                 _answer_frames.append(_final_answer)
                 break
-
     return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
 
 
