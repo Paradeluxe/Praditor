@@ -4,6 +4,15 @@ pyinstaller --onedir --windowed --hidden-import=importlib.resources --icon=icon.
 
 
 
+
+
+pyinstaller --onefile --windowed --hidden-import=importlib.resources --icon=icon.ico --add-data "icon.ico;." Praditor_light.py
+
+pyinstaller --onedir --windowed --hidden-import=importlib.resources --icon=icon.ico --add-data "icon.ico;." Praditor_light.py
+
+
+
+
 pyinstaller --onefile --hidden-import=importlib.resources --icon=icon.ico --hidden-import=sklearn.tree._partitioner --hidden-import=sklearn.neighbors._partition_nodes --hidden-import=sklearn.utils._vector_sentinel --hidden-import=sklearn.utils._sorting --hidden-import=sklearn.utils._heap --hidden-import=sklearn.metrics._pairwise_distances_reduction._datasets_pair --hidden-import=sklearn.metrics._pairwise_distances_reduction._middle_term_computer --add-data "icon.ico;." Praditor.py
 
 
