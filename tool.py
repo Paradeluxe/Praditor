@@ -128,17 +128,19 @@ def isAudioFile(fpath):
         return False
 
 
-def get_frm_points_from_textgrid(file_path):
-    if not os.path.exists(file_path):
-        return None
-    tg = TextGrid(file_path)
-    tg.read(file_path)
-    dict_tg = {}
+def get_frm_points_from_textgrid(audio_file_path):
 
+    audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
+    audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
+    tg_file_path = os.path.join(audio_dir, audio_filename + ".TextGrid")
+    if not os.path.exists(tg_file_path):
+        return {"onset":[], "offset": []}
+    tg = TextGrid(tg_file_path)
+    tg.read(tg_file_path)
+    dict_tg_time = {}
     for tier in tg.tiers:
-        dict_tg[tier.name] = [p.time for p in tier]
-
-    return dict_tg
+        dict_tg_time[tier.name] = [p.time for p in tier]
+    return dict_tg_time
 
 
 def get_frm_points_from_01(file_path):

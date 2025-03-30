@@ -8,8 +8,7 @@ from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxL
     QWidget
 # from pydub import AudioSegment
 
-from core import get_frm_points_from_textgrid
-from tool import ReadSound
+from tool import ReadSound, get_frm_points_from_textgrid
 
 
 def formatted_time(ms):
