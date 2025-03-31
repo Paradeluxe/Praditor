@@ -1,3 +1,4 @@
+# Remove popup console when _ffmpeg_ is processing a .mp3 file
 import subprocess
 
 
