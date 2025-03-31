@@ -1,8 +1,7 @@
+import ctypes
 import os
-
 import sys
 import webbrowser
-import ctypes
 
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (

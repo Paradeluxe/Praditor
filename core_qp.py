@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point
 
-from tool import bandpass_filter, get_current_time, resource_path, ReadSound
+from tool import bandpass_filter, get_current_time, ReadSound
 
 
 # AudioSegment.converter = os.path.abspath(os.listdir(f".\\ffmpeg\\{plat}")[0])
