@@ -74,7 +74,7 @@ Praditor是一个帮助**语音研究**方向的科研人节省时间的项目�
 目前Praditor正在**测试阶段**，欢迎大家传播、分享、合作！
 
 > 我们准备了[测试音频.wav](https://github.com/Paradeluxe/Praditor/blob/master/test_audio.wav) 
-> 和[测试音频.mp3](https://github.com/Paradeluxe/Praditor/blob/master/test_audio.mp3)，，您可以通过它来熟练操作。
+> 和[测试音频.mp3](https://github.com/Paradeluxe/Praditor/blob/master/mp3_test_audio.mp3)，，您可以通过它来熟练操作。
 
 # 如何使用Praditor?
 
