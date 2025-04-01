@@ -62,17 +62,19 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 [![Praditor_intro_cover.png](instructions/Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
 
 
-# Authors
-_Praditor_ is written and maintained by Tony, Liu Zhengyuan from Centre for Cognitive and Brain Sciences, University of Macau.
-
-## 🙌 Acknowledgments
-This project thrives thanks to these remarkable contributors:
-- Thanks Yu Xinqi for her work in validating algorithms' performance.
-
+# Contact us
+_Praditor_ is written and maintained by **Tony, Liu Zhengyuan** from Centre for Cognitive and Brain Sciences, University of Macau.
 
 If you have any questions in terms of how to use _Praditor_ or its algorithm details, or you want me to help you write some additional
 scripts like **export audio files**, **export Excel tables**,
 feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
+
+
+## 🙌 Acknowledgments
+This project thrives thanks to these remarkable contributors:
+- Thank **Yu Xinqi**, **Dr. Ma Yunxiao** for their work in validating algorithms' performance
+- Thank **Hu WingChung** for her work in packaging Praditor for macOS (arm64 and universal2)
+- Thank **Prof. Zhang Haoyun** and **Prof. Wang Ruiming** for their guidance and support for this project.
 
 # How to use Praditor?
 
