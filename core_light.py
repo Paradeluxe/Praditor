@@ -5,7 +5,7 @@ import os
 import numpy as np
 from textgrid import TextGrid, PointTier, Point
 
-from dbscan import DBSCAN as DBSCAN
+from dbscan import DBSCAN
 from tool import bandpass_filter, get_current_time, ReadSound
 
 
