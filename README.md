@@ -59,7 +59,7 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 > on _**Praditor**_.
 
 # Video instruction (bilibili)
-[![Praditor_intro_cover.png](Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
+[![Praditor_intro_cover.png](instructions/Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
 
 
 # Authors

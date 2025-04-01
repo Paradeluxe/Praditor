@@ -53,7 +53,7 @@ Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用
 
 
 # 视频教程 (bilibili)
-[![Praditor_intro_cover.png](Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
+[![Praditor_intro_cover.png](instructions/Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
 
 
 
