@@ -73,8 +73,8 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 ## 🙌 Acknowledgments
 This project thrives thanks to these remarkable contributors:
 - Thank **Yu Xinqi**, **Dr. Ma Yunxiao** for their work in validating algorithms' performance
-- Thank **Hu WingChung** for her work in packaging Praditor for macOS (arm64 and universal2)
-- Thank **Prof. Zhang Haoyun** and **Prof. Wang Ruiming** for their guidance and support for this project.
+- Thank **Hu WingChung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
+- Thank **Prof. Zhang Haoyun** from University of Macau and **Prof. Wang Ruiming** from South China Normal University for their guidance and support for this project
 
 # How to use Praditor?
 
