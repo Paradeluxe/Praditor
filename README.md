@@ -63,9 +63,14 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 
 
 # Authors
-Praditor is written and maintained by Tony, Liu Zhengyuan from Centre for Cognitive and Brain Sciences, University of Macau.
+_Praditor_ is written and maintained by Tony, Liu Zhengyuan from Centre for Cognitive and Brain Sciences, University of Macau.
 
-If you have any questions in terms of how to use Praditor or its algorithm details, or you want me to help you write some additional
+## 🙌 Acknowledgments
+This project thrives thanks to these remarkable contributors:
+- Thanks Yu Xinqi for her work in validating algorithms' performance.
+
+
+If you have any questions in terms of how to use _Praditor_ or its algorithm details, or you want me to help you write some additional
 scripts like **export audio files**, **export Excel tables**,
 feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
 

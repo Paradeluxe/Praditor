@@ -4,8 +4,8 @@ Pyside6中提供的QSplitter控件的使用案例。
 import sys
 from PySide6.QtWidgets import *
 
-from button.param_button import ParamButtons
-# from pyplot.pyplot_window import AudioSignalChart
+from param_button import ParamButtons
+# from sigplot.pyplot_window import AudioSignalChart
 from slider.slider_section import MySliders
 from playground.test import AudioPlot
 
