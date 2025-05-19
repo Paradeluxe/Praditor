@@ -159,7 +159,7 @@ class MainWindow(QMainWindow):
         prev_audio.setFixedSize(50, 25)
         prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
         prev_audio.setStyleSheet(qss_button_normal)
-        prev_audio.pressed.connect(self.prevAudio)
+        prev_audio.pressed.connect(self.prevnextAudio)
         toolbar.addWidget(prev_audio)
 
         run_praditor = QPushButton("Run", self)
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
         next_audio.setFixedSize(50, 25)
         next_audio.setStatusTip("Go to NEXT audio in the folder")
         next_audio.setStyleSheet(qss_button_normal)
-        next_audio.pressed.connect(self.nextAudio)
+        next_audio.pressed.connect(self.prevnextAudio)
         toolbar.addWidget(next_audio)
         toolbar.addSeparator()
 
@@ -301,9 +301,8 @@ class MainWindow(QMainWindow):
 
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
-                print("Audio Stopped")
-                self.audio_sink.stop()
-                self.buffer.close()
+                self.stopPlayingAudio()
+
 
             else:
                 # 检测空格键按下
@@ -317,6 +316,17 @@ class MainWindow(QMainWindow):
                 self.playSound()
             else:
                 super().keyPressEvent(event)
+
+    def mousePressEvent(self, event):
+        try:
+            if self.audio_sink.state() == QAudio.State.ActiveState:
+                self.stopPlayingAudio()
+            else:
+                super().mousePressEvent(event)
+        except AttributeError:
+            super().mousePressEvent(event)
+
+
 
 
     def playSound(self):
@@ -359,21 +369,11 @@ class MainWindow(QMainWindow):
         # 创建音频输出对象并连接信号
         self.audio_sink = QAudioSink(output_device, format)
         self.audio_sink.stateChanged.connect(self.handle_audio_state)
-        print(self.audio_sink.state())
         self.audio_sink.start(self.buffer)
-        print(self.audio_sink.state())
 
     def handle_audio_state(self, state):
         if state == QAudio.State.IdleState:
-            self.audio_sink.stop()
-            self.buffer.close()
-            print("播放结束")
-
-
-
-
-
-
+            self.stopPlayingAudio()
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -586,8 +586,13 @@ class MainWindow(QMainWindow):
         self.readXset()
 
 
-    def prevAudio(self):
-        self.which_one -= 1
+    def prevnextAudio(self):
+        print(self.sender().text())
+        self.stopPlayingAudio()
+        if self.sender().text() == "Prev":
+            self.which_one -= 1
+        else:  # "Next"
+            self.which_one += 1
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
         self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
@@ -599,20 +604,18 @@ class MainWindow(QMainWindow):
             self.select_mode.setChecked(True)
         self.showParams()
 
-    def nextAudio(self):
-        self.which_one += 1
-        self.which_one %= len(self.file_paths)
-        self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
-        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
-
-        if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
-            self.select_mode.setChecked(False)
-        else:
-            self.select_mode.setChecked(True)
-        self.showParams()
 
 
+
+
+    def stopPlayingAudio(self):
+        try:
+            if self.audio_sink.state() == QAudio.State.ActiveState:
+                self.audio_sink.stop()
+                self.buffer.close()
+                print("Audio stopped")
+        except AttributeError:
+            pass
 
 
 
