@@ -355,7 +355,7 @@ class MainWindow(QMainWindow):
         format = QAudioFormat()
         format.setSampleRate(self.AudioViewer.audio_samplerate)  # 设置你的采样率
         format.setChannelCount(1)  # 声道数
-        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, None))  # QAudioFormat.Float32)  # 数据格式
+        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.Float ))  # QAudioFormat.Float32)  # 数据格式
 
         # 验证设备支持
         output_device = QMediaDevices.defaultAudioOutput()
