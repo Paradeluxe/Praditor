@@ -42,6 +42,8 @@ class MainWindow(QMainWindow):
         # load window icon
         # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
 
+        self.audio_sink = None
+        self.buffer = None
         self.setWindowIcon(QIcon(resource_path('icon.ico')))
         self.file_paths = []
         self.file_path = None
@@ -296,11 +298,25 @@ class MainWindow(QMainWindow):
 
 
     def keyPressEvent(self, event):
-        # 检测空格键按下
-        if event.key() == Qt.Key_F5:
-            self.playSound()
-        else:
-            super().keyPressEvent(event)
+
+        try:
+            if self.audio_sink.state() == QAudio.State.ActiveState:
+                print("Audio Stopped")
+                self.audio_sink.stop()
+                self.buffer.close()
+
+            else:
+                # 检测空格键按下
+                if event.key() == Qt.Key_F5:
+                    self.playSound()
+                else:
+                    super().keyPressEvent(event)
+        except AttributeError:
+            # 检测空格键按下
+            if event.key() == Qt.Key_F5:
+                self.playSound()
+            else:
+                super().keyPressEvent(event)
 
 
     def playSound(self):
@@ -329,7 +345,7 @@ class MainWindow(QMainWindow):
         format = QAudioFormat()
         format.setSampleRate(self.AudioViewer.audio_samplerate)  # 设置你的采样率
         format.setChannelCount(1)  # 声道数
-        format.setSampleFormat(format_mapping[self.AudioViewer.audio_obj.info.subtype])  # QAudioFormat.Float32)  # 数据格式
+        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, None))  # QAudioFormat.Float32)  # 数据格式
 
         # 验证设备支持
         output_device = QMediaDevices.defaultAudioOutput()
@@ -343,7 +359,9 @@ class MainWindow(QMainWindow):
         # 创建音频输出对象并连接信号
         self.audio_sink = QAudioSink(output_device, format)
         self.audio_sink.stateChanged.connect(self.handle_audio_state)
+        print(self.audio_sink.state())
         self.audio_sink.start(self.buffer)
+        print(self.audio_sink.state())
 
     def handle_audio_state(self, state):
         if state == QAudio.State.IdleState:
