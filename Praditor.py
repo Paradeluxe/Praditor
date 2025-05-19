@@ -162,8 +162,8 @@ class MainWindow(QMainWindow):
         prev_audio.pressed.connect(self.prevnextAudio)
         toolbar.addWidget(prev_audio)
 
-        run_praditor = QPushButton("Run", self)
-        run_praditor.setFixedSize(50, 25)
+        run_praditor = QPushButton("Extract", self)
+        run_praditor.setFixedSize(65, 25)
         run_praditor.setStatusTip("Initiate Praditor to extract speech onsets/offsets")
         run_praditor.setStyleSheet(qss_button_normal)
         run_praditor.pressed.connect(self.runPraditorOnAudio)
@@ -563,7 +563,7 @@ class MainWindow(QMainWindow):
             # popup_window.setText("Empty Audio File.")
             # popup_window.exec()
 
-            self.setWindowTitle("Praditor")
+            # self.setWindowTitle("Praditor")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
