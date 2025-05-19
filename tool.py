@@ -22,6 +22,7 @@ class ReadSound:
 
         else:  # 如果有fpath
             self.info = sf.info(fpath)
+            # print(self.info)
 
             self.duration_seconds = self.info.duration
             self.arr, self.frame_rate = sf.read(fpath, dtype='int16')
