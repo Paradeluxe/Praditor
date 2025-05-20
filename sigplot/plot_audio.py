@@ -189,9 +189,9 @@ class AudioViewer(QWidget):
                 self.max_amp_ratio -= 0.1  # Scroll Down
 
             if event.angleDelta().x() > 100:
-                self.slider_timerange.setValue(self.slider_timerange.value()+20)
-            elif event.angleDelta().x() < -100:
                 self.slider_timerange.setValue(self.slider_timerange.value()-20)
+            elif event.angleDelta().x() < -100:
+                self.slider_timerange.setValue(self.slider_timerange.value()+20)
 
 
         if self.max_amp_ratio > 1.0:
