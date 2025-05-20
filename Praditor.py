@@ -383,7 +383,7 @@ class MainWindow(QMainWindow):
 
 
     def clearXset(self):
-        self.AudioViewer.tg_dict_tp= get_frm_points_from_textgrid(self.file_path)
+        self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
@@ -556,6 +556,8 @@ class MainWindow(QMainWindow):
             self.showParams()
             self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
 
+            self.showXsetNum()
+
         else:
             print("Empty folder")
             # popup_window = QMessageBox()
@@ -563,6 +565,18 @@ class MainWindow(QMainWindow):
             # popup_window.exec()
 
             # self.setWindowTitle("Praditor")
+
+    def showXsetNum(self):
+
+        if not self.AudioViewer.tg_dict_tp['onset']:
+            self.run_onset.setText("Onset")
+        else:
+            self.run_onset.setText(f"{len(self.AudioViewer.tg_dict_tp['onset'])}")
+
+        if not self.AudioViewer.tg_dict_tp['offset']:
+            self.run_offset.setText("Offset")
+        else:
+            self.run_offset.setText(f"{len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
@@ -583,6 +597,7 @@ class MainWindow(QMainWindow):
 
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
+        self.showXsetNum()
 
 
     def prevnext_audio(self):
@@ -602,7 +617,8 @@ class MainWindow(QMainWindow):
         else:
             self.select_mode.setChecked(True)
         self.showParams()
-
+        self.showXsetNum()
+        # self.statusBar().showMessage("1", 0)
 
 
 

@@ -405,6 +405,7 @@ class AudioViewer(QWidget):
                     self._chart.removeSeries(line)
 
 
+
     def updateXset(self, tg_dict):#, showOnset=True, showOffset=True):
         stime = self.slider_timerange.sliderPosition() / 1000
         # etime = (self.slider_timerange.sliderPosition() + self.interval_ms) / 1000
