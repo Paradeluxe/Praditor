@@ -361,7 +361,7 @@ class MainWindow(QMainWindow):
         output_device = QMediaDevices.defaultAudioOutput()
 
         # 将numpy数组转为字节流[8](@ref)
-        byte_data = (self.AudioViewer.audio_arr * 2).tobytes()
+        byte_data = (self.AudioViewer.audio_arr * 4).tobytes()
         self.buffer = QBuffer()
         self.buffer.setData(byte_data)
         self.buffer.open(QIODevice.ReadOnly)

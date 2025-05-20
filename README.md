@@ -106,8 +106,14 @@ This project thrives thanks to these remarkable contributors:
 
 **In case you want to see details in amplitudes**
 
- - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out
- - <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out in **timeline**
+### Mouse & Keyboard
+ - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
+ - <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
+
+### Touchpad
+- <kbd>↑✌↑</kbd>/<kbd>↓✌↓</kbd> to zoom-in/out at **amplitude**
+- <kbd>←✌→</kbd>/<kbd>→✌←</kbd> to zoom-in/out at **timeline**
+
 
 
 # How does Praditor work?
