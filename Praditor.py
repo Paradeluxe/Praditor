@@ -159,7 +159,7 @@ class MainWindow(QMainWindow):
         prev_audio.setFixedSize(50, 25)
         prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
         prev_audio.setStyleSheet(qss_button_normal)
-        prev_audio.pressed.connect(self.prevnextAudio)
+        prev_audio.pressed.connect(self.prevnext_audio)
         toolbar.addWidget(prev_audio)
 
         run_praditor = QPushButton("Extract", self)
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
         next_audio.setFixedSize(50, 25)
         next_audio.setStatusTip("Go to NEXT audio in the folder")
         next_audio.setStyleSheet(qss_button_normal)
-        next_audio.pressed.connect(self.prevnextAudio)
+        next_audio.pressed.connect(self.prevnext_audio)
         toolbar.addWidget(next_audio)
         toolbar.addSeparator()
 
@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
 
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
-                self.stopPlayingAudio()
+                self.stopSound()
 
 
             else:
@@ -320,7 +320,7 @@ class MainWindow(QMainWindow):
     def mousePressEvent(self, event):
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
-                self.stopPlayingAudio()
+                self.stopSound()
             else:
                 super().mousePressEvent(event)
         except AttributeError:
@@ -355,13 +355,13 @@ class MainWindow(QMainWindow):
         format = QAudioFormat()
         format.setSampleRate(self.AudioViewer.audio_samplerate)  # 设置你的采样率
         format.setChannelCount(1)  # 声道数
-        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.Float ))  # QAudioFormat.Float32)  # 数据格式
+        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.Float))  # QAudioFormat.Float32)  # 数据格式
 
         # 验证设备支持
         output_device = QMediaDevices.defaultAudioOutput()
 
         # 将numpy数组转为字节流[8](@ref)
-        byte_data = self.AudioViewer.audio_arr.tobytes()
+        byte_data = (self.AudioViewer.audio_arr * 2).tobytes()
         self.buffer = QBuffer()
         self.buffer.setData(byte_data)
         self.buffer.open(QIODevice.ReadOnly)
@@ -373,7 +373,7 @@ class MainWindow(QMainWindow):
 
     def handle_audio_state(self, state):
         if state == QAudio.State.IdleState:
-            self.stopPlayingAudio()
+            self.stopSound()
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -586,9 +586,9 @@ class MainWindow(QMainWindow):
         self.readXset()
 
 
-    def prevnextAudio(self):
+    def prevnext_audio(self):
         print(self.sender().text())
-        self.stopPlayingAudio()
+        self.stopSound()
         if self.sender().text() == "Prev":
             self.which_one -= 1
         else:  # "Next"
@@ -608,7 +608,7 @@ class MainWindow(QMainWindow):
 
 
 
-    def stopPlayingAudio(self):
+    def stopSound(self):
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
                 self.audio_sink.stop()

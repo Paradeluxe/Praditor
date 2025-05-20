@@ -169,14 +169,7 @@ class AudioViewer(QWidget):
             return
 
         if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
-            if event.angleDelta().y() > 0:
-                self.max_amp_ratio -= 0.1  # Scroll Up with CTRL
-
-            else:
-                self.max_amp_ratio += 0.1  # Scroll Down with CTRL
-
-        else:  # 单独的滚轮
-            if event.angleDelta().y() > 0:  # Scroll Up
+            if event.angleDelta().y() > 0:  # Scroll Up  with CTRL
                 # print("!!!!!!! ->", self.interval_ms % 2)
 
                 # if self.interval_ms % 2 != 0:
@@ -184,8 +177,15 @@ class AudioViewer(QWidget):
                 # else:
                 self.interval_ms //= 2
 
-            else:  # Scroll Down
+            else:  # Scroll Down  with CTRL
                 self.interval_ms *= 2
+
+        else:  # 单独的滚轮
+            if event.angleDelta().y() > 0:
+                self.max_amp_ratio -= 0.1  # Scroll Up
+
+            else:
+                self.max_amp_ratio += 0.1  # Scroll Down
 
 
         if self.max_amp_ratio > 1.0:
