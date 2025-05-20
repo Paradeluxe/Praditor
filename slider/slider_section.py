@@ -12,11 +12,11 @@ class MySliders(QMainWindow):
         self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
         self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
         self.numValid_slider_onset = SingleSlider("CountValid", 0, 1, 8000, default=475)
-        self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152)
-        self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97)
+        self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
+        self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97, font_color="#7F7F7F")
         self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
-        self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000, font_color="#7F7F7F")
-        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20, font_color="#7F7F7F")
+        self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000)
+        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20)
 
         self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
         self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
@@ -34,15 +34,18 @@ class MySliders(QMainWindow):
 
         layout.addWidget(self.amp_slider_onset, 0, 0)
         layout.addWidget(self.numValid_slider_onset, 1, 0)
-        layout.addWidget(self.ref_len_slider_onset, 2, 0)
-        
+        layout.addWidget(self.penalty_slider_onset, 2, 0)
+
         layout.addWidget(self.ratio_slider_onset, 3, 0)
         layout.addWidget(self.win_size_slider_onset, 4, 0)
-        layout.addWidget(self.penalty_slider_onset, 5, 0)
 
+        layout.addWidget(self.ref_len_slider_onset, 5, 0)
         layout.addWidget(self.eps_ratio_slider_onset, 6, 0)
+
         layout.addWidget(self.cutoff0_slider_onset, 7, 0)
         layout.addWidget(self.cutoff1_slider_onset, 8, 0)
+
+
 
 
         layout.addWidget(self.amp_slider_offset, 0, 1)
@@ -51,9 +54,10 @@ class MySliders(QMainWindow):
 
         layout.addWidget(self.ratio_slider_offset, 3, 1)
         layout.addWidget(self.win_size_slider_offset, 4, 1)
-        layout.addWidget(self.penalty_slider_offset, 5, 1)
 
+        layout.addWidget(self.penalty_slider_offset, 5, 1)
         layout.addWidget(self.eps_ratio_slider_offset, 6, 1)
+
         layout.addWidget(self.cutoff0_slider_offset, 7, 1)
         layout.addWidget(self.cutoff1_slider_offset, 8, 1)
 
