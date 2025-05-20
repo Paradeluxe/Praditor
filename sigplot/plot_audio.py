@@ -183,10 +183,10 @@ class AudioViewer(QWidget):
 
         else:  # 单独的滚轮
             if event.angleDelta().y() > 20:
-                self.max_amp_ratio -= 0.1  # Scroll Up
+                self.max_amp_ratio += 0.1  # Scroll Up
 
             elif event.angleDelta().y() < -20:
-                self.max_amp_ratio += 0.1  # Scroll Down
+                self.max_amp_ratio -= 0.1  # Scroll Down
 
             if event.angleDelta().x() > 100:
                 self.slider_timerange.setValue(self.slider_timerange.value()+20)
