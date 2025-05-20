@@ -165,6 +165,7 @@ class AudioViewer(QWidget):
         self.resolution = self.time_unit * 10  # 100 ms 的长度作为所有samplerate的分辨率
 
     def wheelEvent(self, event):
+
         if not self.fpath:
             return
 
@@ -186,6 +187,9 @@ class AudioViewer(QWidget):
 
             else:
                 self.max_amp_ratio += 0.1  # Scroll Down
+
+            if event.angleDelta().x() > 0:
+
 
 
         if self.max_amp_ratio > 1.0:
