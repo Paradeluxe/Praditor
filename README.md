@@ -73,8 +73,8 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 ## 🙌 Acknowledgments
 This project thrives thanks to these remarkable contributors:
 - Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating algorithms' performance
-- Thank **Hu WingChung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
-- Thank **Prof. Zhang Haoyun** from University of Macau and **Prof. Wang Ruiming** from South China Normal University for their guidance and support for this project
+- Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
+- Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
 
 # How to use Praditor?
 
@@ -104,11 +104,10 @@ This project thrives thanks to these remarkable contributors:
 - `File` > `Read files...` > Select an audio file
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
 
-**In case you want to zoom in/out**
+**In case you want to see details in amplitudes**
 
- - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out in **timeline**
- - <kbd>Ctrl</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Windows users)
- - <kbd>Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out (for Mac users)
+ - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out
+ - <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/zoom-out in **timeline**
 
 
 # How does Praditor work?

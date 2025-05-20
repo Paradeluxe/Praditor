@@ -10,7 +10,7 @@ class MySliders(QMainWindow):
 
         self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
         self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
-        self.cutoff1_slider_onset = SingleSlider("LowPass", 8000, 1, 20000, default=10800, font_color="#7F7F7F")
+        self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
         self.numValid_slider_onset = SingleSlider("CountValid", 0, 1, 8000, default=475)
         self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152)
         self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97)
@@ -20,7 +20,7 @@ class MySliders(QMainWindow):
 
         self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
         self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
-        self.cutoff1_slider_offset = SingleSlider("", 8000, 1, 20000, color="#2AD25E", default=10200)
+        self.cutoff1_slider_offset = SingleSlider("", 4000, 1, 20000, color="#2AD25E", default=10200)
         self.numValid_slider_offset = SingleSlider("", 0, 1, 8000, color="#2AD25E", default=3335)
         self.win_size_slider_offset = SingleSlider("", 2, 1, 500, color="#2AD25E", default=102)
         self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
