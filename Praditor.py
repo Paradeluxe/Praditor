@@ -298,7 +298,7 @@ class MainWindow(QMainWindow):
 
 
     def keyPressEvent(self, event):
-
+        print(event.text())
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
                 self.stopSound()

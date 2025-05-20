@@ -88,23 +88,23 @@ This project thrives thanks to these remarkable contributors:
 
 ![gui.png](instructions/gui.png)
 
-**For onset/offset...**
+### For onset/offset...
 - `Run` Apply Praditor algorithm on the current audio
 - `Prev`/`Next` Go to previous/next audio
 - `Read` Read time points from current audio's .TextGrid results
 - `Clear` Clear time points that are being displayed (but no change to .TextGrid)
 - `Onset`/`Offset` Show/Hide onsets/offsets
 
-**For parameters...**
+### For parameters...
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
-**On the menu...**
-- `File` > `Read files...` > Select an audio file
+### On the menu...
+- `File` > `Read files...` > Select and import an audio file
 - `Help` > `Parameters` > Show quick instruction on how our parameters work
 
-**In case you want to see details in amplitudes**
+**In case you want to see details in audio signal**
 
 ### Mouse & Keyboard
  - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
@@ -116,7 +116,7 @@ This project thrives thanks to these remarkable contributors:
 
 
 
-# How does Praditor work?
+# How does _Praditor_ work?
 The audio signal is first band-pass filtered to remove some high/low frequency noise. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
 
