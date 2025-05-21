@@ -3,9 +3,10 @@ import os
 import sys
 import webbrowser
 
-from PySide6.QtCore import Qt, QIODevice, QBuffer
+from PySide6.QtCore import Qt, QIODevice, QBuffer, QUrl
 from PySide6.QtGui import QAction, QIcon
-from PySide6.QtMultimedia import QAudioFormat, QAudioOutput, QAudioDevice, QMediaDevices, QAudioSink, QAudio
+from PySide6.QtMultimedia import QAudioFormat, QAudioOutput, QAudioDevice, QMediaDevices, QAudioSink, QAudio, \
+    QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -49,6 +50,16 @@ class MainWindow(QMainWindow):
         self.which_one = 0
         self.setWindowTitle("Praditor")
         self.setMinimumSize(900, 720)
+
+
+
+        # 初始化媒体播放器和音频输出
+        self.player = QMediaPlayer()
+        self.audio_output = QAudioOutput()
+        self.audio_output.setVolume(1.0)
+
+        self.player.setAudioOutput(self.audio_output)
+
 
         # icon = QIcon()
         # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
@@ -303,81 +314,34 @@ class MainWindow(QMainWindow):
 
 
     def keyPressEvent(self, event):
-        try:
-            if self.audio_sink.state() == QAudio.State.ActiveState:
-                self.stopSound()
 
-
-            else:
-                # 检测空格键按下
-                if event.key() == Qt.Key_F5:
-                    self.playSound()
-                else:
-                    super().keyPressEvent(event)
-        except AttributeError:
-            # 检测空格键按下
+        if self.player.playbackState() == QMediaPlayer.PlayingState:
+            self.playSound()
+        else:
             if event.key() == Qt.Key_F5:
                 self.playSound()
-            else:
-                super().keyPressEvent(event)
 
-    def mousePressEvent(self, event):
-        try:
-            if self.audio_sink.state() == QAudio.State.ActiveState:
-                self.stopSound()
-            else:
-                super().mousePressEvent(event)
-        except AttributeError:
-            super().mousePressEvent(event)
+        super().keyPressEvent(event)
+
+    # def mousePressEvent(self, event):
+    #     if self.player.playbackState() == QMediaPlayer.PlayingState:
+    #         self.playSound()
+    #
+    #     super().mousePressEvent(event)
 
 
 
 
     def playSound(self):
+        if self.player.playbackState() == QMediaPlayer.PlayingState:
+            self.player.stop()  # 如果正在播放则暂停
+            print("stop")
+        else:
+            self.player.setSource(QUrl.fromLocalFile(self.file_path))
+            self.player.play()    # 开始/恢复播放
+            print("play")
 
-        print(self.AudioViewer.audio_obj.info.subtype)
 
-        """将soundfile的subtype映射到QAudioFormat"""
-        format_mapping = {
-            # Signed PCM 格式
-            'PCM_S8': QAudioFormat.Int16,  # Qt没有Int8格式，用Int16代替
-            'PCM_16': QAudioFormat.Int16,
-            'PCM_24': QAudioFormat.Int32,  # 将24位提升到32位存储
-            'PCM_32': QAudioFormat.Int32,
-
-            # 浮点格式
-            'FLOAT': QAudioFormat.Float,
-            'DOUBLE': QAudioFormat.Float,  # Qt不支持double，降级为float32
-
-            # 无符号PCM（需要特殊处理）
-            'PCM_U8': QAudioFormat.UInt8
-        }
-
-        print()
-
-        # 配置音频格式
-        format = QAudioFormat()
-        format.setSampleRate(self.AudioViewer.audio_samplerate)  # 设置你的采样率
-        format.setChannelCount(1)  # 声道数
-        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.UInt8))  # QAudioFormat.Float32)  # 数据格式
-
-        # 验证设备支持
-        output_device = QMediaDevices.defaultAudioOutput()
-
-        # 将numpy数组转为字节流[8](@ref)
-        byte_data = (self.AudioViewer.audio_arr * 30).tobytes()
-        self.buffer = QBuffer()
-        self.buffer.setData(byte_data)
-        self.buffer.open(QIODevice.ReadOnly)
-
-        # 创建音频输出对象并连接信号
-        self.audio_sink = QAudioSink(output_device, format)
-        self.audio_sink.stateChanged.connect(self.handle_audio_state)
-        self.audio_sink.start(self.buffer)
-
-    def handle_audio_state(self, state):
-        if state == QAudio.State.IdleState:
-            self.stopSound()
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -621,7 +585,7 @@ class MainWindow(QMainWindow):
 
     def prevnext_audio(self):
         print(self.sender().text())
-        self.stopSound()
+        self.player.stop()
         if self.sender().text() == "Prev":
             self.which_one -= 1
         else:  # "Next"
