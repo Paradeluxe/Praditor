@@ -13,16 +13,16 @@ item []:
 		xmax = 7.762879818594104
 		points: size = 4
 			points [1]:
-				time = 0.30142857142857143
+				time = 0.30149659863945577
 				mark = "onset"
 			points [2]:
-				time = 2.168208616780045
+				time = 2.163145124716553
 				mark = "onset"
 			points [3]:
-				time = 4.034036281179138
+				time = 4.041496598639456
 				mark = "onset"
 			points [4]:
-				time = 5.812902494331066
+				time = 5.813560090702948
 				mark = "onset"
 	item [2]:
 		class = "TextTier"

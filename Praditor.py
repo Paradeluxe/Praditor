@@ -19,7 +19,6 @@ from core import runPraditorWithTimeRange, create_textgrid_with_time_point
 from sigplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path, get_frm_points_from_textgrid
-import soundfile as sf
 
 
 plat = os.name.lower()
@@ -41,7 +40,7 @@ class MainWindow(QMainWindow):
 
         # load window icon
         # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
-
+        self.param_sets = []
         self.audio_sink = None
         self.buffer = None
         self.setWindowIcon(QIcon(resource_path('icon.ico')))
@@ -239,9 +238,15 @@ class MainWindow(QMainWindow):
         self.reset_param.setStyleSheet(qss_button_normal)
         self.reset_param.pressed.connect(self.resetParams)
         toolbar.addWidget(self.reset_param)
+
+        self.last_param = QPushButton("Last", self)
+        self.last_param.setFixedSize(50, 25)
+        self.last_param.setStatusTip("Roll back to the last set of params")
+        self.last_param.setStyleSheet(qss_button_normal)
+        self.last_param.pressed.connect(self.lastParams)
+        toolbar.addWidget(self.last_param)
+
         toolbar.addSeparator()
-
-
         # spacer_right = QWidget()
         # spacer_right.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         # toolbar.addWidget(spacer_right)
@@ -348,13 +353,13 @@ class MainWindow(QMainWindow):
             'PCM_U8': QAudioFormat.UInt8
         }
 
-
+        print()
 
         # 配置音频格式
         format = QAudioFormat()
         format.setSampleRate(self.AudioViewer.audio_samplerate)  # 设置你的采样率
         format.setChannelCount(1)  # 声道数
-        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.Float))  # QAudioFormat.Float32)  # 数据格式
+        format.setSampleFormat(format_mapping.get(self.AudioViewer.audio_obj.info.subtype, QAudioFormat.UInt8))  # QAudioFormat.Float32)  # 数据格式
 
         # 验证设备支持
         output_device = QMediaDevices.defaultAudioOutput()
@@ -517,6 +522,15 @@ class MainWindow(QMainWindow):
                 self.MySliders.resetParams(eval(txt_file.read()))
 
 
+    def lastParams(self):
+        print(len(self.param_sets))
+        if len(self.param_sets) == 2:
+
+            self.MySliders.resetParams(self.param_sets[-2])
+            self.param_sets.reverse()
+
+
+
     # def showParamInstruction(self):
     #     # QMessageBox.information(None, "标题", "这是一个信息消息框。")
     #     self.popup = Example()
@@ -598,6 +612,11 @@ class MainWindow(QMainWindow):
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
         self.showXsetNum()
+
+
+        self.param_sets.append(self.MySliders.getParams())
+        if len(self.param_sets) > 2:
+            self.param_sets = self.param_sets[1:]
 
 
     def prevnext_audio(self):
