@@ -140,6 +140,7 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 ### Touchpad
 - <kbd>↑✌↑</kbd>/<kbd>↓✌↓</kbd> to zoom-in/out at **amplitude**
 - <kbd>←✌→</kbd>/<kbd>→✌←</kbd> to zoom-in/out at **timeline**
+- <kbd>←←✌</kbd>/<kbd>✌→→</kbd> to move forward/backward in **timeline** 
 
 
 
