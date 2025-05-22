@@ -72,37 +72,64 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 
 ## 🙌 Acknowledgments
 This project thrives thanks to these remarkable contributors:
-- Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating algorithms' performance
+- Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
 - Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
 - Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
 
-# How to use Praditor?
+# How to use _Praditor_?
 
-## 1. Import your audio
+Although I have prepared various buttons in this GUI, you do not have to use them all.
+
+The simplest and easiest procedure is (1) import audio files, (2) hit the `extract` button,
+(3) [optional] you are not happy about the results, fine-tune the parameters and hit the `extract` button again. 
+**Until you are happy about the results, repeat step (2) and (3).**
+
+## General
+
+### import audio file(s)
 
 `File` -> `Read files...` -> Select your target audio file
 
-![import_audio.png](instructions/import_audio.png)
+_Note_. All the other audio files will also be added to the list.
 
-## 2. Play with Praditor
 
-![gui.png](instructions/gui.png)
+### play and stop
 
-### For onset/offset...
-- `Run` Apply Praditor algorithm on the current audio
-- `Prev`/`Next` Go to previous/next audio
-- `Read` Read time points from current audio's .TextGrid results
-- `Clear` Clear time points that are being displayed (but no change to .TextGrid)
-- `Onset`/`Offset` Show/Hide onsets/offsets
+Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
 
-### For parameters...
+Press <kbd>any key</kbd> to stop playing.
+
+
+### run algorithm and extract onsets
+
+Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+
+### go to the next/previous audio file
+
+Hit `Next`/`Prev`.
+
+## .TextGrid related
+
+
+### I wanna temporarily clear the annotations
+
+Hit `Clear`. This does not delete/change the .TextGrid file. It's safe.
+
+### Oh no, I want the cleared annotations back
+
+Hit `Read`. _Praditor_ will go back to the .TextGrid and present whatever is in it.
+
+### Hide/Show annotations
+
+Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets). 
+
+## Parameters
+
 - `Current/Default` Display default parameters or parameters for the current file
 - `Save` Save the displayed parameters as Current/Default
 - `Reset` Reset the displayed parameters to the last time you saved it.
 
-### On the menu...
-- `File` > `Read files...` > Select and import an audio file
-- `Help` > `Parameters` > Show quick instruction on how our parameters work
+## Audio signal
 
 **In case you want to see details in audio signal**
 
