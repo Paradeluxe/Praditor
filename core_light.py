@@ -175,7 +175,7 @@ def runPraditor(params, audio_obj, which_set):
     # np.cuda.device = 1
     # print("---↘")
     for __offset, __onset in _onoffsets:
-        print(1111111)
+        print("-")
 
         # -------------------------------------------------
         # 强制跳过条件 Skip Condition

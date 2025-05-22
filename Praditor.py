@@ -3,6 +3,7 @@ import os
 import sys
 import webbrowser
 
+from PySide6 import QtGui, QtWidgets
 from PySide6.QtCore import Qt, QIODevice, QBuffer, QUrl
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtMultimedia import QAudioFormat, QAudioOutput, QAudioDevice, QMediaDevices, QAudioSink, QAudio, \
@@ -12,7 +13,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
 )
 
 from QSS import *
@@ -239,8 +240,10 @@ class MainWindow(QMainWindow):
         self.save_param = QPushButton("Save", self)
         self.save_param.setFixedSize(50, 25)
         self.save_param.setStatusTip("Save these params to the selected mode")
-        self.save_param.setStyleSheet(qss_button_normal)
+        self.save_param.setStyleSheet(qss_button_checkable_with_color("#7f0020"))
         self.save_param.pressed.connect(self.saveParams)
+        self.save_param.setCheckable(True)
+        self.save_param.setChecked(True)
         toolbar.addWidget(self.save_param)
 
         self.reset_param = QPushButton("Reset", self)
@@ -311,7 +314,13 @@ class MainWindow(QMainWindow):
         if not os.path.exists("params.txt"):
             with open("params.txt", 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
+        else:
+            with open("params.txt", "r") as txt_file:
+                self.MySliders.resetParams(eval(txt_file.read()))
 
+
+
+        self.MySliders.anySliderValueChanged.connect(self.checkIfParamsExist)
 
     def keyPressEvent(self, event):
 
@@ -425,15 +434,6 @@ class MainWindow(QMainWindow):
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=self.AudioViewer.showOffset)
 
 
-    def saveParams(self):
-        # print(resource_path("params.txt"))
-        if self.select_mode.text() == "Current":
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
-        else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
-
-        with open(txt_file_path, 'w') as txt_file:
-            txt_file.write(f"{self.MySliders.getParams()}")
 
 
     def resetParams(self):
@@ -455,18 +455,45 @@ class MainWindow(QMainWindow):
 
             self.showParams()
 
+    def saveParams(self):
+        # print(resource_path("params.txt"))
+        if self.select_mode.text() == "Current":
+            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        else:  # if self.select_mode.text() == "Default":
+            txt_file_path = "params.txt"
+
+        with open(txt_file_path, 'w') as txt_file:
+            txt_file.write(f"{self.MySliders.getParams()}")
+        print(self.save_param.isChecked())
+        self.save_param.setChecked(False)
+
+
+    def checkIfParamsExist(self):
+        if self.select_mode.text() == "Current":
+            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        else:  # if self.select_mode.text() == "Default":
+            txt_file_path = "params.txt"
+
+        with open(txt_file_path, 'r') as txt_file:
+            # print(str(txt_file.read()) == str(self.MySliders.getParams()))
+            # print("___")
+            self.save_param.setChecked(str(txt_file.read()) == str(self.MySliders.getParams()))
+
+        # defaul和last
+
 
     def showParams(self):
         # 第一步 如果音频文件本身就不存在，不运行
         if self.file_path is None:
-            self.select_mode.setChecked(True)
             self.select_mode.setText("Default")
+            self.select_mode.setChecked(True)
             return
         # 第二步 根据按钮本身的状态调整文字显示（按钮样式会根据按钮状态自动调整跟随）
-        if self.select_mode.isChecked():
-            self.select_mode.setText("Default")
-        else:
+        if self.select_mode.text() == "Default":
             self.select_mode.setText("Current")
+        else:
+            self.select_mode.setText("Default")
+        # if self.select_mode.isChecked():
 
         # 第三步 如果是单独参数同时又不存在，那么先从默认参数复制一份到单独参数来
         if self.select_mode.text() == "Current":
@@ -481,9 +508,12 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             with open(os.path.splitext(self.file_path)[0] + ".txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
+            self.select_mode.setChecked(False)
         elif self.select_mode.text() == "Default":
             with open("params.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
+            self.select_mode.setChecked(True)
+
 
 
     def lastParams(self):
@@ -501,16 +531,7 @@ class MainWindow(QMainWindow):
     #     self.popup.show()
 
     def openFileDialog(self):
-        # 打开文件对话框，让用户选择一个文件
-        # options = QFileDialog.Options()
-        # options.setStatusTip("Folder to store target audios")
 
-        # options |= QFileDialog.DontUseNativeDialog  # 禁用原生对话框
-        # folder_path = QFileDialog.getExistingDirectory(self,
-        #                                                "Open Folder",
-        #                                                "",
-        #                                                # "All Files (*);;Audio Files (*.wav)",
-        #                                                options=options)
         # 设置过滤器，仅显示音频文件
         audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac *.flac *.amr *.wma *.aiff)"
         # 弹出文件选择对话框
@@ -535,14 +556,11 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
 
             self.showXsetNum()
+            self.param_sets.append(self.MySliders.getParams())
 
         else:
             print("Empty folder")
-            # popup_window = QMessageBox()
-            # popup_window.setText("Empty Audio File.")
-            # popup_window.exec()
 
-            # self.setWindowTitle("Praditor")
 
     def showXsetNum(self):
 
@@ -561,6 +579,21 @@ class MainWindow(QMainWindow):
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#--------')
 
     def runPraditorOnAudio(self):
+
+        # 检查采样率
+        # print(self.AudioViewer.audio_samplerate)
+        # print(self.MySliders.cutoff1_slider_onset.value_label.text())
+        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
+            float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
+
+            popup_window = QMessageBox()
+            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
+            popup_window.exec()
+
+
+
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
@@ -576,11 +609,16 @@ class MainWindow(QMainWindow):
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
         self.showXsetNum()
+        self.update_current_param()
 
+    def update_current_param(self):
+        if self.MySliders.getParams() in self.param_sets:
+            self.param_sets.remove(self.MySliders.getParams())
+            self.param_sets.append(self.MySliders.getParams())
+        else:
+            self.param_sets.append(self.MySliders.getParams())
+            self.param_sets = self.param_sets[-2:]
 
-        self.param_sets.append(self.MySliders.getParams())
-        if len(self.param_sets) > 2:
-            self.param_sets = self.param_sets[1:]
 
 
     def prevnext_audio(self):
@@ -601,7 +639,9 @@ class MainWindow(QMainWindow):
             self.select_mode.setChecked(True)
         self.showParams()
         self.showXsetNum()
+        self.update_current_param()
         # self.statusBar().showMessage("1", 0)
+
 
 
 

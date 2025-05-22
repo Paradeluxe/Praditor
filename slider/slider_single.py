@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, QMargins
+from PySide6.QtCore import Qt, QMargins, Signal
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QSlider, QHBoxLayout, \
     QWidget, QLabel)
@@ -7,6 +7,8 @@ from QSS import qss_slider_with_color
 
 
 class SingleSlider(QMainWindow):
+    single_slider_value_changed = Signal(int)
+
     def __init__(self, param_name, minimum, step, maximum, font_color='#272727', color="#1991D3", scale=1, default=None):
         super().__init__()
         # self.setWindowTitle('Slider App')
@@ -107,10 +109,14 @@ class SingleSlider(QMainWindow):
         self.setCentralWidget(container)
         self.setContentsMargins(QMargins(0, 0, 0, 0))
 
+
+
+
     def slider_value_changed(self):
 
 
         self.value_label.setText(f"{(self.param_slider.sliderPosition() * self.scale):.{self.digit}f}")
+        self.single_slider_value_changed.emit(1)
 
 
 

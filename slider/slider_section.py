@@ -1,12 +1,14 @@
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QGridLayout, QApplication, QMainWindow, QWidget
 
 from slider.slider_single import SingleSlider
 
 
 class MySliders(QMainWindow):
+    anySliderValueChanged = Signal(bool)
+
     def __init__(self):
         super().__init__()
-        # self.setWindowTitle('Slider App')
 
         self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
         self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
@@ -60,7 +62,30 @@ class MySliders(QMainWindow):
 
         layout.addWidget(self.cutoff0_slider_offset, 7, 1)
         layout.addWidget(self.cutoff1_slider_offset, 8, 1)
-
+        
+        
+        self.amp_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.numValid_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.ref_len_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.ratio_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.win_size_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.penalty_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.eps_ratio_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.cutoff0_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.cutoff1_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        
+        
+        self.amp_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.numValid_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.ref_len_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.win_size_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.penalty_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.eps_ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.cutoff0_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        self.cutoff1_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        
+        
 
         container = QWidget()
         container.setLayout(layout)
@@ -68,6 +93,10 @@ class MySliders(QMainWindow):
         self.setCentralWidget(container)
         # self.get_params()
 
+    
+    def sliderValueDidChange(self):
+        self.anySliderValueChanged.emit(1)
+    
 
     def getParams(self):
         params = {
