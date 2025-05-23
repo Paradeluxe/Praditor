@@ -168,6 +168,17 @@ class AudioViewer(QWidget):
         # print(event.angleDelta())
         if not self.fpath:
             return
+        if event.source() == Qt.MouseEventSource.MouseEventSynthesizedBySystem:
+            print("触控板滚动")
+            delta = event.pixelDelta()  # 获取像素级滚动量
+            # 处理触控板平滑滚动逻辑
+
+
+        else:
+            print("鼠标滚轮滚动")
+            delta = event.angleDelta()  # 获取角度增量
+            # 处理鼠标滚轮离散滚动逻辑
+        print(delta)
 
         if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
             if event.angleDelta().y() > 0:  # Scroll Up  with CTRL
