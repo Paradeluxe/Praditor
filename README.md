@@ -98,7 +98,7 @@ _Note_. All the other audio files will also be added to the list.
 Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 
-### play and stop
+### play and stop 💿
 
 Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
 
@@ -125,7 +125,7 @@ Hit `Read`. _Praditor_ will go back to the .TextGrid and present whatever is in 
 
 Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets). 
 
-## Parameters
+## Parameters 
 
 `Current/Default` Display default parameters or parameters for the current file
 
