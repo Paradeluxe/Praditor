@@ -332,15 +332,6 @@ class MainWindow(QMainWindow):
 
         super().keyPressEvent(event)
 
-    # def mousePressEvent(self, event):
-    #     if self.player.playbackState() == QMediaPlayer.PlayingState:
-    #         self.playSound()
-    #
-    #     super().mousePressEvent(event)
-
-
-
-
     def playSound(self):
         if self.player.playbackState() == QMediaPlayer.PlayingState:
             self.player.stop()  # 如果正在播放则暂停
