@@ -630,7 +630,7 @@ class MainWindow(QMainWindow):
             self.select_mode.setChecked(True)
         self.showParams()
         self.showXsetNum()
-        self.update_current_param()
+        # self.update_current_param()
         # self.statusBar().showMessage("1", 0)
 
 

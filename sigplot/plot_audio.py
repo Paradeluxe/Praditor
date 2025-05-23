@@ -169,39 +169,43 @@ class AudioViewer(QWidget):
         if not self.fpath:
             return
         if event.source() == Qt.MouseEventSource.MouseEventSynthesizedBySystem:
-            print("触控板滚动")
+            # print("触控板滚动")
             delta = event.pixelDelta()  # 获取像素级滚动量
+            _x = delta.x()
+            _y = delta.y()
             # 处理触控板平滑滚动逻辑
 
 
         else:
-            print("鼠标滚轮滚动")
+            # print("鼠标滚轮滚动")
             delta = event.angleDelta()  # 获取角度增量
+            _x = -delta.x()
+            _y = -delta.y()
             # 处理鼠标滚轮离散滚动逻辑
-        print(delta)
 
         if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
-            if event.angleDelta().y() > 0:  # Scroll Up  with CTRL
-                # print("!!!!!!! ->", self.interval_ms % 2)
-
-                # if self.interval_ms % 2 != 0:
-                #     self.interval_ms -= self.interval_ms % 2
-                # else:
-                self.interval_ms //= 2
-
-            else:  # Scroll Down  with CTRL
+            if _y > 0:  # Scroll Up  with CTRL
                 self.interval_ms *= 2
 
+            else:  # Scroll Down  with CTRL
+                self.interval_ms //= 2
+
+        elif event.modifiers() == Qt.ShiftModifier:  # 滚轮同时按下了Shift键
+            if _y > 20:
+                self.slider_timerange.setValue(self.slider_timerange.value() + 20)
+            elif _y < -20:
+                self.slider_timerange.setValue(self.slider_timerange.value() - 20)
+
         else:  # 单独的滚轮
-            if event.angleDelta().y() > 20:
+            if _y > 20:
                 self.max_amp_ratio += 0.1  # Scroll Up
 
-            elif event.angleDelta().y() < -20:
+            elif _y < -20:
                 self.max_amp_ratio -= 0.1  # Scroll Down
 
-            if event.angleDelta().x() > 100:
+            if _x > 100:
                 self.slider_timerange.setValue(self.slider_timerange.value()-20)
-            elif event.angleDelta().x() < -100:
+            elif _x < -100:
                 self.slider_timerange.setValue(self.slider_timerange.value()+20)
 
 
