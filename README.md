@@ -125,9 +125,12 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 ## Parameters
 
-- `Current/Default` Display default parameters or parameters for the current file
-- `Save` Save the displayed parameters as Current/Default
-- `Reset` Reset the displayed parameters to the last time you saved it.
+`Current/Default` Display default parameters or parameters for the current file
+
+`Save` Save the displayed parameters as Current/Default
+
+`Reset` Reset the displayed parameters to the last time you saved it.
+
 
 ## Audio signal
 
