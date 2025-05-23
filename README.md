@@ -131,16 +131,19 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 ## Audio signal
 
-**In case you want to see details in audio signal**
-
 ### Mouse & Keyboard
- - <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
- - <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
+
+<kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
+
+<kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline** 
 
 ### Touchpad
-- <kbd>↑✌↑</kbd>/<kbd>↓✌↓</kbd> to zoom-in/out at **amplitude**
-- <kbd>←✌→</kbd>/<kbd>→✌←</kbd> to zoom-in/out at **timeline**
-- <kbd>←←✌</kbd>/<kbd>✌→→</kbd> to move forward/backward in **timeline** 
+<kbd>↑✌↑</kbd>/<kbd>↓✌↓</kbd> to zoom-in/out at **amplitude**
+
+<kbd>←✌→</kbd>/<kbd>→✌←</kbd> to zoom-in/out at **timeline**
+
+<kbd>←←✌</kbd>/<kbd>✌→→</kbd> to move forward/backward in **timeline** 
 
 
 
