@@ -93,6 +93,11 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 _Note_. All the other audio files will also be added to the list.
 
 
+### run algorithm and extract onsets
+
+Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+
+
 ### play and stop
 
 Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
@@ -100,9 +105,6 @@ Press <kbd>F5</kbd> to play the audio signal that is currently presented in the 
 Press <kbd>any key</kbd> to stop playing.
 
 
-### run algorithm and extract onsets
-
-Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 ### go to the next/previous audio file
 

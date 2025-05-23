@@ -567,7 +567,7 @@ class MainWindow(QMainWindow):
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
-        webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#--------')
+        webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
 
     def runPraditorOnAudio(self):
 
