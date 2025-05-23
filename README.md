@@ -142,11 +142,11 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 <kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline** 
 
 ### Touchpad
-<kbd>↑✌↑</kbd>/<kbd>↓✌↓</kbd> to zoom-in/out at **amplitude**
+`↑✌↑`/`↓✌↓` to zoom-in/out at **amplitude**
 
-<kbd>←✌→</kbd>/<kbd>→✌←</kbd> to zoom-in/out at **timeline**
+`←✌→`/`→✌←` to zoom-in/out at **timeline**
 
-<kbd>←←✌</kbd>/<kbd>✌→→</kbd> to move forward/backward in **timeline** 
+`←←✌`/`✌→→` to move forward/backward in **timeline** 
 
 
 
