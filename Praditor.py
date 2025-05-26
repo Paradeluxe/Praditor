@@ -3,10 +3,9 @@ import os
 import sys
 import webbrowser
 
-from PySide6 import QtGui, QtWidgets
-from PySide6.QtCore import Qt, QIODevice, QBuffer, QUrl
+from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QAction, QIcon
-from PySide6.QtMultimedia import QAudioFormat, QAudioOutput, QAudioDevice, QMediaDevices, QAudioSink, QAudio, \
+from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
@@ -21,7 +20,6 @@ from core import runPraditorWithTimeRange, create_textgrid_with_time_point
 from sigplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path, get_frm_points_from_textgrid
-
 
 plat = os.name.lower()
 
@@ -358,6 +356,7 @@ class MainWindow(QMainWindow):
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
         if not self.run_offset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["offset"])
+        self.AudioViewer.tg_dict_tp = {}
 
 
 

@@ -184,10 +184,10 @@ class AudioViewer(QWidget):
             # 处理鼠标滚轮离散滚动逻辑
 
         if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
-            if _y > 0:  # Scroll Up  with CTRL
+            if _y > 0:  # Scroll Up with CTRL
                 self.interval_ms *= 2
 
-            else:  # Scroll Down  with CTRL
+            else:  # Scroll Down with CTRL
                 self.interval_ms //= 2
 
         elif event.modifiers() == Qt.ShiftModifier:  # 滚轮同时按下了Shift键
@@ -220,6 +220,7 @@ class AudioViewer(QWidget):
             self.interval_ms = 100
         # print(self.max_amp_ratio)
         # print(self.max_amp_ratio, self.interval_ms)
+
         self.tg_dict_tp = self.readAudio(self.fpath)
         super().wheelEvent(event)
 
@@ -422,6 +423,9 @@ class AudioViewer(QWidget):
 
 
     def updateXset(self, tg_dict):#, showOnset=True, showOffset=True):
+
+
+
         stime = self.slider_timerange.sliderPosition() / 1000
         # etime = (self.slider_timerange.sliderPosition() + self.interval_ms) / 1000
 
@@ -450,8 +454,12 @@ class AudioViewer(QWidget):
                 self._chart.setAxisX(self._axis_x, test_series)
                 self._chart.setAxisY(self._axis_y, test_series)
 
+        if not tg_dict:
+            return
+
         self.hideXset(self.tg_dict_tp["onset"], isVisible=self.showOnset)
         self.hideXset(self.tg_dict_tp["offset"], isVisible=self.showOffset)
+
 
     def sliderValueChanged(self):
         self.updateChart()
