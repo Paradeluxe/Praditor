@@ -145,22 +145,22 @@ class MainWindow(QMainWindow):
 
         self.addToolBar(toolbar)
         # ---------------------------------------------------------------
-        toolbar.addSeparator()
-
-        clear_xset = QPushButton("Clear", self)
-        clear_xset.setFixedSize(50, 25)
-        clear_xset.setStatusTip("Clear Onsets and Offsets")
-        clear_xset.setStyleSheet(qss_button_normal)
-        clear_xset.pressed.connect(self.clearXset)
-        toolbar.addWidget(clear_xset)
-
-
-        read_xset = QPushButton("Read", self)
-        read_xset.setFixedSize(50, 25)
-        read_xset.setStatusTip("Import Onsets and Offsets")
-        read_xset.setStyleSheet(qss_button_normal)
-        read_xset.pressed.connect(self.readXset)
-        toolbar.addWidget(read_xset)
+        # toolbar.addSeparator()
+        #
+        # clear_xset = QPushButton("Clear", self)
+        # clear_xset.setFixedSize(50, 25)
+        # clear_xset.setStatusTip("Clear Onsets and Offsets")
+        # clear_xset.setStyleSheet(qss_button_normal)
+        # clear_xset.pressed.connect(self.clearXset)
+        # toolbar.addWidget(clear_xset)
+        #
+        #
+        # read_xset = QPushButton("Read", self)
+        # read_xset.setFixedSize(50, 25)
+        # read_xset.setStatusTip("Import Onsets and Offsets")
+        # read_xset.setStyleSheet(qss_button_normal)
+        # read_xset.pressed.connect(self.readXset)
+        # toolbar.addWidget(read_xset)
 
         toolbar.addSeparator()
 
