@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 from PySide6.QtCore import Qt, QMargins
-from PySide6.QtGui import QPen, QColor, QPainter, QBrush
+from PySide6.QtGui import QPen, QColor, QPainter, QBrush, QInputDevice
 from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
     QWidget
 # from pydub import AudioSegment
@@ -165,48 +165,46 @@ class AudioViewer(QWidget):
         self.resolution = self.time_unit * 10  # 100 ms 的长度作为所有samplerate的分辨率
 
     def wheelEvent(self, event):
-        # print(event.angleDelta())
+
         if not self.fpath:
             return
-        if not event.pixelDelta().isNull():
-            print("触控板滚动")
-            delta = event.pixelDelta()  # 获取像素级滚动量
+        delta = event.angleDelta()
+        # 判断是否为鼠标滚轮的固定步长（120 的倍数）
+        if abs(delta.y()) % 120 == 0 and delta.x() == 0:  # 滚轮
             _x = delta.x()
             _y = delta.y()
-            # 处理触控板平滑滚动逻辑
-
 
         else:
-            print("鼠标滚轮滚动")
-            delta = event.angleDelta()  # 获取角度增量
             _x = delta.x()
             _y = -delta.y()
-            # 处理鼠标滚轮离散滚动逻辑
+
 
         if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
             if _y > 0:  # Scroll Up with CTRL
-                self.interval_ms //= 2
+                self.interval_ms *= 2
 
             else:  # Scroll Down with CTRL
-                self.interval_ms *= 2
+                self.interval_ms //= 2
 
         elif event.modifiers() == Qt.ShiftModifier:  # 滚轮同时按下了Shift键
             if _y > 20:
-                self.slider_timerange.setValue(self.slider_timerange.value() + 20)
-            elif _y < -20:
                 self.slider_timerange.setValue(self.slider_timerange.value() - 20)
+            elif _y < -20:
+                self.slider_timerange.setValue(self.slider_timerange.value() + 20)
 
         else:  # 单独的滚轮
             if _y > 20:
-                self.max_amp_ratio += 0.1  # Scroll Up
+                self.max_amp_ratio -= 0.1  # Scroll Up
 
             elif _y < -20:
-                self.max_amp_ratio -= 0.1  # Scroll Down
+                self.max_amp_ratio += 0.1  # Scroll Down
 
             if _x > 100:
                 self.slider_timerange.setValue(self.slider_timerange.value()-20)
             elif _x < -100:
                 self.slider_timerange.setValue(self.slider_timerange.value()+20)
+
+
 
 
         if self.max_amp_ratio > 1.0:
