@@ -3,16 +3,20 @@ import os
 import sys
 import webbrowser
 
+from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QAction, QIcon
+from PySide6.QtMultimedia import QAudioOutput, QAudio, \
+    QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
 )
 
 from QSS import *
+# from core import runPraditorWithTimeRange, create_textgrid_with_time_point
 from core_light import runPraditorWithTimeRange, create_textgrid_with_time_point
 from sigplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
@@ -37,13 +41,22 @@ class MainWindow(QMainWindow):
 
         # load window icon
         # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
-
+        self.param_sets = []
+        self.audio_sink = None
+        self.buffer = None
         self.setWindowIcon(QIcon(resource_path('icon.ico')))
         self.file_paths = []
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
         self.setMinimumSize(900, 720)
+
+        # 初始化媒体播放器和音频输出
+        self.player = QMediaPlayer()
+        self.audio_output = QAudioOutput()
+        self.audio_output.setVolume(1.0)
+
+        self.player.setAudioOutput(self.audio_output)
 
         # icon = QIcon()
         # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
@@ -126,21 +139,22 @@ class MainWindow(QMainWindow):
 
         self.addToolBar(toolbar)
         # ---------------------------------------------------------------
-        toolbar.addSeparator()
-
-        clear_xset = QPushButton("Clear", self)
-        clear_xset.setFixedSize(50, 25)
-        clear_xset.setStatusTip("Clear Onsets and Offsets")
-        clear_xset.setStyleSheet(qss_button_normal)
-        clear_xset.pressed.connect(self.clearXset)
-        toolbar.addWidget(clear_xset)
-
-        read_xset = QPushButton("Read", self)
-        read_xset.setFixedSize(50, 25)
-        read_xset.setStatusTip("Import Onsets and Offsets")
-        read_xset.setStyleSheet(qss_button_normal)
-        read_xset.pressed.connect(self.readXset)
-        toolbar.addWidget(read_xset)
+        # toolbar.addSeparator()
+        #
+        # clear_xset = QPushButton("Clear", self)
+        # clear_xset.setFixedSize(50, 25)
+        # clear_xset.setStatusTip("Clear Onsets and Offsets")
+        # clear_xset.setStyleSheet(qss_button_normal)
+        # clear_xset.pressed.connect(self.clearXset)
+        # toolbar.addWidget(clear_xset)
+        #
+        #
+        # read_xset = QPushButton("Read", self)
+        # read_xset.setFixedSize(50, 25)
+        # read_xset.setStatusTip("Import Onsets and Offsets")
+        # read_xset.setStyleSheet(qss_button_normal)
+        # read_xset.pressed.connect(self.readXset)
+        # toolbar.addWidget(read_xset)
 
         toolbar.addSeparator()
 
@@ -148,11 +162,11 @@ class MainWindow(QMainWindow):
         prev_audio.setFixedSize(50, 25)
         prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
         prev_audio.setStyleSheet(qss_button_normal)
-        prev_audio.pressed.connect(self.prevAudio)
+        prev_audio.pressed.connect(self.prevnext_audio)
         toolbar.addWidget(prev_audio)
 
-        run_praditor = QPushButton("Run", self)
-        run_praditor.setFixedSize(50, 25)
+        run_praditor = QPushButton("Extract", self)
+        run_praditor.setFixedSize(65, 25)
         run_praditor.setStatusTip("Initiate Praditor to extract speech onsets/offsets")
         run_praditor.setStyleSheet(qss_button_normal)
         run_praditor.pressed.connect(self.runPraditorOnAudio)
@@ -162,7 +176,7 @@ class MainWindow(QMainWindow):
         next_audio.setFixedSize(50, 25)
         next_audio.setStatusTip("Go to NEXT audio in the folder")
         next_audio.setStyleSheet(qss_button_normal)
-        next_audio.pressed.connect(self.nextAudio)
+        next_audio.pressed.connect(self.prevnext_audio)
         toolbar.addWidget(next_audio)
         toolbar.addSeparator()
 
@@ -210,8 +224,10 @@ class MainWindow(QMainWindow):
         self.save_param = QPushButton("Save", self)
         self.save_param.setFixedSize(50, 25)
         self.save_param.setStatusTip("Save these params to the selected mode")
-        self.save_param.setStyleSheet(qss_button_normal)
+        self.save_param.setStyleSheet(qss_button_checkable_with_color("#7f0020"))
         self.save_param.pressed.connect(self.saveParams)
+        self.save_param.setCheckable(True)
+        self.save_param.setChecked(True)
         toolbar.addWidget(self.save_param)
 
         self.reset_param = QPushButton("Reset", self)
@@ -220,8 +236,15 @@ class MainWindow(QMainWindow):
         self.reset_param.setStyleSheet(qss_button_normal)
         self.reset_param.pressed.connect(self.resetParams)
         toolbar.addWidget(self.reset_param)
-        toolbar.addSeparator()
 
+        self.last_param = QPushButton("Last", self)
+        self.last_param.setFixedSize(50, 25)
+        self.last_param.setStatusTip("Roll back to the last set of params")
+        self.last_param.setStyleSheet(qss_button_normal)
+        self.last_param.pressed.connect(self.lastParams)
+        toolbar.addWidget(self.last_param)
+
+        toolbar.addSeparator()
         # spacer_right = QWidget()
         # spacer_right.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         # toolbar.addWidget(spacer_right)
@@ -269,6 +292,30 @@ class MainWindow(QMainWindow):
         if not os.path.exists("params.txt"):
             with open("params.txt", 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
+        else:
+            with open("params.txt", "r") as txt_file:
+                self.MySliders.resetParams(eval(txt_file.read()))
+
+        self.MySliders.anySliderValueChanged.connect(self.checkIfParamsExist)
+
+    def keyPressEvent(self, event):
+
+        if self.player.playbackState() == QMediaPlayer.PlayingState:
+            self.playSound()
+        else:
+            if event.key() == Qt.Key_F5:
+                self.playSound()
+
+        super().keyPressEvent(event)
+
+    def playSound(self):
+        if self.player.playbackState() == QMediaPlayer.PlayingState:
+            self.player.stop()  # 如果正在播放则暂停
+            print("stop")
+        else:
+            self.player.setSource(QUrl.fromLocalFile(self.file_path))
+            self.player.play()  # 开始/恢复播放
+            print("play")
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -284,6 +331,7 @@ class MainWindow(QMainWindow):
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
         if not self.run_offset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["offset"])
+        self.AudioViewer.tg_dict_tp = {}
 
     def turnOnset(self):
         if not self.run_onset.isChecked():
@@ -347,16 +395,6 @@ class MainWindow(QMainWindow):
         self.AudioViewer.showOffset = not slider_status
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=self.AudioViewer.showOffset)
 
-    def saveParams(self):
-        # print(resource_path("params.txt"))
-        if self.select_mode.text() == "Current":
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
-        else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
-
-        with open(txt_file_path, 'w') as txt_file:
-            txt_file.write(f"{self.MySliders.getParams()}")
-
     def resetParams(self):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
@@ -375,17 +413,43 @@ class MainWindow(QMainWindow):
 
             self.showParams()
 
+    def saveParams(self):
+        # print(resource_path("params.txt"))
+        if self.select_mode.text() == "Current":
+            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        else:  # if self.select_mode.text() == "Default":
+            txt_file_path = "params.txt"
+
+        with open(txt_file_path, 'w') as txt_file:
+            txt_file.write(f"{self.MySliders.getParams()}")
+        print(self.save_param.isChecked())
+        self.save_param.setChecked(False)
+
+    def checkIfParamsExist(self):
+        if self.select_mode.text() == "Current":
+            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        else:  # if self.select_mode.text() == "Default":
+            txt_file_path = "params.txt"
+
+        with open(txt_file_path, 'r') as txt_file:
+            # print(str(txt_file.read()) == str(self.MySliders.getParams()))
+            # print("___")
+            self.save_param.setChecked(str(txt_file.read()) == str(self.MySliders.getParams()))
+
+        # defaul和last
+
     def showParams(self):
         # 第一步 如果音频文件本身就不存在，不运行
         if self.file_path is None:
-            self.select_mode.setChecked(True)
             self.select_mode.setText("Default")
+            self.select_mode.setChecked(True)
             return
         # 第二步 根据按钮本身的状态调整文字显示（按钮样式会根据按钮状态自动调整跟随）
-        if self.select_mode.isChecked():
-            self.select_mode.setText("Default")
-        else:
+        if self.select_mode.text() == "Default":
             self.select_mode.setText("Current")
+        else:
+            self.select_mode.setText("Default")
+        # if self.select_mode.isChecked():
 
         # 第三步 如果是单独参数同时又不存在，那么先从默认参数复制一份到单独参数来
         if self.select_mode.text() == "Current":
@@ -400,9 +464,17 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             with open(os.path.splitext(self.file_path)[0] + ".txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
+            self.select_mode.setChecked(False)
         elif self.select_mode.text() == "Default":
             with open("params.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
+            self.select_mode.setChecked(True)
+
+    def lastParams(self):
+        print(len(self.param_sets))
+        if len(self.param_sets) == 2:
+            self.MySliders.resetParams(self.param_sets[-2])
+            self.param_sets.reverse()
 
     # def showParamInstruction(self):
     #     # QMessageBox.information(None, "标题", "这是一个信息消息框。")
@@ -410,16 +482,7 @@ class MainWindow(QMainWindow):
     #     self.popup.show()
 
     def openFileDialog(self):
-        # 打开文件对话框，让用户选择一个文件
-        # options = QFileDialog.Options()
-        # options.setStatusTip("Folder to store target audios")
 
-        # options |= QFileDialog.DontUseNativeDialog  # 禁用原生对话框
-        # folder_path = QFileDialog.getExistingDirectory(self,
-        #                                                "Open Folder",
-        #                                                "",
-        #                                                # "All Files (*);;Audio Files (*.wav)",
-        #                                                options=options)
         # 设置过滤器，仅显示音频文件
         audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac *.flac *.amr *.wma *.aiff)"
         # 弹出文件选择对话框
@@ -444,19 +507,44 @@ class MainWindow(QMainWindow):
             self.showParams()
             self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
 
+            self.showXsetNum()
+            self.param_sets.append(self.MySliders.getParams())
+
         else:
             print("Empty folder")
-            # popup_window = QMessageBox()
-            # popup_window.setText("Empty Audio File.")
-            # popup_window.exec()
 
-            self.setWindowTitle("Praditor")
+    def showXsetNum(self):
+
+        if not self.AudioViewer.tg_dict_tp['onset']:
+            self.run_onset.setText("Onset")
+        else:
+            self.run_onset.setText(f"{len(self.AudioViewer.tg_dict_tp['onset'])}")
+
+        if not self.AudioViewer.tg_dict_tp['offset']:
+            self.run_offset.setText("Offset")
+        else:
+            self.run_offset.setText(f"{len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
-        webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#--------')
+        webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
 
     def runPraditorOnAudio(self):
+
+        # 检查采样率
+        # print(self.AudioViewer.audio_samplerate)
+        # print(self.MySliders.cutoff1_slider_onset.value_label.text())
+        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(
+                self.AudioViewer.audio_samplerate) / 2 or \
+                float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(
+            self.AudioViewer.audio_samplerate) / 2:
+            popup_window = QMessageBox()
+            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setText(
+                f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate) / 2:.0f}")
+            popup_window.exec()
+
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
@@ -474,9 +562,24 @@ class MainWindow(QMainWindow):
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"],
                                         self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
+        self.showXsetNum()
+        self.update_current_param()
 
-    def prevAudio(self):
-        self.which_one -= 1
+    def update_current_param(self):
+        if self.MySliders.getParams() in self.param_sets:
+            self.param_sets.remove(self.MySliders.getParams())
+            self.param_sets.append(self.MySliders.getParams())
+        else:
+            self.param_sets.append(self.MySliders.getParams())
+            self.param_sets = self.param_sets[-2:]
+
+    def prevnext_audio(self):
+        print(self.sender().text())
+        self.player.stop()
+        if self.sender().text() == "Prev":
+            self.which_one -= 1
+        else:  # "Next"
+            self.which_one += 1
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
         self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
@@ -487,19 +590,18 @@ class MainWindow(QMainWindow):
         else:
             self.select_mode.setChecked(True)
         self.showParams()
+        self.showXsetNum()
+        # self.update_current_param()
+        # self.statusBar().showMessage("1", 0)
 
-    def nextAudio(self):
-        self.which_one += 1
-        self.which_one %= len(self.file_paths)
-        self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one + 1}/{len(self.file_paths)})")
-        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
-
-        if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
-            self.select_mode.setChecked(False)
-        else:
-            self.select_mode.setChecked(True)
-        self.showParams()
+    def stopSound(self):
+        try:
+            if self.audio_sink.state() == QAudio.State.ActiveState:
+                self.audio_sink.stop()
+                self.buffer.close()
+                print("Audio stopped")
+        except AttributeError:
+            pass
 
 
 app = QApplication(sys.argv)
