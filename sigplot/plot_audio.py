@@ -292,11 +292,14 @@ class AudioViewer(QWidget):
 
     def readAudio(self, fpath):
         # print(fpath)
-        self.tg_dict_tp = {"onset": [], "offset": []}
+        # self.tg_dict_tp = {"onset": [], "offset": []}
         if self.fpath != fpath:
             self.fpath = fpath
             # self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
             self.audio_obj = ReadSound(self.fpath)
+
+            self.tg_dict_tp = {"Onset": {}, "Offset": {}}
+
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio
 
@@ -312,9 +315,13 @@ class AudioViewer(QWidget):
         self.updateSlider()
         self.updateChart()
 
-        self.tg_dict_tp = get_frm_points_from_textgrid(self.fpath)
+        if not self.tg_dict_tp:
+            pass
+        else:
+            self.tg_dict_tp = get_frm_points_from_textgrid(self.fpath)
+
         self.updateXset(self.tg_dict_tp)
-        # self.label_etime.setText("1111111")
+
         return self.tg_dict_tp
 
 
@@ -426,7 +433,8 @@ class AudioViewer(QWidget):
 
     def updateXset(self, tg_dict):#, showOnset=True, showOffset=True):
 
-
+        if not tg_dict:
+            return
 
         stime = self.slider_timerange.sliderPosition() / 1000
         # etime = (self.slider_timerange.sliderPosition() + self.interval_ms) / 1000
@@ -456,8 +464,7 @@ class AudioViewer(QWidget):
                 self._chart.setAxisX(self._axis_x, test_series)
                 self._chart.setAxisY(self._axis_y, test_series)
 
-        if not tg_dict:
-            return
+
 
         self.hideXset(self.tg_dict_tp["onset"], isVisible=self.showOnset)
         self.hideXset(self.tg_dict_tp["offset"], isVisible=self.showOffset)

@@ -194,7 +194,7 @@ class MainWindow(QMainWindow):
 
         self.run_onset = QPushButton("Onset", self)
         self.run_onset.setStatusTip("Extract Onsets")
-        self.run_onset.setFixedSize(60, 25)
+        self.run_onset.setFixedSize(80, 25)
         self.run_onset.pressed.connect(self.turnOnset)
         self.run_onset.setStyleSheet(qss_button_checkable_with_color())
         self.run_onset.setCheckable(True)
@@ -203,7 +203,7 @@ class MainWindow(QMainWindow):
 
         self.run_offset = QPushButton("Offset", self)
         self.run_offset.setStatusTip("Extract Offsets")
-        self.run_offset.setFixedSize(60, 25)
+        self.run_offset.setFixedSize(80, 25)
         self.run_offset.pressed.connect(self.turnOffset)
         self.run_offset.setStyleSheet(qss_button_checkable_with_color("#2AD25E"))
         self.run_offset.setCheckable(True)
@@ -296,6 +296,9 @@ class MainWindow(QMainWindow):
 
         # ---------------------------------------------------
         self.MySliders = MySliders()
+        self.MySliders.amp_slider_onset.setStatusTip("[Onset]  (float, >1.0)  Amplitude coefficient (baseline × coefficient = actual threshold)")
+
+
         layout.addWidget(self.MySliders)
         # ---------------------------------------------------
         layout.setContentsMargins(10, 20, 10, 40)
@@ -558,12 +561,12 @@ class MainWindow(QMainWindow):
         if not self.AudioViewer.tg_dict_tp['onset']:
             self.run_onset.setText("Onset")
         else:
-            self.run_onset.setText(f"{len(self.AudioViewer.tg_dict_tp['onset'])}")
+            self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])}")
 
         if not self.AudioViewer.tg_dict_tp['offset']:
             self.run_offset.setText("Offset")
         else:
-            self.run_offset.setText(f"{len(self.AudioViewer.tg_dict_tp['offset'])}")
+            self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
