@@ -37,32 +37,32 @@ class MySliders(QMainWindow):
         layout.addWidget(self.amp_slider_onset, 0, 0)
         layout.addWidget(self.numValid_slider_onset, 1, 0)
         layout.addWidget(self.penalty_slider_onset, 2, 0)
+        layout.addWidget(self.ref_len_slider_onset, 3, 0)
 
-        layout.addWidget(self.ratio_slider_onset, 3, 0)
-        layout.addWidget(self.win_size_slider_onset, 4, 0)
+        layout.addWidget(self.ratio_slider_onset, 4, 0)
+        layout.addWidget(self.win_size_slider_onset, 5, 0)
 
-        layout.addWidget(self.ref_len_slider_onset, 5, 0)
         layout.addWidget(self.eps_ratio_slider_onset, 6, 0)
 
-        layout.addWidget(self.cutoff0_slider_onset, 7, 0)
-        layout.addWidget(self.cutoff1_slider_onset, 8, 0)
+        layout.addWidget(self.cutoff1_slider_onset, 7, 0)
+        layout.addWidget(self.cutoff0_slider_onset, 8, 0)
 
 
 
 
         layout.addWidget(self.amp_slider_offset, 0, 1)
         layout.addWidget(self.numValid_slider_offset, 1, 1)
-        layout.addWidget(self.ref_len_slider_offset, 2, 1)
+        layout.addWidget(self.penalty_slider_offset, 2, 1)
+        layout.addWidget(self.ref_len_slider_offset, 3, 1)
 
-        layout.addWidget(self.ratio_slider_offset, 3, 1)
-        layout.addWidget(self.win_size_slider_offset, 4, 1)
+        layout.addWidget(self.ratio_slider_offset, 4, 1)
+        layout.addWidget(self.win_size_slider_offset, 5, 1)
 
-        layout.addWidget(self.penalty_slider_offset, 5, 1)
         layout.addWidget(self.eps_ratio_slider_offset, 6, 1)
 
-        layout.addWidget(self.cutoff0_slider_offset, 7, 1)
-        layout.addWidget(self.cutoff1_slider_offset, 8, 1)
-        
+        layout.addWidget(self.cutoff1_slider_offset, 7, 1)
+        layout.addWidget(self.cutoff0_slider_offset, 8, 1)
+
         
         self.amp_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.numValid_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
