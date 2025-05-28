@@ -234,6 +234,8 @@ class MainWindow(QMainWindow):
         self.reset_param.setStatusTip("Reset to params that has been saved")
         self.reset_param.setStyleSheet(qss_button_normal)
         self.reset_param.pressed.connect(self.resetParams)
+        # self.reset_param.setCheckable(True)
+        # self.reset_param.setChecked(True)
         toolbar.addWidget(self.reset_param)
 
         self.last_param = QPushButton("Last", self)
@@ -276,7 +278,31 @@ class MainWindow(QMainWindow):
         # ---------------------------------------------------
         self.MySliders = MySliders()
         self.MySliders.amp_slider_onset.setStatusTip(
-            "[Onset]  (float, >1.0)  Amplitude coefficient (baseline × coefficient = actual threshold)")
+            " Onset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
+        self.MySliders.numValid_slider_onset.setStatusTip(" Onset  |  Accumulated net count of above-threshold frames")
+        self.MySliders.penalty_slider_onset.setStatusTip(" Onset  |  Penalty for below-threshold frames")
+        self.MySliders.ref_len_slider_onset.setStatusTip(
+            " Onset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
+        self.MySliders.ratio_slider_onset.setStatusTip(" Onset  |  % of frames retained in the kernel")
+        self.MySliders.win_size_slider_onset.setStatusTip(" Onset  |  Size of the kernel (in frames)")
+        self.MySliders.eps_ratio_slider_onset.setStatusTip(
+            " Onset  |  Neighborhood radius in DBSCAN clustering (useful in detecting in-utterance silent pause)")
+        self.MySliders.cutoff1_slider_onset.setStatusTip(" Onset  |  Higher cutoff frequency of bandpass filter")
+        self.MySliders.cutoff0_slider_onset.setStatusTip(" Onset  |  Lower cutoff frequency of bandpass filter")
+
+        self.MySliders.amp_slider_offset.setStatusTip(
+            " Offset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
+        self.MySliders.numValid_slider_offset.setStatusTip(
+            " Offset  |  Accumulated net count of above-threshold frames")
+        self.MySliders.penalty_slider_offset.setStatusTip(" Offset  |  Penalty for below-threshold frames")
+        self.MySliders.ref_len_slider_offset.setStatusTip(
+            " Offset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
+        self.MySliders.ratio_slider_offset.setStatusTip(" Offset  |  % of frames retained in the kernel")
+        self.MySliders.win_size_slider_offset.setStatusTip(" Offset  |  Size of the kernel (in frames)")
+        self.MySliders.eps_ratio_slider_offset.setStatusTip(
+            " Offset  |  Neighborhood radius in DBSCAN clustering (useful in detecting in-utterance silent pause)")
+        self.MySliders.cutoff1_slider_offset.setStatusTip(" Offset  |  Higher cutoff frequency of bandpass filter")
+        self.MySliders.cutoff0_slider_offset.setStatusTip(" Offset  |  Lower cutoff frequency of bandpass filter")
 
         layout.addWidget(self.MySliders)
         # ---------------------------------------------------
