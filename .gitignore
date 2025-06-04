@@ -1,13 +1,34 @@
+# 忽略音频文件夹
 /audio/
+
+# 忽略构建和分发文件夹
 /build/
 /dist/
+
+# 忽略主规范文件
 /main.spec
+
+# 忽略虚拟环境文件夹
 /.venv/
+
+# 忽略 IDE 相关文件夹
 /.idea/
+
+# 忽略 Python 脚本和图标生成脚本
 /png2ico.py
+
+# 忽略应用规范文件
 /Praditor.spec
+
+# 忽略演示文件
 /icon.pptx
 /flyer*
+
+# 忽略所有 spec 文件
 *.spec
+
+# 忽略 Python 缓存文件
 **/__pycache__
+
+# 忽略发布文档
 release.md
