@@ -10,3 +10,4 @@
 /flyer*
 *.spec
 **/__pycache__
+release.md
