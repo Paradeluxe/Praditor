@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):
         toolbar.addSeparator()
 
         prev_audio = QPushButton("Prev", self)
-        prev_audio.setFixedSize(30, 25)
+        prev_audio.setFixedSize(50, 25)
         prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
         prev_audio.setStyleSheet(qss_button_normal)
         prev_audio.pressed.connect(self.prevnext_audio)
@@ -180,7 +180,7 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(run_praditor)
 
         next_audio = QPushButton("Next", self)
-        next_audio.setFixedSize(30, 25)
+        next_audio.setFixedSize(50, 25)
         next_audio.setStatusTip("Go to NEXT audio in the folder")
         next_audio.setStyleSheet(qss_button_normal)
         next_audio.pressed.connect(self.prevnext_audio)
