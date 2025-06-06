@@ -10,7 +10,7 @@ You should prioritize frequency bands exhibiting higher energy/amplitude contras
 Removing low-contrast frequency bands is supposed to enhance annotation accuracy and precision.
 
 <div align="center">
-  <img alt="high_low_cutoff.png" src="../instructions/high_low_cutoff.png" width="80%"/>
+  <img alt="high_low_cutoff.png" src="../instructions/high_low_cutoff.png" width="95%"/>
 </div>
 
 #### Related Parameter(s)
@@ -23,7 +23,7 @@ sharp fluctuations (the high-frequency components).
 The purpose of kernel smoothing in this process is to eliminate these sudden spikes while maintaining the gradual changes that show the signal's true pattern.
 
 <div align="center">
-  <img alt="kernel_param.png" src="../instructions/kernel_param.png" width="80%"/>
+  <img alt="kernel_param.png" src="../instructions/kernel_param.png" width="95%"/>
 </div>
 
 #### Related Parameter(s)
@@ -71,7 +71,7 @@ To operationalize this discovery, we propose implementing an adaptive time windo
 deliberately configured to be shorter than the minimum detected silence interval.
 
 <div align="center">
-  <img alt="RefLen Parameter" src="reflen_param.PNG" width="80%"/>
+  <img alt="RefLen Parameter" src="reflen_param.PNG" width="95%"/>
 </div>
 
 
@@ -86,7 +86,7 @@ Conventional thresholding requires users to input an absolute value as the actua
 In Praditor, we do not have that kind of problem. DBSCAN have clustered and located all the generally low-volume segments (i.e., silence segments), which means you will never need to open another audio processing software to check its absolute value and guess a threshold. What’s more, each potential onset can have its dedicated reference segment, rather than use only one threshold for all the onset annotations.
 
 <div align="center">
-  <img alt="threshold_param" src="../instructions/threshold_param.PNG" width="80%"/>
+  <img alt="threshold_param" src="../instructions/threshold_param.PNG" width="95%"/>
 </div>
 
 
@@ -131,7 +131,7 @@ Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold).
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
 <div align="center">
-  <img alt="countvalid_param.PNG" src="../instructions/countvalid_param.PNG" width="80%"/>
+  <img alt="countvalid_param.PNG" src="../instructions/countvalid_param.PNG" width="95%"/>
 </div>
 
 ##### 4. Parameter Optimization:
@@ -154,7 +154,7 @@ The **_Penalty_** coefficient modulates temporal precision in these ways:
 * **Low Penalty values** (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
 
 <div align="center">
-  <img alt="penalty_param.PNG" src="../instructions/penalty_param.PNG" width="80%"/>
+  <img alt="penalty_param.PNG" src="../instructions/penalty_param.PNG" width="95%"/>
 </div>
 
 
