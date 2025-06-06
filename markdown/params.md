@@ -10,8 +10,8 @@ You should prioritize frequency bands exhibiting higher energy/amplitude contras
 Removing low-contrast frequency bands is supposed to enhance annotation accuracy and precision.
 
 #### Related Parameter(s)
-* LowPass (int, Hz): High cutoff frequency
-* HighPass (int, Hz): Low cutoff frequency
+* **_LowPass_** (int, Hz): High cutoff frequency
+* **_HighPass_** (int, Hz): Low cutoff frequency
 
 ### Kernel Smoothing (Second Stage, During Validation)
 To identify audio onsets, we only need to see the overall trend of the signal rather than its quick,
@@ -19,8 +19,8 @@ sharp fluctuations (the high-frequency components).
 The purpose of kernel smoothing in this process is to eliminate these sudden spikes while maintaining the gradual changes that show the signal's true pattern.
 
 #### Related Parameter(s)
-* KernelSize (int, frame): Kernel window size in frames (e.g., 100 = 100-frame window)
-* KernelFrm% (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
+* **_KernelSize_** (int, frame): Kernel window size in frames (e.g., 100 = 100-frame window)
+* **_KernelFrm%_** (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
 
 ## Definition Parameters
 _(Threshold, CountValid, Penalty, RefLen, EPS%)_
@@ -35,7 +35,7 @@ The EPS% parameter optimizes boundary delineation between clusters.
 Increased EPS% incorporates transitional data points (e.g., pauses during utterance), while decreased values exclude them from onset annotations.
 
 #### Related Parameter(s)
-* EPS% (float): Radius ratio calculated from the 80th percentile of absolute amplitudes
+* **_EPS%_** (float): Radius ratio calculated from the 80th percentile of absolute amplitudes
 
 
 ### Thresholding
@@ -59,7 +59,7 @@ deliberately configured to be shorter than the minimum detected silence interval
 
 
 #### Related Parameter(s)
-* RefLen (int, frame): Length of the reference segment.
+* **_RefLen_** (int, frame): Length of the reference segment.
 
 Should be smaller than silence segment, so that you can be sure it stays within the range of silence segment. The average (absolute) value of reference segment is deemed as baseline.
 
@@ -111,8 +111,8 @@ The validation function is formalized as:
 ![高清晰度公式](https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Clarge%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Cquad%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D)
 
 The Penalty coefficient modulates temporal precision in these ways:
-* High Penalty values (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
-* Low Penalty values (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
+* **High Penalty values** (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
+* **Low Penalty values** (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
 
 #### Related Parameter(s)
 * **_CountValid_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
