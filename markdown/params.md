@@ -70,6 +70,10 @@ which constitutes a crucial finding for establishing a reliable silence baseline
 To operationalize this discovery, we propose implementing an adaptive time window mechanism where the window duration is
 deliberately configured to be shorter than the minimum detected silence interval.
 
+<div align="center">
+  <img alt="RefLen Parameter" src="reflen_param.PNG" width="80%"/>
+</div>
+
 
 #### Related Parameter(s)
 * **_RefLen_** (int, frame): Length of the reference segment.
@@ -80,6 +84,12 @@ Should be smaller than silence segment, so that you can be sure it stays within 
 
 Conventional thresholding requires users to input an absolute value as the actual threshold. Whether it is based on absolute amplitude, power, or energy, the annoying thing is you have to determine a new one every time you start working on a new audio file.
 In Praditor, we do not have that kind of problem. DBSCAN have clustered and located all the generally low-volume segments (i.e., silence segments), which means you will never need to open another audio processing software to check its absolute value and guess a threshold. What’s more, each potential onset can have its dedicated reference segment, rather than use only one threshold for all the onset annotations.
+
+<div align="center">
+  <img alt="threshold_param" src="../instructions/threshold_param.PNG" width="80%"/>
+</div>
+
+
 Based on the idea that “Sound should be louder than silence”, we can set a coefficient that is slightly larger than 1.0 (e.g., 1.2) and multiply it with baseline as the actual threshold:
 
 **Actual threshold = Baseline * Coef**
@@ -120,6 +130,10 @@ where:
 Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold). 
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
+<div align="center">
+  <img alt="countvalid_param.PNG" src="../instructions/countvalid_param.PNG" width="80%"/>
+</div>
+
 ##### 4. Parameter Optimization:
 
 When you aim for a very, very precise onset annotation, you would set a very low threshold,
@@ -138,6 +152,11 @@ The validation function is formalized as:
 The **_Penalty_** coefficient modulates temporal precision in these ways:
 * **High Penalty values** (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
 * **Low Penalty values** (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
+
+<div align="center">
+  <img alt="penalty_param.PNG" src="../instructions/penalty_param.PNG" width="80%"/>
+</div>
+
 
 #### Related Parameter(s)
 * **_CountValid_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
