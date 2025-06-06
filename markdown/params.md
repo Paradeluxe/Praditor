@@ -41,7 +41,7 @@ This technique identifies potential onset regions through density-based separati
 
 
 <div align="center">
-  <img alt="EPS" src="EPS.PNG" width="80%"/>
+  <img alt="EPS" src="EPS.PNG" width="95%"/>
 </div>
 
 The **_EPS%_** parameter optimizes boundary delineation between clusters.
