@@ -69,24 +69,28 @@ Conventional thresholding requires users to input an absolute value as the actua
 In Praditor, we do not have that kind of problem. DBSCAN have clustered and located all the generally low-volume segments (i.e., silence segments), which means you will never need to open another audio processing software to check its absolute value and guess a threshold. What’s more, each potential onset can have its dedicated reference segment, rather than use only one threshold for all the onset annotations.
 Based on the idea that “Sound should be louder than silence”, we can set a coefficient that is slightly larger than 1.0 (e.g., 1.2) and multiply it with baseline as the actual threshold:
 
-Actual threshold = Baseline * Coef
+**Actual threshold = Baseline * Coef**
 
-I name this Coef as Threshold.
+I name this _Coef_ as **_Threshold_**.
 
 #### Related Parameter(s)
-* Threshold (float, >1.0): A coefficient that determines the actual threshold (baseline × Threshold = actual threshold)
+* **_Threshold_** (float, >1.0): A coefficient that determines the actual threshold (baseline × _Threshold_ = actual threshold)
+
 
 **(3) Validate onset candidate**
 
 Following threshold determination, all audio frames are classified into two categories: above-threshold (acoustically active) and below-threshold (silent) frames. The next step is to pinpoint the exact position of onset through the following procedure:
-	Candidate Identification:
+- **Candidate Identification:**
 Initialize the onset candidate as the first frame right next to the reference segment.
-	Validation Protocol:
+
+- **Validation Protocol:**
 Employ a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
-	Above-threshold frames: +1 contribution
-	Below-threshold frames: Penalized with -1 contribution (configurable penalty coefficient)
-	Decision Thresholding:
-The net activation score (S_net) is calculated as:
+
+  * Above-threshold frames: +1 contribution
+  * Below-threshold frames: Penalized with -1 contribution (configurable penalty coefficient)
+
+- Decision Thresholding:
+The net activation score ($S_{net}$) is calculated as:
 
 $$
 S_{net}= n_{above} - (n_{below} × Penalty)
@@ -100,19 +104,19 @@ where:
 Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold). 
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
-**(4) Parameter Optimization:**
+- **Parameter Optimization:**
 When you aim for a very, very precise onset annotation, you would set a very low threshold, which could introduce a lot of silence frames into the validation process. Most of the time, we do not like below-threshold frames, like the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out. But it can be necessary in some special cases, like explosive consonants. Both situations are legitimate, which has brought the need for tuning “tolerance” to the table. In Praditor, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
 The validation function is formalized as:
 
-![高清晰度公式](https://latex.codecogs.com/png.latex?%5Cdpi%7B150%7D%20%5Clarge%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Cquad%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D)
+![高清晰度公式](https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Clarge%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Cquad%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D)
 
 The Penalty coefficient modulates temporal precision in these ways:
 * High Penalty values (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
 * Low Penalty values (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
 
 #### Related Parameter(s)
-* CountValid (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
-* Penalty (float, >1.0): Weight applied to below-threshold frames
+* **_CountValid_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
+* **_Penalty_** (float, >1.0): Weight applied to below-threshold frames
 
 
 
