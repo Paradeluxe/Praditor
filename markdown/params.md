@@ -9,7 +9,9 @@ All recordings contain inherent noise to some extent. Our focus lies specificall
 You should prioritize frequency bands exhibiting higher energy/amplitude contrast near onsets.
 Removing low-contrast frequency bands is supposed to enhance annotation accuracy and precision.
 
-![high_low_cutoff.png](../instructions/high_low_cutoff.png)
+<div style="text-align:center">
+  <img src="../instructions/high_low_cutoff.png" align="center" style="width:80%" alt="High Low Cutoff Diagram">
+</div>
 
 #### Related Parameter(s)
 * **_LowPass_** (int, Hz): High cutoff frequency
