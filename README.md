@@ -150,13 +150,13 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 
 
-# Fine-tuning guidance
+## Fine-tuning guidance
 
 Refer to [Parameter](./markdown/params.md) section.
 
-# Algorithm
+## Quick Fix
 
-Refer to [Algorithm](./markdown/algorithm.md) section.
+Refer to  section.
 
 
 

@@ -1,23 +1,3 @@
-# Before tuning Params (you can skip this part)
-
-The audio signal is first band-pass filtered to remove some high/low frequency noise. 
-Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
-
-![ds_maxp.png](../instructions/ds_maxp.png)
-
-DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
-For every two consecutive pieces, they are grouped into a **point**. The point has two dimensions, previous and next frame.
-On this point array, Praditor applies DBSCAN clustering to these points. 
-Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
-
-![DBSCAN_small.png](../instructions/DBSCAN_small.png)
-
-At this point, noise areas are found, which means we have roughly pinpoint the probable locations of onsets (i.e., target area).
-
-We do not continue to use the original amplitudes but first derivatives. First-derivative thresholding is a common technique
-in other signal processing areas (e.g., ECG). It keeps the trend but removes the noisy ("spiky") part, which helps to improve the performance.
-
-
 # Params
 Praditor employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Onset** parameters. The latter establishes what it means to be an onset, while the former eliminates noise that might compromise Praditor's algorithmic performance.
 
