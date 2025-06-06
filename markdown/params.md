@@ -1,5 +1,5 @@
 # Params
-Praditor employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Defining** parameters. The latter establishes onset definitions, while the former eliminates noise that might compromise Praditor's algorithmic performance.
+Praditor employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Onset** parameters. The latter establishes what it means to be an onset, while the former eliminates noise that might compromise Praditor's algorithmic performance.
 
 ## Denoising Parameters
 _(LowPass, HighPass, KernelSize, KernelFrm%)_
@@ -8,6 +8,8 @@ _(LowPass, HighPass, KernelSize, KernelFrm%)_
 All recordings contain inherent noise to some extent. Our focus lies specifically on noise that impacts Praditor's performance.
 You should prioritize frequency bands exhibiting higher energy/amplitude contrast near onsets.
 Removing low-contrast frequency bands is supposed to enhance annotation accuracy and precision.
+
+![high_low_cutoff.png](../instructions/high_low_cutoff.png)
 
 #### Related Parameter(s)
 * **_LowPass_** (int, Hz): High cutoff frequency
@@ -22,11 +24,11 @@ The purpose of kernel smoothing in this process is to eliminate these sudden spi
 * **_KernelSize_** (int, frame): Kernel window size in frames (e.g., 100 = 100-frame window)
 * **_KernelFrm%_** (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
 
-## Definition Parameters
+## Onset Parameters
 _(Threshold, CountValid, Penalty, RefLen, EPS%)_
 
 ### Number of onsets
-Praditor's unique multi-onset detection capability derives from DBSCAN clustering pre-thresholding.
+_Praditor_'s unique multi-onset detection capability derives from DBSCAN clustering pre-thresholding.
 This technique identifies potential onset regions through density-based separation: 
 (1) Background noise forms dense clusters near the coordinate origin;
 (2) Speech signals create sparse clusters away from the origin.
@@ -81,18 +83,18 @@ I name this _Coef_ as **_Threshold_**.
 
 Following threshold determination, all audio frames are classified into two categories: above-threshold (acoustically active) and below-threshold (silent) frames. The next step is to pinpoint the exact position of onset through the following procedure:
 
-1. Candidate Identification:
+##### 1. Candidate Identification:
 
 Initialize the onset candidate as the first frame right next to the reference segment.
 
-2. Validation Protocol:
+##### 2. Validation Protocol:
 
 Employ a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
 
-  * Above-threshold frames: +1 contribution
-  * Below-threshold frames: Penalized with -1 contribution (configurable penalty coefficient)
+  * **Above-threshold frames:** +1 contribution
+  * **Below-threshold frames:** Penalized with -1 contribution (configurable penalty coefficient)
 
-- Decision Thresholding:
+##### 3. Decision Thresholding:
 The net activation score ($S_{net}$) is calculated as:
 
 $$
@@ -107,16 +109,22 @@ where:
 Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold). 
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
-3. Parameter Optimization:
+##### 4. Parameter Optimization:
 
-When you aim for a very, very precise onset annotation, you would set a very low threshold, which could introduce a lot of silence frames into the validation process. Most of the time, we do not like below-threshold frames, like the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out. But it can be necessary in some special cases, like explosive consonants. Both situations are legitimate, which has brought the need for tuning “tolerance” to the table. In Praditor, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
+When you aim for a very, very precise onset annotation, you would set a very low threshold,
+which could introduce a lot of silence frames into the validation process.
+Most of the time, we do not like below-threshold frames. A most common example is the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out.
+But it can be necessary in some special cases, like explosive consonants.
+Both situations are legitimate, which has brought the need for tuning “tolerance” to the table.
+In _Praditor_, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
+
 The validation function is formalized as:
 
 <div align="center">
   <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="网络验证状态公式">
 </div>
 
-The Penalty coefficient modulates temporal precision in these ways:
+The **_Penalty_** coefficient modulates temporal precision in these ways:
 * **High Penalty values** (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
 * **Low Penalty values** (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
 
