@@ -31,4 +31,4 @@
 **/__pycache__
 
 # 忽略发布文档
-release.md
+markdown/release.md

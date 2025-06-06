@@ -4,21 +4,21 @@
 The audio signal is first band-pass filtered to remove some high/low frequency noise. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
 
-![ds_maxp.png](instructions/ds_maxp.png)
+![ds_maxp.png](../instructions/ds_maxp.png)
 
 DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
 For every two consecutive pieces, they are grouped into a **point**. The point has two dimensions, previous and next frame.
 On this point array, Praditor applies DBSCAN clustering to these points. 
 Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
 
-![DBSCAN_small.png](instructions/DBSCAN_small.png)
+![DBSCAN_small.png](../instructions/DBSCAN_small.png)
 
 At this point, noise areas are found, which means we have roughly pinpoint the probable locations of onsets (i.e., target area).
 
 We do not continue to use the original amplitudes, but first derivatives. First-derivative thresholding is a common technique
 in other signal processing areas (e.g., ECG). It keeps the trend but remove the noisy ("spiky") part, which helps to improve the performance.
 
-![scan.png](instructions/scan.png)
+![scan.png](../instructions/scan.png)
 
 For every target area, we do the same procedure as below:
 1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
@@ -31,7 +31,7 @@ For every target area, we do the same procedure as below:
 Before we apply down sampling and clustering to the audio signal, a band pass filter is first applied to the original signal.
 The idea is that we do not need all the frequencies. Too high and too low frequency band can be contaminated. 
 
-![choose_freq.png](instructions/choose_freq.png)
+![choose_freq.png](../instructions/choose_freq.png)
 
 What we need is the middle part that has high contrast between silence and sound.
 
@@ -42,7 +42,7 @@ Be reminded that the **_LowPass_** should not surpass the highest valid frequenc
 DBSCAN clustering requires two parameters: **EPS** and **MinPt**. What DBSCAN does is to scan every point, take it as the circle center, 
 and draw a circle with a radius **EPS** in length. Within that circle, calculate how many points within and count them valid if hit **MinPt**.
 
-![DBSCAN.png](instructions/DBSCAN.png)
+![DBSCAN.png](../instructions/DBSCAN.png)
 
 Praditor allows user to adjust **_EPS%_**. Since every audio file can have different amplitude level/silence-sound contrast,
 Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
@@ -51,7 +51,7 @@ Praditor determines **EPS = Current Audio's Largest Amplitude * _EPS%_**.
 After Praditor has confirmed target areas, the original amplitudes is the transformed into absolute first-derivatives. 
 For each target area, Praditor would set up a _Reference Area_, whose mean value serves as the baseline for later thresholding.
 
-![reflen.png](instructions/reflen.png)
+![reflen.png](../instructions/reflen.png)
 
 The length of this reference area is determined by _**RefLen**_. 
 When you want to capture silence that has very short length, it is better that you turn down _**RefLen**_ a little bit as well.
@@ -61,13 +61,13 @@ When you want to capture silence that has very short length, it is better that y
 It is the most used parameter. The core idea of thresholding method is about "Hitting the cliff".
 Whenever a talker speaks, the (absolute) amplitude rises up and creates a "cliff" (in amplitude, or other features).
 
-![threshold_possibly_close.png](instructions/threshold_possibly_close.png)
+![threshold_possibly_close.png](../instructions/threshold_possibly_close.png)
 
 **_Threshold_** has a minimum limitation at **1.00**, which is based on the mean value of background-noise reference.
 However, background noise is not "smoothy" but actually "spiky". 
 That is why **_Threshold_** is usually **slightly larger than 1.00**.
 
-![asp_sound.png](instructions/asp_sound.png)
+![asp_sound.png](../instructions/asp_sound.png)
 
 Besides, I would suggest you pay more attention to **aspirated sound**, as this type of sound has "very slow slope". 
 Too large **_Threshold_** can end up in the middle of that "slope" (which is something you don't want). 
@@ -81,7 +81,7 @@ Usually we would compare the value (absolute 1st derivative) with threshold. If 
 But, Praditor does it a little bit differently, using **kernel smoothing**.
 Praditor would borrow information from later frames, like setting up a window (kernel) with a length, **_KernelSize_**.
 
-![kernel.png](instructions/kernel.png)
+![kernel.png](../instructions/kernel.png)
 
 To prevent extreme values, Praditor would neglect the first few largest values in the window (kernel). Or, we only retain 
 **_KernelFrm%_** of all frames (e.g., 80% of all).
@@ -103,7 +103,7 @@ On other words, we only want a starting frame whose **scanning sum stays positiv
 
 **_Penalty_** here is like a "knob" for tuning **noise sensitivity**. **Higher** **_Penalty_** means higher sensitivity to **below-threshold frames.**
 
-![count_valid.png](instructions/count_valid.png)
+![count_valid.png](../instructions/count_valid.png)
 
 In summary, each scan has a starting frame (i.e., onset candidate). What we do is to check if this "starting frame" is "valid". 
 By saying it "valid", we are saying that scanning sum stays positive and hits **_CountValid_** in the end.
