@@ -80,10 +80,13 @@ I name this _Coef_ as **_Threshold_**.
 **(3) Validate onset candidate**
 
 Following threshold determination, all audio frames are classified into two categories: above-threshold (acoustically active) and below-threshold (silent) frames. The next step is to pinpoint the exact position of onset through the following procedure:
-- **Candidate Identification:**
+
+1. Candidate Identification:
+
 Initialize the onset candidate as the first frame right next to the reference segment.
 
-- **Validation Protocol:**
+2. Validation Protocol:
+
 Employ a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
 
   * Above-threshold frames: +1 contribution
@@ -104,11 +107,14 @@ where:
 Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold). 
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
-- **Parameter Optimization:**
+3. Parameter Optimization:
+
 When you aim for a very, very precise onset annotation, you would set a very low threshold, which could introduce a lot of silence frames into the validation process. Most of the time, we do not like below-threshold frames, like the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out. But it can be necessary in some special cases, like explosive consonants. Both situations are legitimate, which has brought the need for tuning “tolerance” to the table. In Praditor, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
 The validation function is formalized as:
 
-![高清晰度公式](https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Clarge%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Cquad%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D)
+<div align="center">
+  <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="网络验证状态公式">
+</div>
 
 The Penalty coefficient modulates temporal precision in these ways:
 * **High Penalty values** (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
