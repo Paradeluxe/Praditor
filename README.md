@@ -156,7 +156,7 @@ Refer to [Parameter](./markdown/params.md) section.
 
 ## Quick Fix
 
-Refer to  section.
+Refer to [Quick Fix](markdown/quick_fix.md) section.
 
 
 
