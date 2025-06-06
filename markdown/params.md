@@ -22,6 +22,10 @@ To identify audio onsets, we only need to see the overall trend of the signal ra
 sharp fluctuations (the high-frequency components).
 The purpose of kernel smoothing in this process is to eliminate these sudden spikes while maintaining the gradual changes that show the signal's true pattern.
 
+<div align="center">
+  <img alt="kernel_param.png" src="../instructions/kernel_param.png" width="80%"/>
+</div>
+
 #### Related Parameter(s)
 * **_KernelSize_** (int, frame): Kernel window size in frames (e.g., 100 = 100-frame window)
 * **_KernelFrm%_** (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
@@ -35,8 +39,13 @@ This technique identifies potential onset regions through density-based separati
 (1) Background noise forms dense clusters near the coordinate origin;
 (2) Speech signals create sparse clusters away from the origin.
 
-The EPS% parameter optimizes boundary delineation between clusters.
-Increased EPS% incorporates transitional data points (e.g., pauses during utterance), while decreased values exclude them from onset annotations.
+
+<div align="center">
+  <img alt="EPS" src="EPS.PNG" width="80%"/>
+</div>
+
+The **_EPS%_** parameter optimizes boundary delineation between clusters.
+Increased **_EPS%_** incorporates transitional data points (e.g., pauses during utterance), while decreased values exclude them from onset annotations.
 
 #### Related Parameter(s)
 * **_EPS%_** (float): Radius ratio calculated from the 80th percentile of absolute amplitudes
