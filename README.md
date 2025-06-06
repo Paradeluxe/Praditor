@@ -76,7 +76,7 @@ This project thrives thanks to these remarkable contributors:
 - Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
 - Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
 
-# How to use _Praditor_?
+# User Guide
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
 
@@ -153,14 +153,19 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 
 
+# Fine-tuning guidance
 
+Refer to [Parameter](../markdown/params.md) section.
+
+# Algorithm
+
+Refer to [Algorithm](../markdown/algorithm.md) section.
 
 
 
 
 # Data and Materials
 
-If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/)
-.
+If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
 
 
