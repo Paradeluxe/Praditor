@@ -104,11 +104,12 @@ Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next 
 When you aim for a very, very precise onset annotation, you would set a very low threshold, which could introduce a lot of silence frames into the validation process. Most of the time, we do not like below-threshold frames, like the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out. But it can be necessary in some special cases, like explosive consonants. Both situations are legitimate, which has brought the need for tuning “tolerance” to the table. In Praditor, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
 The validation function is formalized as:
 
-![公式](https://latex.codecogs.com/png.latex?Validation(S_{net})%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%
+![高清晰度公式](https://latex.codecogs.com/png.latex?%5Cdpi%7B150%7D%20%5Clarge%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Cquad%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D)
 
 The Penalty coefficient modulates temporal precision in these ways:
 * High Penalty values (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
 * Low Penalty values (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
+
 #### Related Parameter(s)
 * CountValid (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
 * Penalty (float, >1.0): Weight applied to below-threshold frames
