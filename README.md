@@ -86,46 +86,43 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 ## General
 
-### import audio file(s)
+### 🗃️ import audio file(s)
 
 `File` -> `Read files...` -> Select your target audio file
 
 _Note_. All the other audio files will also be added to the list.
 
 
-### run algorithm and extract onsets
+### ▶️ run algorithm and extract onsets
 
 Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 
-### play and stop 💿
+### 🔊 play and stop
 
 Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
 
 Press <kbd>any key</kbd> to stop playing.
 
-
-
-### go to the next/previous audio file
+### ⏮️⏭️ next/previous audio file
 
 Hit `Next`/`Prev`.
 
 ## .TextGrid related
 
-
-### I wanna temporarily clear the annotations
+### 🧹 I wanna temporarily clear the annotations
 
 Hit `Clear`. This does not delete/change the .TextGrid file. It's safe.
 
-### Oh no, I want the cleared annotations back
+### ✍️ Oh no, I want the cleared annotations back
 
 Hit `Read`. _Praditor_ will go back to the .TextGrid and present whatever is in it.
 
-### Hide/Show annotations
+### 👀 Hide/Show annotations
 
 Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets). 
 
-## Parameters 
+## 📊 Parameters 
 
 `Current/Default` Display default parameters or parameters for the current file
 
@@ -136,14 +133,14 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 ## Audio signal
 
-### Mouse & Keyboard
+### 🖱️⌨️ Mouse & Keyboard
 <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
 
 <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
 
 <kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline** 
 
-### Touchpad
+### 💻 Touchpad
 `↑✌↑`/`↓✌↓` to zoom-in/out at **amplitude**
 
 `←✌→`/`→✌←` to zoom-in/out at **timeline**
