@@ -1,4 +1,4 @@
-# Before tuning Params (you can skip this)
+# Before tuning Params (you can skip this part)
 
 The audio signal is first band-pass filtered to remove some high/low frequency noise. 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each piece).
@@ -16,14 +16,6 @@ At this point, noise areas are found, which means we have roughly pinpoint the p
 
 We do not continue to use the original amplitudes but first derivatives. First-derivative thresholding is a common technique
 in other signal processing areas (e.g., ECG). It keeps the trend but removes the noisy ("spiky") part, which helps to improve the performance.
-
-![scan.png](../instructions/scan.png)
-
-For every target area, we do the same procedure as below:
-1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
-2. Set up a **starting frame** as the onset candidate (start from the very next frame from the noise reference).
-3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
-4. When we gather enough **valid** frames, the exact frame/time point we stop is the answer we want. Otherwise, we move on to the next starting frame.
 
 
 # Params
