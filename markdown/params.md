@@ -107,11 +107,11 @@ The validation function is formalized as:
 ![公式](https://latex.codecogs.com/png.latex?Validation(S_{net})%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Cquad%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%
 
 The Penalty coefficient modulates temporal precision in these ways:
-	High Penalty values (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
-	Low Penalty values (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
-Related Parameter(s)
-	CountValid (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
-	Penalty (float, >1.0): Weight applied to below-threshold frames
+* High Penalty values (e.g., >10): Enforce strict temporal boundaries by magnifying silent frame penalties, potentially inducing rightward onset shifts
+* Low Penalty values (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
+#### Related Parameter(s)
+* CountValid (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
+* Penalty (float, >1.0): Weight applied to below-threshold frames
 
 
 
