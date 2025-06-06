@@ -155,11 +155,11 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 
 # Fine-tuning guidance
 
-Refer to [Parameter](../markdown/params.md) section.
+Refer to [Parameter](./markdown/params.md) section.
 
 # Algorithm
 
-Refer to [Algorithm](../markdown/algorithm.md) section.
+Refer to [Algorithm](./markdown/algorithm.md) section.
 
 
 

@@ -15,8 +15,8 @@ Noise points are usually gathered around (0, 0) due to their relatively small am
 
 At this point, noise areas are found, which means we have roughly pinpoint the probable locations of onsets (i.e., target area).
 
-We do not continue to use the original amplitudes, but first derivatives. First-derivative thresholding is a common technique
-in other signal processing areas (e.g., ECG). It keeps the trend but remove the noisy ("spiky") part, which helps to improve the performance.
+We do not continue to use the original amplitudes but first derivatives. First-derivative thresholding is a common technique
+in other signal processing areas (e.g., ECG). It keeps the trend but removes the noisy ("spiky") part, which helps to improve the performance.
 
 ![scan.png](../instructions/scan.png)
 
