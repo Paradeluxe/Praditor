@@ -41,7 +41,7 @@ This technique identifies potential onset regions through density-based separati
 
 
 <div align="center">
-  <img alt="EPS" src="EPS.PNG" width="95%"/>
+  <img alt="EPS" src="../instructions/EPS.PNG" width="95%"/>
 </div>
 
 The **_EPS%_** parameter optimizes boundary delineation between clusters.
@@ -71,7 +71,7 @@ To operationalize this discovery, we propose implementing an adaptive time windo
 deliberately configured to be shorter than the minimum detected silence interval.
 
 <div align="center">
-  <img alt="RefLen Parameter" src="reflen_param.PNG" width="95%"/>
+  <img alt="RefLen Parameter" src="../instructions/reflen_param.PNG" width="95%"/>
 </div>
 
 
@@ -110,7 +110,7 @@ Initialize the onset candidate as the first frame right next to the reference se
 
 ##### 2. Validation Protocol:
 
-Employ a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
+Use a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
 
   * **Above-threshold frames:** +1 contribution
   * **Below-threshold frames:** Penalized with -1 contribution (configurable penalty coefficient)
