@@ -3,7 +3,7 @@ import os
 import sys
 import webbrowser
 
-from PySide6.QtCore import Qt, QUrl
+from PySide6.QtCore import Qt, QUrl, Signal
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
 
         file_menu = self.menuBar().addMenu("&File")
         button_action = QAction("&Read file...", self)
-        button_action.setStatusTip("Folder to store target audios")
+        button_action.setStatusTip("Read audio files HERE!")
         button_action.triggered.connect(self.openFileDialog)
         file_menu.addAction(button_action)
         # file_menu.setStyleSheet("""
@@ -141,42 +141,43 @@ class MainWindow(QMainWindow):
         # ---------------------------------------------------------------
         toolbar.addSeparator()
 
-        clear_xset = QPushButton("Clear", self)
-        clear_xset.setFixedSize(50, 25)
-        clear_xset.setStatusTip("Clear Onsets and Offsets")
-        clear_xset.setStyleSheet(qss_button_normal)
-        clear_xset.pressed.connect(self.clearXset)
-        toolbar.addWidget(clear_xset)
+        self.clear_xset = QPushButton("Clear", self)  # Reload
+        self.clear_xset.setFixedSize(50, 25)
+        self.clear_xset.setStatusTip("Clear Onsets and Offsets")
+        self.clear_xset.setStyleSheet(qss_button_normal)
+        self.clear_xset.pressed.connect(self.clearXset)
 
-        read_xset = QPushButton("Read", self)
-        read_xset.setFixedSize(50, 25)
-        read_xset.setStatusTip("Import Onsets and Offsets")
-        read_xset.setStyleSheet(qss_button_normal)
-        read_xset.pressed.connect(self.readXset)
-        toolbar.addWidget(read_xset)
+        toolbar.addWidget(self.clear_xset)
+
+        self.read_xset = QPushButton("Read", self)
+        self.read_xset.setFixedSize(50, 25)
+        self.read_xset.setStatusTip("Read Onsets and Offsets from existing .TextGrid")
+        self.read_xset.setStyleSheet(qss_button_normal)
+        self.read_xset.pressed.connect(self.readXset)
+        toolbar.addWidget(self.read_xset)
 
         toolbar.addSeparator()
 
-        prev_audio = QPushButton("Prev", self)
-        prev_audio.setFixedSize(50, 25)
-        prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
-        prev_audio.setStyleSheet(qss_button_normal)
-        prev_audio.pressed.connect(self.prevnext_audio)
-        toolbar.addWidget(prev_audio)
+        self.prev_audio = QPushButton("Prev", self)
+        self.prev_audio.setFixedSize(50, 25)
+        self.prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
+        self.prev_audio.setStyleSheet(qss_button_normal)
+        self.prev_audio.pressed.connect(self.prevnext_audio)
+        toolbar.addWidget(self.prev_audio)
 
-        run_praditor = QPushButton("Extract", self)
-        run_praditor.setFixedSize(65, 25)
-        run_praditor.setStatusTip("Initiate Praditor to extract speech onsets/offsets")
-        run_praditor.setStyleSheet(qss_button_normal)
-        run_praditor.pressed.connect(self.runPraditorOnAudio)
-        toolbar.addWidget(run_praditor)
+        self.run_praditor = QPushButton("Extract", self)
+        self.run_praditor.setFixedSize(65, 25)
+        self.run_praditor.setStatusTip("Extract speech onsets/offsets")
+        self.run_praditor.setStyleSheet(qss_button_normal)
+        self.run_praditor.pressed.connect(self.runPraditorOnAudio)
+        toolbar.addWidget(self.run_praditor)
 
-        next_audio = QPushButton("Next", self)
-        next_audio.setFixedSize(50, 25)
-        next_audio.setStatusTip("Go to NEXT audio in the folder")
-        next_audio.setStyleSheet(qss_button_normal)
-        next_audio.pressed.connect(self.prevnext_audio)
-        toolbar.addWidget(next_audio)
+        self.next_audio = QPushButton("Next", self)
+        self.next_audio.setFixedSize(50, 25)
+        self.next_audio.setStatusTip("Go to NEXT audio in the folder")
+        self.next_audio.setStyleSheet(qss_button_normal)
+        self.next_audio.pressed.connect(self.prevnext_audio)
+        toolbar.addWidget(self.next_audio)
         toolbar.addSeparator()
 
         # ----------------------------------------------
@@ -348,12 +349,20 @@ class MainWindow(QMainWindow):
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
+        if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
+            popup_window = QMessageBox()
+            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setText(f"This audio file has no .TextGrid attached.")
+            popup_window.exec()
+            return
+
         self.AudioViewer.updateXset(self.AudioViewer.tg_dict_tp)
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=not self.run_onset.isChecked())
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=not self.run_offset.isChecked())
 
     def clearXset(self):
-        self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
+        # self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])

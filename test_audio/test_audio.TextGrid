@@ -35,19 +35,22 @@ item []:
 		name = "offset"
 		xmin = 0.0
 		xmax = 7.762879818594104
-		points: size = 5
+		points: size = 6
 			points [1]:
-				time = 0.6441496598639456
+				time = 0.6440816326530612
 				mark = "offset"
 			points [2]:
-				time = 1.1571315192743765
+				time = 1.1523356009070296
 				mark = "offset"
 			points [3]:
-				time = 3.0697097505668935
+				time = 3.0653333333333337
 				mark = "offset"
 			points [4]:
-				time = 4.7155555555555555
+				time = 4.399433106575963
 				mark = "offset"
 			points [5]:
-				time = 6.725918367346939
+				time = 4.793922902494331
+				mark = "offset"
+			points [6]:
+				time = 6.729260770975057
 				mark = "offset"

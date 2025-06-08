@@ -2,11 +2,10 @@ import sys
 
 import numpy as np
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
-from PySide6.QtCore import Qt, QMargins
-from PySide6.QtGui import QPen, QColor, QPainter, QBrush, QInputDevice
+from PySide6.QtCore import Qt, QMargins, Signal, Property
+from PySide6.QtGui import QPen, QColor
 from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
     QWidget
-# from pydub import AudioSegment
 
 from tool import ReadSound, get_frm_points_from_textgrid
 
@@ -56,6 +55,7 @@ def downsampleXset(xsets, stime, duration, max_show_frm, samplerate):
 
 
 class AudioViewer(QWidget):
+
     def __init__(self):#, interval_ms=40000, resolution=20000):
         super().__init__()
         self.max_amp_ratio = 1.0
@@ -489,9 +489,10 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     window = AudioViewer()#r"C:\Users\18357\Desktop\Py_GUI\test.wav")
-    window.readAudio(r"C:\Users\18357\Desktop\Py_GUI\test.wav")
-    window.show()
+    # window.readAudio(r"C:\Users\18357\Desktop\Py_GUI\test.wav")
+    # window.show()
+    window.tgChanged.connect(lambda: print(f"值已改变: "))
+    window.tg_dict_tp = {1:1}
+    # window.resize(1200, 300)
 
-    window.resize(1200, 300)
-
-    sys.exit(app.exec())
+    # sys.exit(app.exec())

@@ -1,38 +1,28 @@
-from pydub import AudioSegment
-import numpy as np
-import scipy.io.wavfile as wavfile
+from PySide6.QtCore import QObject, Signal, Property
 
-# 音频文件路径
-audio_file_path = r'C:\Users\18357\Desktop\Praditor\test_audio.wav'
+class MyModel(QObject):
+    # 定义信号（不需要参数）
+    data_changed = Signal()
 
-# 使用pydub读取音频文件
-audio_segment = AudioSegment.from_file(audio_file_path)
-# 将音频数据转换为NumPy数组
-# 注意：pydub的get_array_of_samples()返回的是int16的样本值，需要归一化到-1.0到1.0的范围
-pydub_samples = audio_segment.get_array_of_samples()
-pydub_channels = audio_segment.channels
-pydub_sample_width = audio_segment.sample_width
-pydub_frame_rate = audio_segment.frame_rate
-pydub_array = np.array(pydub_samples) #/ (2**(pydub_sample_width * 8 - 1))
+    def __init__(self):
+        super().__init__()
+        self._my_variable = {"onset": [], "offset": []}  # 私有变量
 
-# 使用scipy读取音频文件
-scipy_sample_rate, scipy_data = wavfile.read(audio_file_path)
-# scipy读取的数据已经是NumPy数组，需要归一化到-1.0到1.0的范围
-scipy_array = scipy_data #/ (2**15)
+    @Property(dict)  # 指定类型（可选）
+    def my_variable(self):
+        return self._my_variable
 
+    @my_variable.setter
+    def my_variable(self, value):
+        if self._my_variable != value:  # 只有值变化时才触发
+            self._my_variable = value
+            self.data_changed.emit()  # 触发信号
 
+# 使用示例
+model = MyModel()
 
+# 连接信号到槽
+model.data_changed.connect(lambda: print(f"值已改变: {model.my_variable}"))
 
-
-# 打印结果
-print("Pydub:")
-print("Sample Rate:", pydub_frame_rate)
-print("Channels:", pydub_channels)
-print("Sample Width:", pydub_sample_width)
-print("Array Shape:", pydub_array.shape)
-print("Array Sample:", pydub_array[:5])
-
-print("\nSciPy:")
-print("Sample Rate:", scipy_sample_rate)
-print("Array Shape:", scipy_array.shape)
-print("Array Sample:", scipy_array[:5])
+# 修改变量（触发信号）
+model.my_variable = {1:1}
