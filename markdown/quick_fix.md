@@ -1,8 +1,15 @@
 # Fine-tune Praditor
+
+
+
 - Too many onsets: **_EPS%_** ↓.
 - Too few onsets: **_EPS%_** ↑.
 - Too early annotation: try **_Threshold_** ↑ first
-- If it is **almost at the right place** but just a little too late, try **_KernelFrm%_** ↑, **_KernelSize_** ↓ (make it sharp.)
+- If it is **almost at the right place** but just a little too late, try **_KernelFrm%_** ↑, **_KernelSize_** ↓ (make it sharp) or **_CountValid_** ↑.
+- If it is stuck before a short **peak**, try having **_CountValid_** ↑.
+- If it is stuck before a short **pause**, try having **_Penalty_** ↑.
+
+For the remaining three parameters (i.e., **_RefLen_**, **_LowPass_**, **_HighPass_**), just try to adjust them to appropriate ranges.
 
 
 ## Too many/few onsets

@@ -413,6 +413,10 @@ class AudioViewer(QWidget):
 
 
     def removeXset(self, xsets=[]):
+
+        if not xsets:
+            return
+
         stime = self.slider_timerange.sliderPosition() / 1000
         # etime = (self.slider_timerange.sliderPosition() + self.interval_ms) / 1000
 
