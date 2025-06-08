@@ -4,26 +4,25 @@
 Onsets have generally two types (1) before-speech, and (2) during-speech.
 
 - Too **MANY** onsets: 
-  - during-speech onsets: [**_EPS%_** ↓](#eps---one-and-only)
+  - **during-speech** onsets: [**_EPS%_** ↓](#eps---one-and-only)
 - Too **FEW** onsets:
-  - Too few during-speech onsets: [**_EPS%_** ↑](#eps---one-and-only); if not work, then [**_RefLen_** ↓](#reflen)
-  - Part of the before-speech onsets are missing: [**_Threshold_** ↓](#threshold)
+  - Too few **during-speech** onsets: [**_EPS%_** ↑](#eps---one-and-only); if not work, then [**_RefLen_** ↓](#reflen)
+  - Part of the **before-speech** onsets are missing: [**_Threshold_** ↓](#threshold)
 - Multiple onsets almost overlap, try [**_Threshold_** ↓](#threshold)
 
 ## Onset quality
-- Too early annotation: 
+- Too **EARLY** annotation: 
   - Most of the time: [**_Threshold_** ↑](#threshold)
-  - If it is stuck before a short **peak**, try having [**_CountValid_** ↑](#countvalid).
-  - If it is stuck before a short **pause**, try having [**_Penalty_** ↑](#penalty).
-- Too late annotation:
-  - If it is **almost at the right place** but just a little too late, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
-or [**_CountValid_** ↑](#countvalid).
+  - If many onsets are stuck before a short **peak**, try [**_CountValid_** ↑](#countvalid)
+  - If many onsets are stuck before a short **pause**, try [**_Penalty_** ↑](#penalty)
+- Too **LATE** annotation:
+  - If it is almost at the right place but just **a little too late**, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
+  - If it is **way too late**, [**_CountValid_** ↓](#countvalid)
 
 
 
-## Ohter
-
-- If none of the above parameters work (or have prominent changes), try to find a more suitable [**_LowPass_** and **_HighPass_**](#lowpass-highpass).
+## Other
+- If tuning the above parameters does not change that much, you may want to find more suitable [**_LowPass_** and **_HighPass_**](#lowpass-highpass).
 
 
 
