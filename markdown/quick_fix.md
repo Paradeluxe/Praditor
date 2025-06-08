@@ -11,11 +11,14 @@ Onsets have generally two types (1) before-speech, and (2) during-speech.
 - Multiple onsets almost overlap, try [**_Threshold_** ↓](#threshold)
 
 ## Onset quality
-- Too early annotation: try [**_Threshold_** ↑](#threshold) first
-- If it is **almost at the right place** but just a little too late, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
+- Too early annotation: 
+  - Most of the time: [**_Threshold_** ↑](#threshold)
+  - If it is stuck before a short **peak**, try having [**_CountValid_** ↑](#countvalid).
+  - If it is stuck before a short **pause**, try having [**_Penalty_** ↑](#penalty).
+- Too late annotation:
+  - If it is **almost at the right place** but just a little too late, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
 or [**_CountValid_** ↑](#countvalid).
-- If it is stuck before a short **peak**, try having [**_CountValid_** ↑](#countvalid).
-- If it is stuck before a short **pause**, try having [**_Penalty_** ↑](#penalty).
+
 
 
 ## Ohter
