@@ -3,9 +3,11 @@
 ## Number of onsets
 Onsets have generally two types (1) before-speech, and (2) during-speech.
 
-- Too many during-speech onsets/You don't want pauses during speech: [**_EPS%_** ↓](#eps---one-and-only).
-- Too few onsets/You do want pauses during speech: [**_EPS%_** ↑](#eps---one-and-only), [**_RefLen_** ↓](#reflen).
-- If part of the before-speech onsets are not detected, try [**_Threshold_** ↓](#threshold).
+- Too **MANY** onsets: 
+  - during-speech onsets: [**_EPS%_** ↓](#eps---one-and-only)
+- Too **FEW** onsets:
+  - Too few during-speech onsets: [**_EPS%_** ↑](#eps---one-and-only); if not work, then [**_RefLen_** ↓](#reflen)
+  - Part of the before-speech onsets are missing: [**_Threshold_** ↓](#threshold)
 - Multiple onsets almost overlap, try [**_Threshold_** ↓](#threshold)
 
 ## Onset quality
