@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
 
         self.clear_xset = QPushButton("Clear", self)  # Reload
         self.clear_xset.setFixedSize(50, 25)
-        self.clear_xset.setStatusTip("Clear Onsets and Offsets")
+        self.clear_xset.setStatusTip("Clear Onsets and Offsets from the screen")
         self.clear_xset.setStyleSheet(qss_button_normal)
         self.clear_xset.pressed.connect(self.clearXset)
 
