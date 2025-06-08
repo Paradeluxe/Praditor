@@ -574,14 +574,20 @@ class MainWindow(QMainWindow):
             popup_window.exec()
 
         if not self.run_onset.isChecked():
-            self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
+            try:
+                self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
+            except KeyError:
+                pass
             self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
                                                                             self.AudioViewer.audio_obj, "onset")
         else:
             self.AudioViewer.tg_dict_tp["onset"] = []
 
         if not self.run_offset.isChecked():
-            self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
+            try:
+                self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
+            except KeyError:
+                pass
             self.AudioViewer.tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
                                                                              self.AudioViewer.audio_obj, "offset")
         else:
