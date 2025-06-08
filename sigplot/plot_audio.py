@@ -169,6 +169,7 @@ class AudioViewer(QWidget):
         if not self.fpath:
             return
         delta = event.angleDelta()
+        print(delta)
         # 判断是否为鼠标滚轮的固定步长（120 的倍数）
         if abs(delta.y()) % 120 == 0 and delta.x() == 0:  # 滚轮
             _x = delta.x()
