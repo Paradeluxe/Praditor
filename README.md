@@ -146,7 +146,6 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 - **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
-
 # Data and Materials
 
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
