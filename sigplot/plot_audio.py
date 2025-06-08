@@ -465,9 +465,14 @@ class AudioViewer(QWidget):
                 self._chart.setAxisY(self._axis_y, test_series)
 
 
-
-        self.hideXset(self.tg_dict_tp["onset"], isVisible=self.showOnset)
-        self.hideXset(self.tg_dict_tp["offset"], isVisible=self.showOffset)
+        try:
+            self.hideXset(self.tg_dict_tp["onset"], isVisible=self.showOnset)
+        except KeyError:
+            pass
+        try:
+            self.hideXset(self.tg_dict_tp["offset"], isVisible=self.showOffset)
+        except KeyError:
+            pass
 
 
     def sliderValueChanged(self):
