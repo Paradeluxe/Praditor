@@ -1,18 +1,26 @@
 # Fine-tune Praditor
 
+## Number of onsets
+Onsets have generally two types (1) before-speech, and (2) during-speech.
+
+- Too many during-speech onsets/You don't want pauses during speech: [**_EPS%_** ↓](#eps---one-and-only).
+- Too few onsets/You do want pauses during speech: [**_EPS%_** ↑](#eps---one-and-only), [**_RefLen_** ↓](#reflen).
+- If part of the before-speech onsets are not detected, try [**_Threshold_** ↓](#threshold).
+- Multiple onsets almost overlap, try [**_Threshold_** ↓](#threshold)
+
+## Onset quality
+- Too early annotation: try [**_Threshold_** ↑](#threshold) first
+- If it is **almost at the right place** but just a little too late, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
+or [**_CountValid_** ↑](#countvalid).
+- If it is stuck before a short **peak**, try having [**_CountValid_** ↑](#countvalid).
+- If it is stuck before a short **pause**, try having [**_Penalty_** ↑](#penalty).
 
 
-- Too many onsets: **_EPS%_** ↓.
-- Too few onsets: **_EPS%_** ↑.
-- Too early annotation: try **_Threshold_** ↑ first
-- If it is **almost at the right place** but just a little too late, try **_KernelFrm%_** ↑, **_KernelSize_** ↓ (make it sharp) or **_CountValid_** ↑.
-- If it is stuck before a short **peak**, try having **_CountValid_** ↑.
-- If it is stuck before a short **pause**, try having **_Penalty_** ↑.
+## Ohter
 
-For the remaining three parameters (i.e., **_RefLen_**, **_LowPass_**, **_HighPass_**), just try to adjust them to appropriate ranges.
+- If none of the above parameters work (or have prominent changes), try to find a more suitable [**_LowPass_** and **_HighPass_**](#lowpass-highpass).
 
 
-## Too many/few onsets
 
 ### EPS% - One and only
 It controls the length of radius in DBSCAN clustering. The actual EPS is determined by multiplying the 80% highest value with EPS%. Rather than using a precise number, it is more universally applicable to set up a ratio that can be adjusted for audio files with varying volume levels.  
@@ -25,10 +33,6 @@ EPS% is positively correlated with the number of onsets detected. Increasing EPS
   
 **Figure b2.** An example of tuning EPS.
 
-
-
-
-## Too early/late annotation
 
 ### Threshold
 The core logic of thresholding resembles "hitting the cliff", where the "cliff" represents the waveform's shape at the onset of an utterance. For plosive consonants (e.g., [b], [p], [k]), the "cliff" is sharp and distinct, whereas for aspirated consonants (e.g., [f], [θ]), it resembles a gradual "slope" rather than a "cliff". The actual threshold is calculated by multiplying the baseline by Threshold. If the threshold is set too low, annotations may occur prematurely, before the actual onset. Conversely, if the threshold is set too high, annotations may fall midway on the "slope". It is recommended set the threshold slightly above the baseline, with the Threshold value slightly exceeding 1.00.  
@@ -55,7 +59,7 @@ During the boxcar smoothing, KernelSize defines the length of the kernel, while 
 
 
 
-### Penalty, CountValid
+### Penalty
 Penalty is a parameter used to adjust the sensitivity to noise, particularly below-threshold frames, and is negatively related to the scanning sum. A higher Penalty value increases the likelihood to reject a starting frame or onset candidate, even if the silence preceding it is shorter (e.g., subtle noises like lip smacking before speech). However, excessive Penalty values may lead to the omission of valid but subtle onsets, making it critical to fine-tune this parameter based on the specific characteristics of the dataset.  
 
 
@@ -63,6 +67,8 @@ Penalty is a parameter used to adjust the sensitivity to noise, particularly bel
 
 **Figure b8.** An example of tuning Penalty.
 
+
+### CountValid
 CountValid serves a similar purpose to Penalty in refining onset detection by demanding a higher level of certainty. Increasing CountValid means requiring more above-threshold frames following a candidate onset for it to be considered valid. This adjustment helps ensure that detected onsets are not spurious and correspond to actual transitions from silence to speech. However, setting CountValid too high may exclude real onsets, particularly in cases where speech contains softer or shorter segments.  
 
 ![example_CountValid.png](../instructions/example_CountValid.png)
@@ -85,6 +91,7 @@ If RefLen is too small (e.g., 1), the reference sequence may fail to capture suf
 ![example_RefLen.png](../instructions/example_RefLen.png)
 
 **Figure b4.** An example of tuning RefLen.
+
 
 
 ### LowPass, HighPass
