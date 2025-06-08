@@ -59,24 +59,13 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 > on _**Praditor**_.
 
 # Video instruction (bilibili)
-[![Praditor_intro_cover.png](instructions/Praditor_intro_cover.png)](https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10)
+<div align="center">
+  <a href="https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10">
+    <img src="instructions/Praditor_intro_cover.png" alt="Praditor_intro_cover" style="width:80%;">
+  </a>
+</div>
 
-
-# Contact us
-_Praditor_ is written and maintained by **Tony, Liu Zhengyuan** from Centre for Cognitive and Brain Sciences, University of Macau.
-
-If you have any questions in terms of how to use _Praditor_ or its algorithm details, or you want me to help you write some additional
-scripts like **export audio files**, **export Excel tables**,
-feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
-
-
-## 🙌 Acknowledgments
-This project thrives thanks to these remarkable contributors:
-- Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
-- Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
-- Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
-
-# User Guide
+# Basic Operation
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
 
@@ -148,16 +137,13 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 `←←✌`/`✌→→` to move forward/backward in **timeline** 
 
 
-
-
 ## Fine-tuning guidance
 
-Refer to [Parameter](./markdown/params.md) section.
+> Basic understanding is enough. Understanding the algorithm is better.
 
-## Quick Fix
-
-Refer to [Quick Fix](markdown/quick_fix.md) section.
-
+- **Basic knowledge**: Go to the first section of [**Quick Fix**](markdown/quick_fix.md).
+- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md/#detailed-introduction).
+- **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
 
@@ -166,3 +152,16 @@ Refer to [Quick Fix](markdown/quick_fix.md) section.
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
 
 
+# Contact us
+_**Praditor**_ is written and maintained by **Tony, Liu Zhengyuan** from Centre for Cognitive and Brain Sciences, University of Macau.
+
+If you have any questions in terms of how to use _Praditor_ or its algorithm details, or you want me to help you write some additional
+scripts like **export audio files**, **export Excel tables**,
+feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
+
+
+## 🙌 Acknowledgments
+This project thrives thanks to these remarkable contributors:
+- Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
+- Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
+- Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
