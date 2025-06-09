@@ -131,7 +131,7 @@ Hit `Next`/`Prev`.
 `←←✌`/`✌→→` to move forward/backward in **timeline** 
 
 
-# Fine-tuning guidance
+# 📚 Fine-tuning guidance
 
 > Basic understanding is enough. Understanding the algorithm is better.
 
@@ -140,7 +140,7 @@ Hit `Next`/`Prev`.
 - **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
-# Data and Materials
+# 🗃️ Data and Materials
 
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
 
@@ -155,10 +155,8 @@ Also, the funding:
 - This project was funded by the National Natural Science Foundation of China (32200845),
 the Science and Technology Development Fund, Macao S.A.R (FDCT, 0153/2022/A), and the Multi-Year Research Grant (MYRG2022-00148-ICI) from the University of Macau to Haoyun Zhang.
 
-
-
-
-# Contact us
+  
+# 📨 Contact us
 _**Praditor**_ is written and maintained by **Tony, Liu Zhengyuan** from Centre for Cognitive and Brain Sciences, University of Macau.
 
 If you have any questions in terms of how to use _Praditor_ or its algorithm details, or you want me to help you write some additional
