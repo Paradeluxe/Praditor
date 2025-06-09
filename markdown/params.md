@@ -34,7 +34,7 @@ The purpose of kernel smoothing in this process is to eliminate these sudden spi
 _(Threshold, CountValid, Penalty, RefLen, EPS%)_
 
 ### Number of onsets
-_Praditor_'s unique multi-onset detection capability derives from DBSCAN clustering pre-thresholding.
+_Praditor_'s unique multi-onset detection capability derives from DBSCAN clustering (before thresholding).
 This technique identifies potential onset regions through density-based separation: 
 (1) Background noise forms dense clusters near the coordinate origin;
 (2) Speech signals create sparse clusters away from the origin.
@@ -97,7 +97,7 @@ Based on the idea that “Sound should be louder than silence”, we can set a c
 I name this _Coef_ as **_Threshold_**.
 
 #### Related Parameter(s)
-* **_Threshold_** (float, >1.0): A coefficient that determines the actual threshold (baseline × _Threshold_ = actual threshold)
+* **_Threshold_** (float, >1.0): A coefficient that determines the actual threshold (baseline × **_Threshold_** = actual threshold)
 
 
 **(3) Validate onset candidate**

@@ -3,6 +3,8 @@
 ## Number of onsets
 Onsets have generally two types (1) before-speech, and (2) during-speech.
 
+> ↑ means tuning up, ↓ means tuning down
+
 - Too **MANY** onsets: 
   - **during-speech** onsets: [**_EPS%_** ↓](#eps---one-and-only)
 - Too **FEW** onsets:
@@ -25,23 +27,10 @@ Onsets have generally two types (1) before-speech, and (2) during-speech.
 
 # Detailed Introduction
 
-## EPS%
-It controls the length of radius in DBSCAN clustering. The actual EPS is determined by multiplying the 80% highest value with EPS%. Rather than using a precise number, it is more universally applicable to set up a ratio that can be adjusted for audio files with varying volume levels.  
-
-EPS% is positively correlated with the number of onsets detected. Increasing EPS% identifies more onsets by capturing those within shorter silence intervals, such as between-character pauses in Mandarin speech.  
-
-
-![example_EPS.png](../instructions/example_EPS.png)
-
-  
-**Figure b1.** An example of tuning EPS.
-
 ## LowPass, HighPass
 They are the two cutoff frequencies for the bandpass filter. **_LowPass_** should exceed **_HighPass_** and less than the highest valid frequency (i.e., Nyquist frequency).  
 
-$$
-\text{LowPass} \leq f_{\text{Nyquist}} = \frac{\text{SampleRate}}{2}
-$$
+$$ \text{LowPass} \leq f_{\text{Nyquist}} = \frac{\text{SampleRate}}{2} $$
 
 
 If the user ultimately chooses a **_LowPass_** frequency that exceeds Nyquist frequency, _Praditor_ will automatically apply the bandpass filter using the highest valid frequency instead.  
@@ -53,29 +42,15 @@ Most of the time, tuning these two parameters will not have that significant imp
  
 **Figure b1.** An example of tuning **_LowPass_**. **_HighPass_** works the similar way.
 
+## EPS%
+It controls the length of radius in DBSCAN clustering. The actual EPS is determined by multiplying the 80% highest value with EPS%. Rather than using a precise number, it is more universally applicable to set up a ratio that can be adjusted for audio files with varying volume levels.  
 
-## Threshold
-The core logic of thresholding resembles "hitting the cliff", where the "cliff" represents the waveform's shape at the onset of an utterance.
-For plosive consonants (e.g., [b], [p], [k]), the "cliff" is sharp and distinct, whereas for aspirated consonants (e.g., [f], [θ]),
-it resembles a gradual "slope" rather than a "cliff". The actual threshold is calculated by multiplying the baseline by **_Threshold_**.
-If the threshold is set too low, annotations may occur prematurely, before the actual onset.
-Conversely, if the threshold is set too high, annotations may fall midway on the "slope". It is recommended set the threshold slightly above the baseline, with the Threshold value slightly exceeding 1.00.  
-
-![example_Threshold.png](../instructions/example_Threshold.png)
-
-**Figure b2.** An example of tuning **_Threshold_**. The first annotation is blocked by an abrupt noise spike due to **_Threshold_** being too low.
+EPS% is positively correlated with the number of onsets detected. Increasing EPS% identifies more onsets by capturing those within shorter silence intervals, such as between-character pauses in Mandarin speech.  
 
 
-## KernelFrm%, KernelSize
-During the boxcar smoothing, **_KernelSize_** defines the length of the kernel, while **_KernelFrm%_** specifies the percentage of values retained within each kernel.
-Tuning these two requires careful consideration, as both excessively high and low values can result in onset annotations being inappropriately early or late.
-A high **_KernelSize_** overly smooths the signal, like a larger pixelation brush that blurs a wider area, potentially causing late annotations and reducing accuracy.
-Conversely, a small **_KernelSize_** may fail to smooth the signal sufficiently, which could also lead to inaccuracies.
-Meanwhile, **_KernelFrm%_** is a double-edged sword. Lowering it decreases sensitivity to abrupt loud noises and speech onsets alike, but its effects are unpredictable, potentially resulting in either early or late annotations.
-This randomness necessitates a balanced approach to tuning **_KernelFrm%_** to achieve optimal performance.  
+![example_EPS.png](../instructions/example_EPS.png)
 
-
-![example_KernelSize.png](../instructions/example_KernelSize.png)
+**Figure b2.** An example of tuning EPS.
 
 
 ## RefLen
@@ -96,6 +71,30 @@ Conversely, if **_RefLen_** is too large, it risks including portions of the spe
 
 **Figure b4.** An example of tuning **_RefLen_**.
 
+
+
+## Threshold
+The core logic of thresholding resembles "hitting the cliff", where the "cliff" represents the waveform's shape at the onset of an utterance.
+For plosive consonants (e.g., [b], [p], [k]), the "cliff" is sharp and distinct, whereas for aspirated consonants (e.g., [f], [θ]),
+it resembles a gradual "slope" rather than a "cliff". The actual threshold is calculated by multiplying the baseline by **_Threshold_**.
+If the threshold is set too low, annotations may occur prematurely, before the actual onset.
+Conversely, if the threshold is set too high, annotations may fall midway on the "slope". It is recommended to set the threshold slightly above the baseline, with the Threshold value slightly exceeding 1.00.  
+
+![example_Threshold.png](../instructions/example_Threshold.png)
+
+**Figure b5.** An example of tuning **_Threshold_**. The first annotation is blocked by an abrupt noise spike due to **_Threshold_** being too low.
+
+
+## KernelFrm%, KernelSize
+During the boxcar smoothing, **_KernelSize_** defines the length of the kernel, while **_KernelFrm%_** specifies the percentage of values retained within each kernel.
+Tuning these two requires careful consideration, as both excessively high and low values can result in onset annotations being inappropriately early or late.
+A high **_KernelSize_** overly smooths the signal, like a larger pixelation brush that blurs a wider area, potentially causing late annotations and reducing accuracy.
+Conversely, a small **_KernelSize_** may fail to smooth the signal sufficiently, which could also lead to inaccuracies.
+Meanwhile, **_KernelFrm%_** is a double-edged sword. Lowering it decreases sensitivity to abrupt loud noises and speech onsets alike, but its effects are unpredictable, potentially resulting in either early or late annotations.
+This randomness necessitates balanced tuning of **_KernelFrm%_** for optimal performance. 
+
+
+![example_KernelSize.png](../instructions/example_KernelSize.png)
 
 **Figure b6.** An example of tuning **_KernelSize_**.
 

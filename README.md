@@ -142,7 +142,7 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 > Basic understanding is enough. Understanding the algorithm is better.
 
 - **Basic knowledge**: Go to the first section of [**Quick Fix**](markdown/quick_fix.md).
-- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md/#detailed-introduction).
+- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md#detailed-introduction).
 - **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
@@ -160,7 +160,10 @@ feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@
 
 
 ## 🙌 Acknowledgments
-This project thrives thanks to these remarkable contributors:
-- Thank **Yu Xinqi**, **Dr. Ma Yunxiao**, **Zhang Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
-- Thank **Hu Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
-- Thank **Prof. Zhang Haoyun** (University of Macau) and **Prof. Wang Ruiming** (South China Normal University) for their guidance and support for this project
+Shout out to these remarkable contributors!!
+- Thank **YU Xinqi**, **Dr. MA Yunxiao**, **ZHANG Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
+- Thank **HU Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
+- Thank **Prof. ZHANG Haoyun** (University of Macau) and **Prof. WANG Ruiming** (South China Normal University) for their guidance and support for this project
+
+This project was funded by the National Natural Science Foundation of China (32200845),
+the Science and Technology Development Fund, Macao S.A.R (FDCT, 0153/2022/A), and the Multi-Year Research Grant (MYRG2022-00148-ICI) from the University of Macau to Haoyun Zhang.
