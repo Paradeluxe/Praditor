@@ -1,4 +1,5 @@
 # Fine-tune Praditor
+> Refer to [the official GitHub repo](https://github.com/Paradeluxe/Praditor/blob/master/markdown/quick_fix.md) for the latest update.
 
 ## Number of onsets
 Onsets have generally two types (1) before-speech, and (2) during-speech.
@@ -6,9 +7,9 @@ Onsets have generally two types (1) before-speech, and (2) during-speech.
 > ↑ means tuning up, ↓ means tuning down
 
 - Too **MANY** onsets: 
-  - **during-speech** onsets: [**_EPS%_** ↓](#eps---one-and-only)
+  - **during-speech** onsets: [**_EPS%_** ↓](#eps)
 - Too **FEW** onsets:
-  - Too few **during-speech** onsets: [**_EPS%_** ↑](#eps---one-and-only); if not work, then [**_RefLen_** ↓](#reflen)
+  - Too few **during-speech** onsets: [**_EPS%_** ↑](#eps); if not work, then [**_RefLen_** ↓](#reflen)
   - Part of the **before-speech** onsets are missing: [**_Threshold_** ↓](#threshold)
 - Multiple onsets almost overlap, try [**_Threshold_** ↓](#threshold)
 

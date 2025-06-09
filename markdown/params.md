@@ -1,6 +1,9 @@
 # Params
 Praditor employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Onset** parameters. The latter establishes what it means to be an onset, while the former eliminates noise that might compromise Praditor's algorithmic performance.
 
+> Refer to [the official GitHub repo](https://github.com/Paradeluxe/Praditor/blob/master/markdown/params.md) for the latest update.
+
+
 ## Denoising Parameters
 _(LowPass, HighPass, KernelSize, KernelFrm%)_
 
