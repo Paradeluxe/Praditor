@@ -151,6 +151,19 @@ Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets).
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
 
 
+## 🙌 Acknowledgments
+Shout out to these remarkable contributors!!
+- Thank **YU Xinqi**, **Dr. MA Yunxiao**, **ZHANG Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
+- Thank **HU Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
+- Thank **Prof. ZHANG Haoyun** (University of Macau) and **Prof. WANG Ruiming** (South China Normal University) for their guidance and support for this project
+
+Also, the funding:
+- This project was funded by the National Natural Science Foundation of China (32200845),
+the Science and Technology Development Fund, Macao S.A.R (FDCT, 0153/2022/A), and the Multi-Year Research Grant (MYRG2022-00148-ICI) from the University of Macau to Haoyun Zhang.
+
+
+
+
 # Contact us
 _**Praditor**_ is written and maintained by **Tony, Liu Zhengyuan** from Centre for Cognitive and Brain Sciences, University of Macau.
 
@@ -158,12 +171,3 @@ If you have any questions in terms of how to use _Praditor_ or its algorithm det
 scripts like **export audio files**, **export Excel tables**,
 feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
 
-
-## 🙌 Acknowledgments
-Shout out to these remarkable contributors!!
-- Thank **YU Xinqi**, **Dr. MA Yunxiao**, **ZHANG Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
-- Thank **HU Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
-- Thank **Prof. ZHANG Haoyun** (University of Macau) and **Prof. WANG Ruiming** (South China Normal University) for their guidance and support for this project
-
-This project was funded by the National Natural Science Foundation of China (32200845),
-the Science and Technology Development Fund, Macao S.A.R (FDCT, 0153/2022/A), and the Multi-Year Research Grant (MYRG2022-00148-ICI) from the University of Macau to Haoyun Zhang.
