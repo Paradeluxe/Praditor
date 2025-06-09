@@ -145,7 +145,7 @@ Hit `Next`/`Prev`.
 If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
 
 
-## 🙌 Acknowledgments
+# 🙌 Acknowledgments
 Shout out to these remarkable contributors!!
 - Thank **YU Xinqi**, **Dr. MA Yunxiao**, **ZHANG Sifan** for their work in validating the effectiveness of _Praditor_'s algorithm.
 - Thank **HU Wing Chung** for her work in packaging _Praditor_ for macOS (arm64 and universal2)
