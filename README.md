@@ -99,17 +99,11 @@ Hit `Next`/`Prev`.
 
 ## .TextGrid related
 
-### 🧹 I wanna temporarily clear the annotations
+`Clear` If you want to temporarily clear the annotations, this does not delete/change the .TextGrid file. It's safe.
 
-Hit `Clear`. This does not delete/change the .TextGrid file. It's safe.
+`Read` If you want the cleared annotations back. _Praditor_ will go back to the .TextGrid and present whatever is in it.
 
-### ✍️ Oh no, I want the cleared annotations back
-
-Hit `Read`. _Praditor_ will go back to the .TextGrid and present whatever is in it.
-
-### 👀 Hide/Show annotations
-
-Press `Onset`/`Offset` (sometimes they are the number of Onsets/Offsets). 
+`Onset`/`Offset` to hide/show annotations on the screen (also does not change the .TextGrid).  
 
 ## 📊 Parameters 
 
