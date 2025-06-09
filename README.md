@@ -116,14 +116,14 @@ Hit `Next`/`Prev`.
 
 ## Audio signal
 
-### 🖱️⌨️ Mouse & Keyboard
+### Mouse & Keyboard 🖱️⌨️ 
 <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
 
 <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
 
 <kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline** 
 
-### 💻 Touchpad
+### Touchpad 💻
 `↑✌↑`/`↓✌↓` to zoom-in/out at **amplitude**
 
 `←✌→`/`→✌←` to zoom-in/out at **timeline**
