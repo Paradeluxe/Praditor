@@ -65,7 +65,7 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
   </a>
 </div>
 
-# Basic Operation
+# 🙌 Basic Operation
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
 
@@ -75,25 +75,25 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 ## General
 
-### 🗃️ import audio file(s)
+### import audio file(s)
 
 `File` -> `Read files...` -> Select your target audio file
 
 _Note_. All the other audio files will also be added to the list.
 
 
-### ▶️ run algorithm and extract onsets
+### run algorithm and extract onsets
 
 Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 
-### 🔊 play and stop
+### play and stop
 
 Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
 
 Press <kbd>any key</kbd> to stop playing.
 
-### ⏮️⏭️ next/previous audio file
+### next/previous audio file
 
 Hit `Next`/`Prev`.
 
@@ -105,7 +105,7 @@ Hit `Next`/`Prev`.
 
 `Onset`/`Offset` to hide/show annotations on the screen (also does not change the .TextGrid).  
 
-## 📊 Parameters 
+## Parameters 
 
 `Current/Default` Display default parameters or parameters for the current file
 
