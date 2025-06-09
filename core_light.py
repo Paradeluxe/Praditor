@@ -3,9 +3,11 @@ import math
 import os
 
 import numpy as np
+# from sklearn.cluster import DBSCAN
+from dbscan import DBSCAN
+
 from textgrid import TextGrid, PointTier, Point
 
-from dbscan import DBSCAN
 from tool import bandpass_filter, get_current_time, ReadSound
 
 
@@ -174,7 +176,7 @@ def runPraditor(params, audio_obj, which_set):
     # print(np.cuda.get_device_id())
     # np.cuda.device = 1
     # print("---↘")
-    for __offset, __onset in _onoffsets:
+    for i, (__offset, __onset) in enumerate(_onoffsets):
         print("-")
 
         # -------------------------------------------------
@@ -224,6 +226,12 @@ def runPraditor(params, audio_obj, which_set):
 
         __y1_threshold = float(np.sum(__candidate_y1_area) / (__sample_startpoint - __sample_endpoint) * params["amp"])
         __ref_midpoint = int(__offset*_dsFactor + (__onset-__offset) * _dsFactor * 0.8)  # 3/4偏移量
+
+        if i < len(_onoffsets) - 1:
+            __ref_midpoint_next = int(_onoffsets[i+1][0]*_dsFactor + (_onoffsets[i+1][1]-_onoffsets[i+1][0]) * _dsFactor * 0.8)
+        else:
+            __ref_midpoint_next = len(_audio_arr_filtered)  # 设置为音频最后一帧的位置
+
         if __ref_midpoint < __sample_startpoint:
             __ref_midpoint = __sample_startpoint
         # print(np.argmin(candidate_y1_area), ref_midpoint)
@@ -239,7 +247,7 @@ def runPraditor(params, audio_obj, which_set):
         __countDSTime = -1
 
 
-        while True:
+        while __ref_midpoint + __countDSTime < __ref_midpoint_next:
             __countDSTime += 1
 
             __left_boundary = __ref_midpoint + __countDSTime - params["win_size"]
@@ -273,6 +281,9 @@ def runPraditor(params, audio_obj, which_set):
                 _answer_frames.append(_final_answer)
                 break
     return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
+
+
+
 
 
 def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
