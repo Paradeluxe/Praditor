@@ -181,14 +181,15 @@ class AudioViewer(QWidget):
             _y = -delta.y()
 
 
-        if event.modifiers() == Qt.ControlModifier:  # 滚轮同时按下了Ctrl键
+        if event.modifiers() == Qt.KeyboardModifier.ControlModifier:  # 滚轮同时按下了Ctrl键
             if _y > 0:  # Scroll Up with CTRL
                 self.interval_ms *= 2
 
             else:  # Scroll Down with CTRL
                 self.interval_ms //= 2
+            print(self.interval_ms)
 
-        elif event.modifiers() == Qt.ShiftModifier:  # 滚轮同时按下了Shift键
+        elif event.modifiers() == Qt.KeyboardModifier.ShiftModifier:  # 滚轮同时按下了Shift键
             if _y > 20:
                 self.slider_timerange.setValue(self.slider_timerange.value() - 20)
             elif _y < -20:
