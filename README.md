@@ -131,7 +131,7 @@ Hit `Next`/`Prev`.
 `←←✌`/`✌→→` to move forward/backward in **timeline** 
 
 
-## Fine-tuning guidance
+# Fine-tuning guidance
 
 > Basic understanding is enough. Understanding the algorithm is better.
 
