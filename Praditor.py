@@ -606,7 +606,6 @@ class MainWindow(QMainWindow):
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
 
     def runPraditorOnAudio(self):
-
         # 检查采样率
         # print(self.AudioViewer.audio_samplerate)
         # print(self.MySliders.cutoff1_slider_onset.value_label.text())

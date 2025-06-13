@@ -164,6 +164,11 @@ class AudioViewer(QWidget):
         self.interval_ms = 100 * 128
         self.resolution = self.time_unit * 10  # 100 ms 的长度作为所有samplerate的分辨率
 
+    def keyPressEvent(self, event):
+
+        if not self.fpath:
+            return
+
     def wheelEvent(self, event):
 
         if not self.fpath:
