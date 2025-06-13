@@ -166,15 +166,31 @@ class AudioViewer(QWidget):
 
     def keyPressEvent(self, event):
 
-        print(event)
+        if event.modifiers() == Qt.ControlModifier:
+            # print(event)
+            if event.key() == Qt.Key_I:
+                self.interval_ms //= 2
+            elif event.key() == Qt.Key_O:
+                self.interval_ms *= 2
+            else:
+                pass
+        
+        
+        if self.interval_ms > 100 * 128:
+            self.interval_ms = 100 * 128
+        elif self.interval_ms < 100:
+            self.interval_ms = 100
+        self.tg_dict_tp = self.readAudio(self.fpath)
+
+        super().keyPressEvent(event)
 
     def wheelEvent(self, event):
 
         if not self.fpath:
             return
-        print(event.modifiers())
+        # print(event.modifiers())
         delta = event.angleDelta()
-        print(delta)
+        # print(delta)
         # 判断是否为鼠标滚轮的固定步长（120 的倍数）
         if abs(delta.y()) % 120 == 0 and delta.x() == 0:  # 滚轮
             _x = delta.x()
@@ -191,7 +207,7 @@ class AudioViewer(QWidget):
 
             else:  # Scroll Down with CTRL
                 self.interval_ms //= 2
-            print(self.interval_ms)
+            # print(self.interval_ms)
 
         elif event.modifiers() == Qt.KeyboardModifier.ShiftModifier:  # 滚轮同时按下了Shift键
             if _y > 20:
