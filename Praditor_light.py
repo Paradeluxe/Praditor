@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
-        self.setMinimumSize(900, 720)
+        self.setMinimumSize(950, 720)
 
         # 初始化媒体播放器和音频输出
         self.player = QMediaPlayer()
@@ -165,12 +165,19 @@ class MainWindow(QMainWindow):
         self.prev_audio.pressed.connect(self.prevnext_audio)
         toolbar.addWidget(self.prev_audio)
 
-        self.run_praditor = QPushButton("Extract", self)
-        self.run_praditor.setFixedSize(65, 25)
+        self.run_praditor = QPushButton("Run", self)
+        self.run_praditor.setFixedSize(50, 25)
         self.run_praditor.setStatusTip("Extract speech onsets/offsets")
         self.run_praditor.setStyleSheet(qss_button_normal)
         self.run_praditor.pressed.connect(self.runPraditorOnAudio)
         toolbar.addWidget(self.run_praditor)
+
+        self.test_praditor = QPushButton("Test", self)
+        self.test_praditor.setFixedSize(50, 25)
+        self.test_praditor.setStatusTip("Test the number of onsets/offsets but no change to .TextGrid")
+        self.test_praditor.setStyleSheet(qss_button_normal)
+        self.test_praditor.pressed.connect(self.testPraditorOnAudio)
+        toolbar.addWidget(self.test_praditor)
 
         self.next_audio = QPushButton("Next", self)
         self.next_audio.setFixedSize(50, 25)
@@ -606,6 +613,43 @@ class MainWindow(QMainWindow):
         self.readXset()
         self.showXsetNum()
         self.update_current_param()
+
+    def testPraditorOnAudio(self):
+        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(
+                self.AudioViewer.audio_samplerate) / 2 or \
+                float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(
+            self.AudioViewer.audio_samplerate) / 2:
+            popup_window = QMessageBox()
+            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setText(
+                f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate) / 2:.0f}")
+            popup_window.exec()
+
+        _test_tg_dict_tp = {"onset": [], "offset": []}
+        if not self.run_onset.isChecked():
+            _test_tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj,
+                                                                 "onset")
+        else:
+            _test_tg_dict_tp["onset"] = []
+
+        if not self.run_offset.isChecked():
+            _test_tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(),
+                                                                  self.AudioViewer.audio_obj, "offset")
+        else:
+            _test_tg_dict_tp["offset"] = []
+
+        if not _test_tg_dict_tp['onset']:
+            self.run_onset.setText("Onset")
+        else:
+            self.run_onset.setText(f"Onset: {len(_test_tg_dict_tp['onset'])} ?")
+
+        if not _test_tg_dict_tp['offset']:
+            self.run_offset.setText("Offset")
+        else:
+            self.run_offset.setText(f"Offset: {len(_test_tg_dict_tp['offset'])} ?")
+
+        # self.update_current_param()
 
     def update_current_param(self):
         if self.MySliders.getParams() in self.param_sets:
