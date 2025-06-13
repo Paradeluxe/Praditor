@@ -121,12 +121,16 @@ Hit `Next`/`Prev`.
 
 <kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
 
-<kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline** 
+* <kbd>Ctrl/Command</kbd>+<kbd>I</kbd>/<kbd>O</kbd> also works the same way
+
+<kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline**
+
 
 ### Touchpad 💻
 `↑✌↑`/`↓✌↓` to zoom-in/out at **amplitude**
 
 `←✌→`/`→✌←` to zoom-in/out at **timeline**
+> **Timeline zoom** might not work in macOS. Use `Command + I/O` instead.
 
 `←←✌`/`✌→→` to move forward/backward in **timeline** 
 

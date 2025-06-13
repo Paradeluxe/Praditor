@@ -169,9 +169,10 @@ class AudioViewer(QWidget):
         if event.modifiers() == Qt.ControlModifier:
             # print(event)
             if event.key() == Qt.Key_I:
-                self.interval_ms //= 2
+                self.interval_ms //= 2  #  缩小间隔
             elif event.key() == Qt.Key_O:
-                self.interval_ms *= 2
+                self.interval_ms *= 2  #  放大间隔
+
             else:
                 pass
         
