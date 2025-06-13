@@ -166,8 +166,7 @@ class AudioViewer(QWidget):
 
     def keyPressEvent(self, event):
 
-        if not self.fpath:
-            return
+        print(event)
 
     def wheelEvent(self, event):
 
