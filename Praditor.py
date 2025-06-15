@@ -157,9 +157,9 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(self.clear_xset)
 
 
-        self.read_xset = QPushButton("Read", self)
+        self.read_xset = QPushButton("Show", self)
         self.read_xset.setFixedSize(50, 25)
-        self.read_xset.setStatusTip("Read Onsets and Offsets from existing .TextGrid")
+        self.read_xset.setStatusTip("Read Onsets and Offsets if there is the existing .TextGrid")
         self.read_xset.setStyleSheet(qss_button_normal)
         self.read_xset.pressed.connect(self.readXset)
         toolbar.addWidget(self.read_xset)
