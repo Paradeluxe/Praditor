@@ -214,7 +214,7 @@ Praditor的算法略有不同，我们加入了 **核平滑（kernel smoothing�
 
 在这里，**_Penalty_** 像是一个调节 **噪声灵敏度** 的“旋钮”。**_Penalty_** 调的越高，对低于阈值的帧越敏感——越强调“连续性地大于阈值”的要求。
 
-![count_valid.png](../instructions/count_valid.png)
+![count_valid.png](../instructions/net_active.png)
 
 总结来说，每次扫描都有一个**开始帧**（即，起始点的候选）。扫描的目的是：验证这个开始帧是否**有效**。
 有效的标准是，**扫描和**保持为正数，直到其最终达到标准 **_CountValid_**。由此，该**开始帧**便可以认定为是**起始点**。

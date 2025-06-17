@@ -3,7 +3,7 @@
 - Now you can play the audio while double-checking annotation
 
 ### Zoom-in/out like Praat
-- Now Praditor allows users to zoom in/out at timeline by pressing `ctrl/command + I/O`
+- Now _Praditor_ allows users to zoom in/out at timeline by pressing `ctrl/command + I/O`
 
 
 
