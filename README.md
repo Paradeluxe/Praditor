@@ -75,33 +75,23 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 ## General
 
-### import audio file(s)
-
-`File` -> `Read files...` -> Select your target audio file
-
-_Note_. All the other audio files will also be added to the list.
+`File` -> `Read files...` -> Import your target audio file
 
 
-### run algorithm and extract onsets
-
-Hit `Extract`. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+`Extract` run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 
-### play and stop
+<kbd>F5</kbd> to play the audio signal that is currently presented in the window, and <kbd>Any Key</kbd> to stop playing.
 
-Press <kbd>F5</kbd> to play the audio signal that is currently presented in the window. 
 
-Press <kbd>any key</kbd> to stop playing.
 
-### next/previous audio file
-
-Hit `Next`/`Prev`.
+`Next`/`Prev` Move to the next/previous audio file
 
 ## .TextGrid related
 
 `Clear` If you want to temporarily clear the annotations, this does not delete/change the .TextGrid file. It's safe.
 
-`Read` If you want the cleared annotations back. _Praditor_ will go back to the .TextGrid and present whatever is in it.
+`Show` If you want the cleared annotations back. _Praditor_ will go back to the .TextGrid and present whatever is in it.
 
 `Onset`/`Offset` to hide/show annotations on the screen (also does not change the .TextGrid).  
 
@@ -111,7 +101,9 @@ Hit `Next`/`Prev`.
 
 `Save` Save the displayed parameters as Current/Default
 
-`Reset` Reset the displayed parameters to the last time you saved it.
+`Reset` Reset the displayed parameters to the last time you saved it
+
+`Last` Go back to the last set parameters you have run
 
 
 ## Audio signal
@@ -119,9 +111,7 @@ Hit `Next`/`Prev`.
 ### Mouse & Keyboard 🖱️⌨️ 
 <kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **amplitude**
 
-<kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline**
-
-* <kbd>Ctrl/Command</kbd>+<kbd>I</kbd>/<kbd>O</kbd> also works the same way
+<kbd>Ctrl/Command</kbd>+<kbd>Wheel ↑</kbd>/<kbd>Wheel ↓</kbd> to zoom-in/out at **timeline** (<kbd>Ctrl/Command</kbd>+<kbd>I</kbd>/<kbd>O</kbd> also works)
 
 <kbd>Shift</kbd>+<kbd>Wheel ↓</kbd>/<kbd>Wheel ↑</kbd> to move forward/backward in **timeline**
 
