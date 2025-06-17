@@ -65,7 +65,7 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
   </a>
 </div>
 
-# 🙌 Basic Operation
+# 🙌 Play with GUI
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
 
@@ -75,7 +75,7 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 ## General
 
-`File` -> `Read files...` -> Import your target audio file
+`File` -> `Read files...` -> Import your target audio file (**Recommend**: >= 44.1 kHz; **Accept**: >= 8 kHz)
 
 
 `Extract` run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
