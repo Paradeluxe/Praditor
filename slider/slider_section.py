@@ -13,7 +13,7 @@ class MySliders(QMainWindow):
         self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
         self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
         self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
-        self.numValid_slider_onset = SingleSlider("CountValid", 0, 1, 8000, default=475)
+        self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475)
         self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
         self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97, font_color="#7F7F7F")
         self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)

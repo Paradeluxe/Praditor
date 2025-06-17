@@ -16,11 +16,11 @@ Onsets have generally two types (1) before-speech, and (2) during-speech.
 ## Onset quality
 - Too **EARLY** annotation: 
   - Most of the time: [**_Threshold_** ↑](#threshold)
-  - If many onsets are stuck before a short **peak**, try [**_CountValid_** ↑](#countvalid)
+  - If many onsets are stuck before a short **peak**, try [**_NetActive_** ↑](#netactive)
   - If many onsets are stuck before a short **pause**, try [**_Penalty_** ↑](#penalty)
 - Too **LATE** annotation:
   - If it is almost at the right place but just **a little too late**, try [**_KernelFrm%_** ↑, **_KernelSize_** ↓](#kernelfrm-kernelsize) (make it sharp)
-  - If it is **way too late**, [**_CountValid_** ↓](#countvalid)
+  - If it is **way too late**, [**_NetActive_** ↓](#netactive)
 
 
 ## Other
@@ -109,7 +109,7 @@ This randomness necessitates balanced tuning of **_KernelFrm%_** for optimal per
 ## Penalty
 **_Penalty_** is a parameter used to adjust the sensitivity to noise, particularly below-threshold frames, and is negatively related to the scanning sum.
 A higher **_Penalty_** value increases the likelihood to reject a starting frame or onset candidate, even if the silence preceding it is shorter (e.g., subtle noises like lip-smacking before speech).
-However, excessive **_Penalty_** values may lead to the omission of valid but subtle onsets, making it critical to fine-tune this parameter based on the specific characteristics of the dataset.  
+However, excessive **_Penalty_** values may lead to the omission of valid but subtle onsets (e.g., aspirated consonants), making it critical to fine-tune this parameter based on the characteristics of the dataset.  
 
 
 ![example_Penalty.png](../instructions/example_Penalty.png)
@@ -117,15 +117,15 @@ However, excessive **_Penalty_** values may lead to the omission of valid but su
 **Figure b8.** An example of tuning **_Penalty_**.
 
 
-## CountValid
-**_CountValid_** serves a similar purpose to **_Penalty_** in refining onset detection by demanding a higher level of certainty.
-Increasing **_CountValid_** means requiring more above-threshold frames following a candidate onset for it to be considered valid.
+## NetActive
+**_NetActive_** serves a similar purpose to **_Penalty_** in refining onset detection by demanding a higher level of certainty.
+Increasing **_NetActive_** means requiring more above-threshold frames following a candidate onset for it to be considered active.
 This adjustment helps ensure that detected onsets are not spurious and correspond to actual transitions from silence to speech.
-However, setting **_CountValid_** too high may exclude real onsets, particularly in cases where speech contains softer or shorter segments.  
+However, setting **_NetActive_** too high may exclude real onsets, particularly in cases where speech contains softer or shorter segments.  
 
-![example_CountValid.png](../instructions/example_CountValid.png)
+![example_NetActive.png](../instructions/example_NetActive.png)
  
-**Figure b9.** An example of tuning **_CountValid_**. The first spike is likely to be lip-smacking.
+**Figure b9.** An example of tuning **_NetActive_**. The first spike is likely to be lip-smacking.
 
 
 

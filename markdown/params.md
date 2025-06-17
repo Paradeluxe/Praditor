@@ -34,7 +34,7 @@ The purpose of kernel smoothing in this process is to eliminate these sudden spi
 * **_KernelFrm%_** (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
 
 ## Onset Parameters
-_(Threshold, CountValid, Penalty, RefLen, EPS%)_
+_(Threshold, NetActive, Penalty, RefLen, EPS%)_
 
 ### Number of onsets
 _Praditor_'s unique multi-onset detection capability derives from DBSCAN clustering (before thresholding).
@@ -130,7 +130,7 @@ where:
 * $N_{below}$ = count of below-threshold frames
 * $Penalty$ = empirically determined tolerance coefficient (Penalty ≥ 1)
 
-Validation occurs when $S_{net} ≥ CountValid$ (minimum activation threshold). 
+Validation occurs when $S_{net} ≥ NetActive$ (minimum activation threshold). 
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
 <div align="center">
@@ -149,7 +149,7 @@ In _Praditor_, we have a “Penalty” parameter for tuning the tolerance of the
 The validation function is formalized as:
 
 <div align="center">
-  <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BCountValid%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="网络验证状态公式">
+  <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BNetActive%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="网络验证状态公式">
 </div>
 
 The **_Penalty_** coefficient modulates temporal precision in these ways:
@@ -162,7 +162,7 @@ The **_Penalty_** coefficient modulates temporal precision in these ways:
 
 
 #### Related Parameter(s)
-* **_CountValid_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
+* **_NetActive_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
 * **_Penalty_** (float, >1.0): Weight applied to below-threshold frames
 
 
