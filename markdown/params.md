@@ -149,7 +149,7 @@ In _Praditor_, we have a "Penalty" parameter for tuning the tolerance of the bel
 The validation function is formalized as:
 
 <div align="center">
-  <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BNetActive%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="网络验证状态公式">
+  <img src="https://latex.codecogs.com/png.latex?%5Cdpi%7B100%7D%20%5Csmall%20Validation(S_%7Bnet%7D)%20%3D%20%5Cbegin%7Bcases%7D%20%5Ctext%7BInvalid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cleq%200%2C%20%5C%5C%20%5Ctext%7BValid%7D%2C%20%26%20%5Ctext%7Bif%20%7D%20x%20%5Cgeq%20%5Ctext%7BNetActive%7D%2C%20%5C%5C%20%5Ctext%7BContinuing%7D%2C%20%26%20%5Ctext%7Botherwise.%7D%20%5Cend%7Bcases%7D" alt="公式">
 </div>
 
 The **_Penalty_** coefficient modulates temporal precision in these ways:
