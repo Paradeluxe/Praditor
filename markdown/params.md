@@ -13,7 +13,7 @@ You should prioritize frequency bands exhibiting higher energy/amplitude contras
 Removing low-contrast frequency bands is supposed to enhance annotation accuracy and precision.
 
 <div align="center">
-  <img alt="high_low_cutoff.png" src="../instructions/high_low_cutoff.png" width="95%"/>
+  <img alt="high_low_cutoff.png" src="../instructions/high_low_cutoff.png"/>
 </div>
 
 #### Related Parameter(s)
@@ -26,7 +26,7 @@ sharp fluctuations (the high-frequency components).
 The purpose of kernel smoothing in this process is to eliminate these sudden spikes while maintaining the gradual changes that show the signal's true pattern.
 
 <div align="center">
-  <img alt="kernel_param.png" src="../instructions/kernel_param.png" width="95%"/>
+  <img alt="kernel_param.png" src="../instructions/kernel_param.png"/>
 </div>
 
 #### Related Parameter(s)
@@ -44,7 +44,7 @@ This technique identifies potential onset regions through density-based separati
 
 
 <div align="center">
-  <img alt="EPS" src="../instructions/EPS.PNG" width="95%"/>
+  <img alt="EPS" src="../instructions/EPS.PNG"/>
 </div>
 
 The **_EPS%_** parameter optimizes boundary delineation between clusters.
@@ -74,7 +74,7 @@ To operationalize this discovery, we propose implementing an adaptive time windo
 deliberately configured to be shorter than the minimum detected silence interval.
 
 <div align="center">
-  <img alt="RefLen Parameter" src="../instructions/reflen_param.PNG" width="95%"/>
+  <img alt="RefLen Parameter" src="../instructions/reflen_param.PNG"/>
 </div>
 
 
@@ -86,14 +86,14 @@ Should be smaller than silence segment, so that you can be sure it stays within 
 **(2) Determine the threshold.**
 
 Conventional thresholding requires users to input an absolute value as the actual threshold. Whether it is based on absolute amplitude, power, or energy, the annoying thing is you have to determine a new one every time you start working on a new audio file.
-In Praditor, we do not have that kind of problem. DBSCAN have clustered and located all the generally low-volume segments (i.e., silence segments), which means you will never need to open another audio processing software to check its absolute value and guess a threshold. What’s more, each potential onset can have its dedicated reference segment, rather than use only one threshold for all the onset annotations.
+In Praditor, we do not have that kind of problem. DBSCAN have clustered and located all the generally low-volume segments (i.e., silence segments), which means you will never need to open another audio processing software to check its absolute value and guess a threshold. What's more, each potential onset can have its dedicated reference segment, rather than use only one threshold for all the onset annotations.
 
 <div align="center">
-  <img alt="threshold_param" src="../instructions/threshold_param.PNG" width="95%"/>
+  <img alt="threshold_param" src="../instructions/threshold_param.PNG"/>
 </div>
 
 
-Based on the idea that “Sound should be louder than silence”, we can set a coefficient that is slightly larger than 1.0 (e.g., 1.2) and multiply it with baseline as the actual threshold:
+Based on the idea that "Sound should be louder than silence", we can set a coefficient that is slightly larger than 1.0 (e.g., 1.2) and multiply it with baseline as the actual threshold:
 
 **Actual threshold = Baseline * Coef**
 
@@ -113,7 +113,7 @@ Initialize the onset candidate as the first frame right next to the reference se
 
 ##### 2. Validation Protocol:
 
-Use a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it’s valid.
+Use a sliding window validation approach based on the fundamental premise that actual onsets should maintain persistent acoustic activity. In plain terms: if you have enough consecutive frames above the threshold, it's valid.
 
   * **Above-threshold frames:** +1 contribution
   * **Below-threshold frames:** Penalized with -1 contribution (configurable penalty coefficient)
@@ -134,7 +134,7 @@ Validation occurs when $S_{net} ≥ NetActive$ (minimum activation threshold).
 Candidate rejection occurs if $S_{net} ≤ 0$, prompting evaluation of the next frame as the new candidate.
 
 <div align="center">
-  <img alt="countvalid_param.PNG" src="../instructions/countvalid_param.PNG" width="95%"/>
+  <img alt="netactive_param.PNG" src="../instructions/netactive_param.PNG"/>
 </div>
 
 ##### 4. Parameter Optimization:
@@ -143,8 +143,8 @@ When you aim for a very, very precise onset annotation, you would set a very low
 which could introduce a lot of silence frames into the validation process.
 Most of the time, we do not like below-threshold frames. A most common example is the tiny little pause between the sound of saliva when you open your mouth or move your tongue and the sound of actually speaking out.
 But it can be necessary in some special cases, like explosive consonants.
-Both situations are legitimate, which has brought the need for tuning “tolerance” to the table.
-In _Praditor_, we have a “Penalty” parameter for tuning the tolerance of the below-threshold frames. 
+Both situations are legitimate, which has brought the need for tuning "tolerance" to the table.
+In _Praditor_, we have a "Penalty" parameter for tuning the tolerance of the below-threshold frames. 
 
 The validation function is formalized as:
 
@@ -157,15 +157,13 @@ The **_Penalty_** coefficient modulates temporal precision in these ways:
 * **Low Penalty values** (≈1): Permit greater temporal flexibility, accommodating brief articulatory pauses (e.g., plosive consonants, lingual adjustments)
 
 <div align="center">
-  <img alt="penalty_param.PNG" src="../instructions/penalty_param.PNG" width="95%"/>
+  <img alt="penalty_param.PNG" src="../instructions/penalty_param.PNG"/>
 </div>
 
 
 #### Related Parameter(s)
 * **_NetActive_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
 * **_Penalty_** (float, >1.0): Weight applied to below-threshold frames
-
-
 
 
 
