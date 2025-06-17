@@ -5,9 +5,6 @@
 /build/
 /dist/
 
-# 忽略主规范文件
-/main.spec
-
 # 忽略虚拟环境文件夹
 /.venv/
 
@@ -16,9 +13,6 @@
 
 # 忽略 Python 脚本和图标生成脚本
 /png2ico.py
-
-# 忽略应用规范文件
-/Praditor.spec
 
 # 忽略演示文件
 /icon.pptx
