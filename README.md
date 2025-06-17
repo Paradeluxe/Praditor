@@ -65,6 +65,16 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
   </a>
 </div>
 
+
+# 📚 Fine-tuning guidance
+
+> Basic understanding is enough. Understanding the algorithm is better.
+
+- **Basic knowledge**: Go to the first section of [**Quick Fix**](markdown/quick_fix.md).
+- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md#detailed-introduction).
+- **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
+
+
 # 🙌 Play with GUI
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
@@ -126,14 +136,6 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 `←←✌`/`✌→→` to move forward/backward in **timeline** 
 
-
-# 📚 Fine-tuning guidance
-
-> Basic understanding is enough. Understanding the algorithm is better.
-
-- **Basic knowledge**: Go to the first section of [**Quick Fix**](markdown/quick_fix.md).
-- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md#detailed-introduction).
-- **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
 # 🗃️ Data and Materials
