@@ -71,7 +71,7 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 > Basic understanding is enough. Understanding the algorithm is better.
 
 - **Basic knowledge**: Go to the first section of [**Quick Fix**](markdown/quick_fix.md).
-- **Advanced knowledge**: Go to the second section of [**Quick Fix** (Detailed Introduction)](markdown/quick_fix.md#detailed-introduction).
+- **Advanced knowledge**: Go to the second section of [**Quick Fix** (i.e., Detailed Introduction)](markdown/quick_fix.md#detailed-introduction).
 - **Expert knowledge**: Go to [**Parameter**](./markdown/params.md).
 
 
