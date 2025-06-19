@@ -1,6 +1,6 @@
 
 # Params
-Praditor employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Onset** parameters. The latter establishes what it means to be an onset, while the former eliminates noise that might compromise Praditor's algorithmic performance.
+_Praditor_ employs **nine parameters** divided into two functional categories: (1) **Denoising** and (2) **Onset** parameters. The latter establishes what it means to be an onset, while the former eliminates noise that might compromise Praditor's algorithmic performance.
 
 > Refer to [the official GitHub repo](https://github.com/Paradeluxe/Praditor/blob/master/markdown/params.md) for the latest update.
 
@@ -9,11 +9,14 @@ Praditor employs **nine parameters** divided into two functional categories: (1)
 The audio signal is first band-pass filtered to remove some high/low frequency bands that have rather low contrast before/after the onset. 
 
 Then, it is down sampled with max-pooling strategy (i.e., using the max value to represent each down-sampled segment).
+
 ![ds_maxp.png](../instructions/ds_maxp.png)
+
+ > _Note_. Each colorbar represents a down-sampled segment. 
 
 DBSCAN requires two dimensions. How do we transform 1-D audio signal into 2-D array?
 For every two consecutive pieces, they are grouped into a **point**. The point has two dimensions, previous and next frame.
-On this point array, Praditor applies DBSCAN clustering to these points. 
+On this point array, _Praditor_ applies DBSCAN clustering to these points. 
 Noise points are usually gathered around (0, 0) due to their relatively small amplitudes.
 
 ![DBSCAN_small.png](../instructions/DBSCAN_small.png)
@@ -28,7 +31,7 @@ in other signal processing areas (e.g., ECG). It keeps the trend but removes the
 For every target area, we do the same procedure as below:
 1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
 2. Set up a **starting frame** as the onset candidate (start from the very next frame from the noise reference).
-3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **active/inactive**.
+3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **active(O)/inactive(X)**.
 4. When we gather enough **active** frames, the exact frame/time point we stop is the answer we want. Otherwise, we move on to the next starting frame.
 
 
