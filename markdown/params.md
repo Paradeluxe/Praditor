@@ -28,8 +28,8 @@ in other signal processing areas (e.g., ECG). It keeps the trend but removes the
 For every target area, we do the same procedure as below:
 1. Set up a noise reference. It's **mean absolute first-derivatives** as baseline.
 2. Set up a **starting frame** as the onset candidate (start from the very next frame from the noise reference).
-3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **valid/invalid**.
-4. When we gather enough **valid** frames, the exact frame/time point we stop is the answer we want. Otherwise, we move on to the next starting frame.
+3. Scan from the starting frame. We use **kernel smoothing** to see if the current frame (or actually kernel/window) is **active/inactive**.
+4. When we gather enough **active** frames, the exact frame/time point we stop is the answer we want. Otherwise, we move on to the next starting frame.
 
 
 
