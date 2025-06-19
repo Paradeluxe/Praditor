@@ -55,7 +55,7 @@ It generates output as PointTiers in .TextGrid format.
 Praditor also allows users to adjust parameters in the Dashboard to get a better performance.
 
 > You can try [test_audio.wav](https://github.com/Paradeluxe/Praditor/raw/master/test_audio/test_audio.wav) and 
-> [mp3_test_audio.mp3](https://github.com/Paradeluxe/Praditor/raw/master/test_audio/mp3_test_audio.mp3)
+> [test_audio.mp3](https://github.com/Paradeluxe/Praditor/raw/master/test_audio/test_audio.mp3)
 > on _**Praditor**_.
 
 # Video instruction (bilibili)
@@ -87,13 +87,9 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 `File` -> `Read files...` -> Import your target audio file (**Recommend**: >= 44.1 kHz; **Accept**: >= 8 kHz)
 
-
 `Extract` run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
-
 <kbd>F5</kbd> to play the audio signal that is currently presented in the window, and <kbd>Any Key</kbd> to stop playing.
-
-
 
 `Next`/`Prev` Move to the next/previous audio file
 
@@ -140,7 +136,7 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 # 🗃️ Data and Materials
 
-If you would like to download the datasets that were used in developing Praditor, please refer to [our OSF storage](https://osf.io/9se8r/).
+If you would like to download the datasets that were used in developing _Praditor_, please refer to [our OSF storage](https://osf.io/9se8r/).
 
 
 # 🙌 Acknowledgments
