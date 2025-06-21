@@ -14,12 +14,14 @@ _**Praditor**_ has been tested on **Win11** and **macOS** (≥10.14.6). Win10 sh
 
 They produce the same answers with slight difference in processing speed. And, `light` version is generally smaller.
 
+> Since 1.3.0, _Praditor_ no longer supports _universal2_ architecture. For Mac users (Intel, or M-series, macOS ≤14), you can still download the previous version [Praditor_v1.2.0_mac_universal2_onefile_light.tar.gz](https://github.com/Paradeluxe/Praditor/releases/download/v1.2.0/Praditor_v1.2.0_mac_universal2_onefile_light.tar.gz).
 
-| System | Format | Recommend | Compatible |
-|:---:|:---:|:---:|:---:|
-| **Windows** | .exe |**x64, AMD64** (**[full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win.exe)**) | x64, AMD64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win.exe), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win_light.exe)) |
-| **macOS** (M-series, macOS ≥15) | .app |  **arm64** (**[full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64.tar.gz)**) | arm64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64.tar.gz), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64_light.tar.gz)), universal2 ([light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_universal2_light.tar.gz))  |
-| **macOS** (Intel, or M-series,  macOS ≤14) | .app | **universal2** (**[light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_universal2_light.tar.gz)**) | universal2 ([light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_universal2_light.tar.gz))  |
+
+
+| System | Format |                                                                                                            Compatible                                                                                                             |
+|:---:|:---:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| **Windows** | .exe |        x64/AMD64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win.exe), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win_light.exe))        |
+| **macOS** (M-series, macOS ≥15) | .app | arm64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64.tar.gz), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64_light.tar.gz)) |
 
 > For manuals, feel free to download [quick_fix.pdf](https://github.com/Paradeluxe/Praditor/raw/master/markdown/quick_fix.pdf) (beginner and advanced level), [params.pdf](https://github.com/Paradeluxe/Praditor/raw/master/markdown/params.pdf) (expert level).
 
