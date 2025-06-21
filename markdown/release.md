@@ -20,9 +20,10 @@ They produce the same answers with slight difference in processing speed. And, `
 
 | System | Format |                                                                                                            Compatible                                                                                                             |
 |:---:|:---:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| **Windows** | .exe |        x64/AMD64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win.exe), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win_light.exe))        |
-| **macOS** (M-series, macOS ≥15) | .app | arm64 ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64.tar.gz), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64_light.tar.gz)) |
+| **Windows** | .exe |        **x64/AMD64** ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win.exe), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_win_light.exe))        |
+| **macOS** (M-series, macOS ≥15) | .app | **arm64** ([full](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64.tar.gz), [light](https://github.com/Paradeluxe/Praditor/releases/download/v1.3.0/Praditor_v1.3.0_mac_arm64_light.tar.gz)) |
 
+> [!NOTE]
 > For manuals, feel free to download [quick_fix.pdf](https://github.com/Paradeluxe/Praditor/raw/master/markdown/quick_fix.pdf) (beginner and advanced level), [params.pdf](https://github.com/Paradeluxe/Praditor/raw/master/markdown/params.pdf) (expert level).
 
 
