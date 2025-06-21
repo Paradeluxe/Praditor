@@ -15,7 +15,6 @@
 /png2ico.py
 
 # 忽略演示文件
-/icon.pptx
 /flyer*
 
 # 忽略所有 spec 文件
