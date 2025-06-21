@@ -99,7 +99,8 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 `Show` If you want the cleared annotations back. _Praditor_ will go back to the .TextGrid and present whatever is in it.
 
 `Onset`/`Offset` to hide/show annotations on the screen (also does not change the .TextGrid). 
-> _Note_: **Onsets** and **offsets** are controlled by two DIFFERENT sets of parameters. 
+> _Note_: **Onsets** and **offsets** are controlled by two DIFFERENT sets of parameters, 
+> which means there is **no strict guarantee on 1-to-1 correspondence**.
 > Offset annotation is the onset annotation on the reversed audio.
 
 ## Parameters 
