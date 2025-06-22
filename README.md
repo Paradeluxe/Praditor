@@ -59,9 +59,13 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 
 # Video instruction
 <div align="center">
-  <a href="https://youtu.be/68bqwj3q-Ag">
-    <img src="instructions/Praditor_intro_cover.png" alt="Praditor_intro_cover" style="width:80%;">
-  </a>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src=".\instructions\bilibili.PNG" width="50%" />
+  <img src=".\instructions\youtube.PNG" width="50%" />
+</div>
+
+
 </div>
 
 
