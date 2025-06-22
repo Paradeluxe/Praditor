@@ -59,7 +59,7 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 
 # Video instruction
 <div align="center">
-  <a href="https://www.bilibili.com/video/BV1i3QPYkEzP/?share_source=copy_web&vd_source=04f6059f57092624c36ac4e9fc1efe10">
+  <a href="https://youtu.be/68bqwj3q-Ag">
     <img src="instructions/Praditor_intro_cover.png" alt="Praditor_intro_cover" style="width:80%;">
   </a>
 </div>
