@@ -119,7 +119,7 @@ However, excessive **_Penalty_** values may lead to the omission of valid but su
 
 ## NetActive
 **_NetActive_** serves a similar purpose to **_Penalty_** in refining onset detection by demanding a higher level of certainty.
-Increasing **_NetActive_** means requiring more above-threshold frames following a candidate onset for it to be considered active.
+Increasing **_NetActive_** means requiring more above-threshold frames following a candidate onset for it to be considered valid.
 This adjustment helps ensure that detected onsets are not spurious and correspond to actual transitions from silence to speech.
 However, setting **_NetActive_** too high may exclude real onsets, particularly in cases where speech contains softer or shorter segments.  
 
