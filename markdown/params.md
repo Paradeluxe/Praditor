@@ -36,7 +36,7 @@ For every target area, we do the same procedure as below:
 
 
 
-## Denoising Parameters
+## Denoising Parameters (Grey in the GUI)
 _(LowPass, HighPass, KernelSize, KernelFrm%)_
 
 ### Bandpass Filtering (First Stage)
@@ -65,7 +65,7 @@ The purpose of kernel smoothing in this process is to eliminate these sudden spi
 * **_KernelSize_** (int, frame): Kernel window size in frames (e.g., 100 = 100-frame window)
 * **_KernelFrm%_** (float): Percentage of frames retained in a kernel window (e.g., 0.97 = discard top 3% frames by absolute value)
 
-## Onset Parameters
+## Onset Parameters (Black in the GUI)
 _(Threshold, NetActive, Penalty, RefLen, EPS%)_
 
 ### Number of onsets
