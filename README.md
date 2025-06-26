@@ -90,7 +90,9 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 `File` -> `Read files...` -> Import your target audio file (**Recommend**: >= 44.1 kHz; **Accept**: >= 8 kHz)
 
-`Extract` run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+`Run` Run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+
+`Test` Test how many onsets/offsets may be found using the presented parameters. This function does not affect .TextGrid.
 
 <kbd>F5</kbd> to play the audio signal that is currently presented in the window, and <kbd>Any Key</kbd> to stop playing.
 
