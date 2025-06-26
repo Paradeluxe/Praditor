@@ -93,6 +93,7 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 `Run` Run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 `Test` Test how many onsets/offsets may be found using the presented parameters. This function does not affect .TextGrid.
+> If the number meets the expectation, hit `Run` to get the final annotation.
 
 <kbd>F5</kbd> to play the audio signal that is currently presented in the window, and <kbd>Any Key</kbd> to stop playing.
 
