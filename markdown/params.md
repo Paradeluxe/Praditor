@@ -194,7 +194,7 @@ The **_Penalty_** coefficient modulates temporal precision in these ways:
 
 
 #### Related Parameter(s)
-* **_NetActive_** (int): Onset qualification standard (valid count = above-threshold frames - [below-threshold frames × penalty])
+* **_NetActive_** (int): Onset qualification standard (net active count = above-threshold frames - [below-threshold frames × penalty])
 * **_Penalty_** (float, >1.0): Weight applied to below-threshold frames
 
 
