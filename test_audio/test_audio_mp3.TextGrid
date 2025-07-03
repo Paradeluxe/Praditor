@@ -2,7 +2,7 @@ File type = "ooTextFile"
 Object class = "TextGrid"
 
 xmin = 0.0
-xmax = 8.100408163265307
+xmax = 30.10426303854875
 tiers? <exists>
 size = 2
 item []:
@@ -10,38 +10,182 @@ item []:
 		class = "TextTier"
 		name = "onset"
 		xmin = 0.0
-		xmax = 8.100408163265307
-		points: size = 4
+		xmax = 30.10426303854875
+		points: size = 31
 			points [1]:
-				time = 0.2598412698412698
+				time = 0.5639909297052155
 				mark = "onset"
 			points [2]:
-				time = 2.195827664399093
+				time = 1.0012698412698413
 				mark = "onset"
 			points [3]:
-				time = 4.06984126984127
+				time = 1.4523809523809523
 				mark = "onset"
 			points [4]:
-				time = 5.841383219954649
+				time = 2.5187755102040814
+				mark = "onset"
+			points [5]:
+				time = 3.1634920634920634
+				mark = "onset"
+			points [6]:
+				time = 3.608299319727891
+				mark = "onset"
+			points [7]:
+				time = 3.933151927437642
+				mark = "onset"
+			points [8]:
+				time = 6.237097505668935
+				mark = "onset"
+			points [9]:
+				time = 7.831383219954649
+				mark = "onset"
+			points [10]:
+				time = 9.311746031746031
+				mark = "onset"
+			points [11]:
+				time = 10.221043083900227
+				mark = "onset"
+			points [12]:
+				time = 10.730068027210883
+				mark = "onset"
+			points [13]:
+				time = 11.092290249433107
+				mark = "onset"
+			points [14]:
+				time = 11.34095238095238
+				mark = "onset"
+			points [15]:
+				time = 12.985351473922902
+				mark = "onset"
+			points [16]:
+				time = 14.665442176870748
+				mark = "onset"
+			points [17]:
+				time = 14.92294784580499
+				mark = "onset"
+			points [18]:
+				time = 16.545668934240364
+				mark = "onset"
+			points [19]:
+				time = 17.851836734693876
+				mark = "onset"
+			points [20]:
+				time = 18.331609977324263
+				mark = "onset"
+			points [21]:
+				time = 19.11138321995465
+				mark = "onset"
+			points [22]:
+				time = 19.808208616780046
+				mark = "onset"
+			points [23]:
+				time = 20.635555555555555
+				mark = "onset"
+			points [24]:
+				time = 21.026485260770976
+				mark = "onset"
+			points [25]:
+				time = 21.350249433106576
+				mark = "onset"
+			points [26]:
+				time = 22.915963718820862
+				mark = "onset"
+			points [27]:
+				time = 25.405396825396824
+				mark = "onset"
+			points [28]:
+				time = 26.258503401360546
+				mark = "onset"
+			points [29]:
+				time = 28.267256235827663
+				mark = "onset"
+			points [30]:
+				time = 28.606938775510205
+				mark = "onset"
+			points [31]:
+				time = 29.145034013605443
 				mark = "onset"
 	item [2]:
 		class = "TextTier"
 		name = "offset"
 		xmin = 0.0
-		xmax = 8.100408163265307
-		points: size = 5
+		xmax = 30.10426303854875
+		points: size = 26
 			points [1]:
-				time = 0.6672925170068021
+				time = 1.3633560090702947
 				mark = "offset"
 			points [2]:
-				time = 1.1671836734693875
+				time = 1.9278911564625851
 				mark = "offset"
 			points [3]:
-				time = 3.062721088435374
+				time = 3.1016326530612246
 				mark = "offset"
 			points [4]:
-				time = 4.720204081632653
+				time = 5.6053061224489795
 				mark = "offset"
 			points [5]:
-				time = 6.937165532879819
+				time = 7.572154195011338
+				mark = "offset"
+			points [6]:
+				time = 8.524399092970521
+				mark = "offset"
+			points [7]:
+				time = 10.651791383219955
+				mark = "offset"
+			points [8]:
+				time = 11.022993197278911
+				mark = "offset"
+			points [9]:
+				time = 11.962312925170068
+				mark = "offset"
+			points [10]:
+				time = 14.32095238095238
+				mark = "offset"
+			points [11]:
+				time = 14.585351473922902
+				mark = "offset"
+			points [12]:
+				time = 14.843401360544219
+				mark = "offset"
+			points [13]:
+				time = 15.281632653061225
+				mark = "offset"
+			points [14]:
+				time = 17.789795918367346
+				mark = "offset"
+			points [15]:
+				time = 18.76888888888889
+				mark = "offset"
+			points [16]:
+				time = 19.35342403628118
+				mark = "offset"
+			points [17]:
+				time = 19.68907029478458
+				mark = "offset"
+			points [18]:
+				time = 20.773424036281178
+				mark = "offset"
+			points [19]:
+				time = 21.221814058956916
+				mark = "offset"
+			points [20]:
+				time = 21.736009070294784
+				mark = "offset"
+			points [21]:
+				time = 24.474739229024944
+				mark = "offset"
+			points [22]:
+				time = 25.278140589569162
+				mark = "offset"
+			points [23]:
+				time = 25.90893424036281
+				mark = "offset"
+			points [24]:
+				time = 28.076190476190476
+				mark = "offset"
+			points [25]:
+				time = 28.49419501133787
+				mark = "offset"
+			points [26]:
+				time = 29.626893424036282
 				mark = "offset"
