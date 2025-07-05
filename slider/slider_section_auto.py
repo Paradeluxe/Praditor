@@ -16,7 +16,7 @@ class MySliders(QMainWindow):
         self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475)
         # self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
         # self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97, font_color="#7F7F7F")
-        self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
+        # self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
         # self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000)
         self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20)
 
@@ -26,7 +26,7 @@ class MySliders(QMainWindow):
         self.numValid_slider_offset = SingleSlider("", 0, 1, 8000, color="#2AD25E", default=3335)
         # self.win_size_slider_offset = SingleSlider("", 2, 1, 500, color="#2AD25E", default=102)
         # self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
-        self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
+        # self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
         # self.ref_len_slider_offset = SingleSlider("", 1, 1, 2000, color="#2AD25E", default=1000)
         self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
@@ -36,7 +36,7 @@ class MySliders(QMainWindow):
 
         layout.addWidget(self.amp_slider_onset, 0, 0)
         layout.addWidget(self.numValid_slider_onset, 1, 0)
-        layout.addWidget(self.penalty_slider_onset, 2, 0)
+        # layout.addWidget(self.penalty_slider_onset, 2, 0)
         # layout.addWidget(self.ref_len_slider_onset, 3, 0)
 
         # layout.addWidget(self.ratio_slider_onset, 4, 0)
@@ -52,7 +52,7 @@ class MySliders(QMainWindow):
 
         layout.addWidget(self.amp_slider_offset, 0, 1)
         layout.addWidget(self.numValid_slider_offset, 1, 1)
-        layout.addWidget(self.penalty_slider_offset, 2, 1)
+        # layout.addWidget(self.penalty_slider_offset, 2, 1)
         # layout.addWidget(self.ref_len_slider_offset, 3, 1)
         #
         # layout.addWidget(self.ratio_slider_offset, 4, 1)
@@ -69,7 +69,7 @@ class MySliders(QMainWindow):
         # self.ref_len_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         # self.ratio_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         # self.win_size_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.penalty_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.penalty_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.eps_ratio_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.cutoff0_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.cutoff1_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
@@ -80,7 +80,7 @@ class MySliders(QMainWindow):
         # self.ref_len_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         # self.ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         # self.win_size_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.penalty_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.penalty_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.eps_ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.cutoff0_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         self.cutoff1_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
@@ -107,7 +107,7 @@ class MySliders(QMainWindow):
                 "numValid": self.numValid_slider_onset.value_label.text(),
                 # "win_size": self.win_size_slider_onset.value_label.text(),
                 # "ratio": self.ratio_slider_onset.value_label.text(),
-                "penalty": self.penalty_slider_onset.value_label.text(),
+                # "penalty": self.penalty_slider_onset.value_label.text(),
                 # "ref_len": self.ref_len_slider_onset.value_label.text(),
                 "eps_ratio": self.eps_ratio_slider_onset.value_label.text()
 
@@ -120,7 +120,7 @@ class MySliders(QMainWindow):
                 "numValid": self.numValid_slider_offset.value_label.text(),
                 # "win_size": self.win_size_slider_offset.value_label.text(),
                 # "ratio": self.ratio_slider_offset.value_label.text(),
-                "penalty": self.penalty_slider_offset.value_label.text(),
+                # "penalty": self.penalty_slider_offset.value_label.text(),
                 # "ref_len": self.ref_len_slider_offset.value_label.text(),
                 "eps_ratio": self.eps_ratio_slider_offset.value_label.text()
 
@@ -139,7 +139,7 @@ class MySliders(QMainWindow):
         self.numValid_slider_onset.param_slider.setValue(round(eval(params["onset"]["numValid"]) / self.numValid_slider_onset.scale))
         # self.win_size_slider_onset.param_slider.setValue(round(eval(params["onset"]["win_size"]) / self.win_size_slider_onset.scale))
         # self.ratio_slider_onset.param_slider.setValue(round(eval(params["onset"]["ratio"]) / self.ratio_slider_onset.scale))
-        self.penalty_slider_onset.param_slider.setValue(round(eval(params["onset"]["penalty"]) / self.penalty_slider_onset.scale))
+        # self.penalty_slider_onset.param_slider.setValue(round(eval(params["onset"]["penalty"]) / self.penalty_slider_onset.scale))
         # self.ref_len_slider_onset.param_slider.setValue(round(eval(params["onset"]["ref_len"]) / self.ref_len_slider_onset.scale))
         self.eps_ratio_slider_onset.param_slider.setValue(round(eval(params["onset"]["eps_ratio"]) / self.eps_ratio_slider_onset.scale))
 
@@ -149,7 +149,7 @@ class MySliders(QMainWindow):
         self.numValid_slider_offset.param_slider.setValue(round(eval(params["offset"]["numValid"]) / self.numValid_slider_offset.scale))
         # self.win_size_slider_offset.param_slider.setValue(round(eval(params["offset"]["win_size"]) / self.win_size_slider_offset.scale))
         # self.ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["ratio"]) / self.ratio_slider_offset.scale))
-        self.penalty_slider_offset.param_slider.setValue(round(eval(params["offset"]["penalty"]) / self.penalty_slider_offset.scale))
+        # self.penalty_slider_offset.param_slider.setValue(round(eval(params["offset"]["penalty"]) / self.penalty_slider_offset.scale))
         # self.ref_len_slider_offset.param_slider.setValue(round(eval(params["offset"]["ref_len"]) / self.ref_len_slider_offset.scale))
         self.eps_ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
 

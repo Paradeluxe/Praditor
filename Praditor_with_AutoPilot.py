@@ -309,7 +309,7 @@ class MainWindow(QMainWindow):
         self.MySliders = MySliders()
         self.MySliders.amp_slider_onset.setStatusTip(" Onset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
         self.MySliders.numValid_slider_onset.setStatusTip(" Onset  |  Accumulated net count of above-threshold frames")
-        self.MySliders.penalty_slider_onset.setStatusTip(" Onset  |  Penalty for below-threshold frames")
+        # self.MySliders.penalty_slider_onset.setStatusTip(" Onset  |  Penalty for below-threshold frames")
         # self.MySliders.ref_len_slider_onset.setStatusTip(" Onset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
         # self.MySliders.ratio_slider_onset.setStatusTip(" Onset  |  % of frames retained in the kernel")
         # self.MySliders.win_size_slider_onset.setStatusTip(" Onset  |  Size of the kernel (in frames)")
@@ -320,7 +320,7 @@ class MainWindow(QMainWindow):
 
         self.MySliders.amp_slider_offset.setStatusTip(" Offset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
         self.MySliders.numValid_slider_offset.setStatusTip(" Offset  |  Accumulated net count of above-threshold frames")
-        self.MySliders.penalty_slider_offset.setStatusTip(" Offset  |  Penalty for below-threshold frames")
+        # self.MySliders.penalty_slider_offset.setStatusTip(" Offset  |  Penalty for below-threshold frames")
         # self.MySliders.ref_len_slider_offset.setStatusTip(" Offset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
         # self.MySliders.ratio_slider_offset.setStatusTip(" Offset  |  % of frames retained in the kernel")
         # self.MySliders.win_size_slider_offset.setStatusTip(" Offset  |  Size of the kernel (in frames)")
@@ -451,7 +451,7 @@ class MainWindow(QMainWindow):
         self.MySliders.numValid_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
         # self.MySliders.win_size_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
         # self.MySliders.ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        self.MySliders.penalty_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+        # self.MySliders.penalty_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
         # self.MySliders.ref_len_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
         self.MySliders.eps_ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
 
@@ -461,7 +461,7 @@ class MainWindow(QMainWindow):
         self.MySliders.numValid_slider_offset.param_slider.setDisabled(slider_status)
         # self.MySliders.win_size_slider_offset.param_slider.setDisabled(slider_status)
         # self.MySliders.ratio_slider_offset.param_slider.setDisabled(slider_status)
-        self.MySliders.penalty_slider_offset.param_slider.setDisabled(slider_status)
+        # self.MySliders.penalty_slider_offset.param_slider.setDisabled(slider_status)
         # self.MySliders.ref_len_slider_offset.param_slider.setDisabled(slider_status)
         self.MySliders.eps_ratio_slider_offset.param_slider.setDisabled(slider_status)
 

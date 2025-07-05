@@ -13,22 +13,22 @@ item []:
 		xmax = 7.762879818594104
 		points: size = 6
 			points [1]:
-				time = 0.30142857142857143
+				time = 0.3014512471655329
 				mark = "onset"
 			points [2]:
 				time = 0.7158730158730159
 				mark = "onset"
 			points [3]:
-				time = 2.168208616780045
+				time = 2.1682312925170066
 				mark = "onset"
 			points [4]:
 				time = 4.0272562358276645
 				mark = "onset"
 			points [5]:
-				time = 4.456167800453515
+				time = 4.456303854875284
 				mark = "onset"
 			points [6]:
-				time = 5.8126984126984125
+				time = 5.812743764172335
 				mark = "onset"
 	item [2]:
 		class = "TextTier"
@@ -37,20 +37,20 @@ item []:
 		xmax = 7.762879818594104
 		points: size = 6
 			points [1]:
-				time = 0.6504988662131519
+				time = 0.6348752834467121
 				mark = "offset"
 			points [2]:
-				time = 1.1522902494331067
+				time = 1.1284807256235827
 				mark = "offset"
 			points [3]:
-				time = 3.0650793650793653
+				time = 3.032517006802721
 				mark = "offset"
 			points [4]:
-				time = 4.3992743764172335
+				time = 4.379954648526077
 				mark = "offset"
 			points [5]:
-				time = 4.793673469387755
+				time = 4.707460317460318
 				mark = "offset"
 			points [6]:
-				time = 6.6906349206349205
+				time = 6.675374149659864
 				mark = "offset"
