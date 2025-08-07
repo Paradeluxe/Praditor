@@ -35,7 +35,8 @@ A DBSCAN-Based Automation for Speech Onset Detection
     <a href="https://github.com/Paradeluxe/Praditor/blob/master/README.md"><strong>English</strong></a>
      · 
     <a href="https://github.com/Paradeluxe/Praditor/blob/master/README_zh.md"><strong>中文</strong></a>
-
+     | 
+    <a href="https://doi.org/10.3758/s13428-025-02776-2"><strong>Our Paper</strong></a>
   </p>
 
 <br/>
