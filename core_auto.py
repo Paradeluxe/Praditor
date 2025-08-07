@@ -228,8 +228,6 @@ def autoPraditor(params, audio_obj, which_set):
         __candidate_y1_area = np.sort(__candidate_y1_area)[:int(len(__candidate_y1_area) * params["ratio"])]
 
 
-
-
         __y1_threshold = float(np.sum(__candidate_y1_area) / (__sample_startpoint - __sample_endpoint) * params["amp"])
         __ref_midpoint = int(__offset*_dsFactor + (__onset-__offset) * _dsFactor * 0.8)  # 3/4偏移量
 
@@ -252,33 +250,8 @@ def autoPraditor(params, audio_obj, which_set):
         __countBadPiece = 0
         __countDSTime = -1
 
-
-        # import matplotlib.pyplot as plt
-        # from skimage.filters import threshold_otsu
-        #
-        # # 提取要绘制的音频片段
-        # __audio_segment = abs(_audio_arr_filtered[__ref_midpoint:__ref_midpoint_next] - _audio_arr_filtered[__ref_midpoint-1:__ref_midpoint_next-1])
-        #
-        # # 使用Otsu法计算阈值
-        # threshold = threshold_otsu(__audio_segment)
-        #
-        # # 创建时间轴
-        # __time = np.linspace(__ref_midpoint/_audio_samplerate,
-        #                     __ref_midpoint_next/_audio_samplerate,
-        #                     len(__audio_segment))
-        #
-        # # 绘制波形图和Otsu阈值
-        # plt.figure(figsize=(10, 4))
-        # plt.plot(__time, __audio_segment, 'b', label='Signal')
-        # plt.axhline(y=threshold, color='r', linestyle='-', label='Otsu Threshold')
-        # plt.title(f"Audio Signal with Otsu Threshold between {__ref_midpoint/_audio_samplerate:.2f}s and {__ref_midpoint_next/_audio_samplerate:.2f}s")
-        # plt.xlabel("Time (s)")
-        # plt.ylabel("Amplitude")
-        # plt.legend()
-        # plt.grid()
-        # plt.show()
         
-        while __ref_midpoint + __countDSTime < __ref_midpoint_next:
+        while __ref_midpoint + __countDSTime < __ref_midpoint_next:  # 遍历从midpoint到next midpoint之间的每一帧
             __countDSTime += 1
 
             __left_boundary = __ref_midpoint + __countDSTime - params["win_size"]
