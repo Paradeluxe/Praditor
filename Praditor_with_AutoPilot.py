@@ -203,9 +203,9 @@ class MainWindow(QMainWindow):
 
 
         # self.run_onset = QPushButton("Onset", self)
-        self.run_onset = QLabel("Onset | Offset", self)
+        self.run_onset = QLabel("", self)
         self.run_onset.setStatusTip("Extract Onsets")
-        self.run_onset.setFixedSize(150, 25)
+        self.run_onset.setFixedSize(180, 25)
         # self.run_onset.pressed.connect(self.turnOnset)
         self.run_onset.setStyleSheet(qss_button_checkable_with_color())
         # self.run_onset.setCheckable(True)
@@ -603,9 +603,9 @@ class MainWindow(QMainWindow):
     def showXsetNum(self):
 
         if not self.AudioViewer.tg_dict_tp['onset']:
-            self.run_onset.setText("Onset | Offset")
+            self.run_onset.setText("")
         else:
-            self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])} | Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
+            self.run_onset.setText(f"{len(self.AudioViewer.tg_dict_tp['onset'])} Onset(s), {len(self.AudioViewer.tg_dict_tp['offset'])} Offset(s) ")
 
         # if not self.AudioViewer.tg_dict_tp['offset']:
         #     self.run_offset.setText("Offset")
@@ -681,10 +681,9 @@ class MainWindow(QMainWindow):
 
 
         if not _test_tg_dict_tp['onset']:
-            self.run_onset.setText("Onset | Offset")
-
+            self.run_onset.setText("")
         else:
-            self.run_onset.setText(f"Onset: {len(_test_tg_dict_tp['onset'])} ? | Offset: {len(_test_tg_dict_tp['offset'])} ?")
+            self.run_onset.setText(f"{len(_test_tg_dict_tp['onset'])} Onset(s), {len(_test_tg_dict_tp['offset'])} Offset(s) ?")
 
         # if not _test_tg_dict_tp['offset']:
         #     self.run_offset.setText("Offset")

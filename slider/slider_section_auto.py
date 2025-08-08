@@ -11,7 +11,7 @@ class MySliders(QMainWindow):
         super().__init__()
 
         self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
-        self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
+        self.cutoff0_slider_onset = SingleSlider("HighPass", 0, 1, 500, default=60, font_color="#7F7F7F")
         self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
         self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475)
         # self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
