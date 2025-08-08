@@ -1,1 +1,1 @@
-{'onset': {'amp': '1.38', 'cutoff0': '60', 'cutoff1': '10800', 'numValid': '475', 'win_size': '148', 'ratio': '0.98', 'penalty': '14.7', 'ref_len': '1000', 'eps_ratio': '0.020'}, 'offset': {'amp': '1.94', 'cutoff0': '200', 'cutoff1': '10200', 'numValid': '3335', 'win_size': '102', 'ratio': '0.87', 'penalty': '10.8', 'ref_len': '1000', 'eps_ratio': '0.015'}}
+{'onset': {'amp': '1.38', 'cutoff0': '4', 'cutoff1': '10800', 'numValid': '475', 'eps_ratio': '0.048'}, 'offset': {'amp': '1.38', 'cutoff0': '4', 'cutoff1': '10800', 'numValid': '475', 'eps_ratio': '0.048'}}

@@ -20,15 +20,15 @@ class MySliders(QMainWindow):
         # self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000)
         self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20)
 
-        self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
-        self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
-        self.cutoff1_slider_offset = SingleSlider("", 4000, 1, 20000, color="#2AD25E", default=10200)
-        self.numValid_slider_offset = SingleSlider("", 0, 1, 8000, color="#2AD25E", default=3335)
-        # self.win_size_slider_offset = SingleSlider("", 2, 1, 500, color="#2AD25E", default=102)
-        # self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
-        # self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
-        # self.ref_len_slider_offset = SingleSlider("", 1, 1, 2000, color="#2AD25E", default=1000)
-        self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 300, scale=0.001, color="#2AD25E", default=15)
+        # self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
+        # self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
+        # self.cutoff1_slider_offset = SingleSlider("", 4000, 1, 20000, color="#2AD25E", default=10200)
+        # self.numValid_slider_offset = SingleSlider("", 0, 1, 8000, color="#2AD25E", default=3335)
+        # # self.win_size_slider_offset = SingleSlider("", 2, 1, 500, color="#2AD25E", default=102)
+        # # self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
+        # # self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
+        # # self.ref_len_slider_offset = SingleSlider("", 1, 1, 2000, color="#2AD25E", default=1000)
+        # self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
         layout = QGridLayout()
         layout.setSpacing(0)
@@ -50,18 +50,18 @@ class MySliders(QMainWindow):
 
 
 
-        layout.addWidget(self.amp_slider_offset, 0, 1)
-        layout.addWidget(self.numValid_slider_offset, 1, 1)
-        # layout.addWidget(self.penalty_slider_offset, 2, 1)
-        # layout.addWidget(self.ref_len_slider_offset, 3, 1)
-        #
-        # layout.addWidget(self.ratio_slider_offset, 4, 1)
-        # layout.addWidget(self.win_size_slider_offset, 5, 1)
+        # layout.addWidget(self.amp_slider_offset, 0, 1)
+        # layout.addWidget(self.numValid_slider_offset, 1, 1)
+        # # layout.addWidget(self.penalty_slider_offset, 2, 1)
+        # # layout.addWidget(self.ref_len_slider_offset, 3, 1)
+        # #
+        # # layout.addWidget(self.ratio_slider_offset, 4, 1)
+        # # layout.addWidget(self.win_size_slider_offset, 5, 1)
 
-        layout.addWidget(self.eps_ratio_slider_offset, 3, 1)
+        # layout.addWidget(self.eps_ratio_slider_offset, 3, 1)
 
-        layout.addWidget(self.cutoff1_slider_offset, 4, 1)
-        layout.addWidget(self.cutoff0_slider_offset, 5, 1)
+        # layout.addWidget(self.cutoff1_slider_offset, 4, 1)
+        # layout.addWidget(self.cutoff0_slider_offset, 5, 1)
 
         
         self.amp_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
@@ -75,15 +75,15 @@ class MySliders(QMainWindow):
         self.cutoff1_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)
         
         
-        self.amp_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.numValid_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        # self.ref_len_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        # self.ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        # self.win_size_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        # self.penalty_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.eps_ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.cutoff0_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
-        self.cutoff1_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.amp_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.numValid_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # # self.ref_len_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # # self.ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # # self.win_size_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # # self.penalty_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.eps_ratio_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.cutoff0_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
+        # self.cutoff1_slider_offset.single_slider_value_changed.connect(self.sliderValueDidChange)
         
         
 
@@ -112,19 +112,30 @@ class MySliders(QMainWindow):
                 "eps_ratio": self.eps_ratio_slider_onset.value_label.text()
 
             },
-
             "offset": {
-                "amp": self.amp_slider_offset.value_label.text(),
-                "cutoff0": self.cutoff0_slider_offset.value_label.text(),
-                "cutoff1": self.cutoff1_slider_offset.value_label.text(),
-                "numValid": self.numValid_slider_offset.value_label.text(),
-                # "win_size": self.win_size_slider_offset.value_label.text(),
-                # "ratio": self.ratio_slider_offset.value_label.text(),
-                # "penalty": self.penalty_slider_offset.value_label.text(),
-                # "ref_len": self.ref_len_slider_offset.value_label.text(),
-                "eps_ratio": self.eps_ratio_slider_offset.value_label.text()
+                "amp": self.amp_slider_onset.value_label.text(),
+                "cutoff0": self.cutoff0_slider_onset.value_label.text(),
+                "cutoff1": self.cutoff1_slider_onset.value_label.text(),
+                "numValid": self.numValid_slider_onset.value_label.text(),
+                # "win_size": self.win_size_slider_onset.value_label.text(),
+                # "ratio": self.ratio_slider_onset.value_label.text(),
+                # "penalty": self.penalty_slider_onset.value_label.text(),
+                # "ref_len": self.ref_len_slider_onset.value_label.text(),
+                "eps_ratio": self.eps_ratio_slider_onset.value_label.text()
 
-            }
+            },
+            # "offset": {
+            #     "amp": self.amp_slider_offset.value_label.text(),
+            #     "cutoff0": self.cutoff0_slider_offset.value_label.text(),
+            #     "cutoff1": self.cutoff1_slider_offset.value_label.text(),
+            #     "numValid": self.numValid_slider_offset.value_label.text(),
+            #     # "win_size": self.win_size_slider_offset.value_label.text(),
+            #     # "ratio": self.ratio_slider_offset.value_label.text(),
+            #     # "penalty": self.penalty_slider_offset.value_label.text(),
+            #     # "ref_len": self.ref_len_slider_offset.value_label.text(),
+            #     "eps_ratio": self.eps_ratio_slider_offset.value_label.text()
+
+            # }
 
         }
 
@@ -143,15 +154,15 @@ class MySliders(QMainWindow):
         # self.ref_len_slider_onset.param_slider.setValue(round(eval(params["onset"]["ref_len"]) / self.ref_len_slider_onset.scale))
         self.eps_ratio_slider_onset.param_slider.setValue(round(eval(params["onset"]["eps_ratio"]) / self.eps_ratio_slider_onset.scale))
 
-        self.amp_slider_offset.param_slider.setValue(round(eval(params["offset"]["amp"]) / self.amp_slider_offset.scale))
-        self.cutoff0_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff0"]) / self.cutoff0_slider_offset.scale))
-        self.cutoff1_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff1"]) / self.cutoff1_slider_offset.scale))
-        self.numValid_slider_offset.param_slider.setValue(round(eval(params["offset"]["numValid"]) / self.numValid_slider_offset.scale))
-        # self.win_size_slider_offset.param_slider.setValue(round(eval(params["offset"]["win_size"]) / self.win_size_slider_offset.scale))
-        # self.ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["ratio"]) / self.ratio_slider_offset.scale))
-        # self.penalty_slider_offset.param_slider.setValue(round(eval(params["offset"]["penalty"]) / self.penalty_slider_offset.scale))
-        # self.ref_len_slider_offset.param_slider.setValue(round(eval(params["offset"]["ref_len"]) / self.ref_len_slider_offset.scale))
-        self.eps_ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
+        # self.amp_slider_offset.param_slider.setValue(round(eval(params["offset"]["amp"]) / self.amp_slider_offset.scale))
+        # self.cutoff0_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff0"]) / self.cutoff0_slider_offset.scale))
+        # self.cutoff1_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff1"]) / self.cutoff1_slider_offset.scale))
+        # self.numValid_slider_offset.param_slider.setValue(round(eval(params["offset"]["numValid"]) / self.numValid_slider_offset.scale))
+        # # self.win_size_slider_offset.param_slider.setValue(round(eval(params["offset"]["win_size"]) / self.win_size_slider_offset.scale))
+        # # self.ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["ratio"]) / self.ratio_slider_offset.scale))
+        # # self.penalty_slider_offset.param_slider.setValue(round(eval(params["offset"]["penalty"]) / self.penalty_slider_offset.scale))
+        # # self.ref_len_slider_offset.param_slider.setValue(round(eval(params["offset"]["ref_len"]) / self.ref_len_slider_offset.scale))
+        # self.eps_ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
 
         
         

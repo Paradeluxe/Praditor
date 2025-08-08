@@ -1,6 +1,15 @@
 def qss_button_checkable_with_color(color="#1991D3"):
     return f"""
 
+
+
+        QLabel {{
+            background-color: transparent;
+            color: black;
+            font-weight: bold;
+        }}
+
+
         QPushButton {{
             background: {color}; 
             color: white;

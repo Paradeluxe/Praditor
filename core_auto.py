@@ -66,7 +66,7 @@ def autoPraditor(params, audio_obj, which_set):
     # 1.1. 降采样
     # 把一秒钟的音频分成n=40份
 
-    _dsFactor = _audio_obj.frame_rate // 40
+    _dsFactor = _audio_obj.frame_rate // 50
     # _audio_arr_ds = _audio_arr_filtered
 
     # 用取余容易得到[:-0]，返回一个空list

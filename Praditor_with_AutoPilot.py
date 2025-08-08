@@ -9,6 +9,7 @@ from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
+    QLabel,
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
@@ -201,23 +202,24 @@ class MainWindow(QMainWindow):
         # ----------------------------------------------
 
 
-        self.run_onset = QPushButton("Onset", self)
+        # self.run_onset = QPushButton("Onset", self)
+        self.run_onset = QLabel("Onset | Offset", self)
         self.run_onset.setStatusTip("Extract Onsets")
-        self.run_onset.setFixedSize(80, 25)
-        self.run_onset.pressed.connect(self.turnOnset)
+        self.run_onset.setFixedSize(150, 25)
+        # self.run_onset.pressed.connect(self.turnOnset)
         self.run_onset.setStyleSheet(qss_button_checkable_with_color())
-        self.run_onset.setCheckable(True)
+        # self.run_onset.setCheckable(True)
         # self.run_onset.setChecked(False)
         toolbar.addWidget(self.run_onset)
 
-        self.run_offset = QPushButton("Offset", self)
-        self.run_offset.setStatusTip("Extract Offsets")
-        self.run_offset.setFixedSize(80, 25)
-        self.run_offset.pressed.connect(self.turnOffset)
-        self.run_offset.setStyleSheet(qss_button_checkable_with_color("#2AD25E"))
-        self.run_offset.setCheckable(True)
-        # self.run_offset.setChecked(False)
-        toolbar.addWidget(self.run_offset)
+        # self.run_offset = QPushButton("Offset", self)
+        # self.run_offset.setStatusTip("Extract Offsets")
+        # self.run_offset.setFixedSize(80, 25)
+        # self.run_offset.pressed.connect(self.turnOffset)
+        # self.run_offset.setStyleSheet(qss_button_checkable_with_color("#2AD25E"))
+        # self.run_offset.setCheckable(True)
+        # # self.run_offset.setChecked(False)
+        # toolbar.addWidget(self.run_offset)
 
 
 
@@ -318,15 +320,15 @@ class MainWindow(QMainWindow):
         self.MySliders.cutoff0_slider_onset.setStatusTip(" Onset  |  Lower cutoff frequency of bandpass filter")
 
 
-        self.MySliders.amp_slider_offset.setStatusTip(" Offset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
-        self.MySliders.numValid_slider_offset.setStatusTip(" Offset  |  Accumulated net count of above-threshold frames")
-        # self.MySliders.penalty_slider_offset.setStatusTip(" Offset  |  Penalty for below-threshold frames")
-        # self.MySliders.ref_len_slider_offset.setStatusTip(" Offset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
-        # self.MySliders.ratio_slider_offset.setStatusTip(" Offset  |  % of frames retained in the kernel")
-        # self.MySliders.win_size_slider_offset.setStatusTip(" Offset  |  Size of the kernel (in frames)")
-        self.MySliders.eps_ratio_slider_offset.setStatusTip(" Offset  |  Neighborhood radius in DBSCAN clustering (useful in detecting in-utterance silent pause)")
-        self.MySliders.cutoff1_slider_offset.setStatusTip(" Offset  |  Higher cutoff frequency of bandpass filter")
-        self.MySliders.cutoff0_slider_offset.setStatusTip(" Offset  |  Lower cutoff frequency of bandpass filter")
+        # self.MySliders.amp_slider_offset.setStatusTip(" Offset  |  A coef for determining actual threshold (baseline × coefficient = actual threshold)")
+        # self.MySliders.numValid_slider_offset.setStatusTip(" Offset  |  Accumulated net count of above-threshold frames")
+        # # self.MySliders.penalty_slider_offset.setStatusTip(" Offset  |  Penalty for below-threshold frames")
+        # # self.MySliders.ref_len_slider_offset.setStatusTip(" Offset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
+        # # self.MySliders.ratio_slider_offset.setStatusTip(" Offset  |  % of frames retained in the kernel")
+        # # self.MySliders.win_size_slider_offset.setStatusTip(" Offset  |  Size of the kernel (in frames)")
+        # self.MySliders.eps_ratio_slider_offset.setStatusTip(" Offset  |  Neighborhood radius in DBSCAN clustering (useful in detecting in-utterance silent pause)")
+        # self.MySliders.cutoff1_slider_offset.setStatusTip(" Offset  |  Higher cutoff frequency of bandpass filter")
+        # self.MySliders.cutoff0_slider_offset.setStatusTip(" Offset  |  Lower cutoff frequency of bandpass filter")
 
 
         layout.addWidget(self.MySliders)
@@ -390,17 +392,18 @@ class MainWindow(QMainWindow):
 
 
         self.AudioViewer.updateXset(self.AudioViewer.tg_dict_tp)
-        self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=not self.run_onset.isChecked())
-        self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=not self.run_offset.isChecked())
+        self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=True)#not self.run_onset.isChecked())
+        self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=True)#not self.run_onset.isChecked())
+        # self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=not self.run_offset.isChecked())
 
 
     def clearXset(self):
         # self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
-        if not self.run_onset.isChecked():
-            self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
-        if not self.run_offset.isChecked():
-            self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["offset"])
+        # if not self.run_onset.isChecked():
+        self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
+        # if not self.run_offset.isChecked():
+        self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["offset"])
         self.AudioViewer.tg_dict_tp = {}
 
 
@@ -419,7 +422,7 @@ class MainWindow(QMainWindow):
         self.MySliders.numValid_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         # self.MySliders.win_size_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         # self.MySliders.ratio_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
-        self.MySliders.penalty_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
+        # self.MySliders.penalty_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         # self.MySliders.ref_len_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
         self.MySliders.eps_ratio_slider_onset.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
 
@@ -429,7 +432,7 @@ class MainWindow(QMainWindow):
         self.MySliders.numValid_slider_onset.param_slider.setDisabled(slider_status)
         # self.MySliders.win_size_slider_onset.param_slider.setDisabled(slider_status)
         # self.MySliders.ratio_slider_onset.param_slider.setDisabled(slider_status)
-        self.MySliders.penalty_slider_onset.param_slider.setDisabled(slider_status)
+        # self.MySliders.penalty_slider_onset.param_slider.setDisabled(slider_status)
         # self.MySliders.ref_len_slider_onset.param_slider.setDisabled(slider_status)
         self.MySliders.eps_ratio_slider_onset.param_slider.setDisabled(slider_status)
 
@@ -437,36 +440,36 @@ class MainWindow(QMainWindow):
         self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["onset"], isVisible=self.AudioViewer.showOnset)
 
 
-    def turnOffset(self):
-        if not self.run_offset.isChecked():
-            offset_color = "#AFAFAF"
-            slider_status = True
-        else:
-            offset_color = "#2AD25E"
-            slider_status = False
+    # def turnOffset(self):
+    #     if not self.run_offset.isChecked():
+    #         offset_color = "#AFAFAF"
+    #         slider_status = True
+    #     else:
+    #         offset_color = "#2AD25E"
+    #         slider_status = False
 
-        self.MySliders.amp_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        self.MySliders.cutoff0_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        self.MySliders.cutoff1_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        self.MySliders.numValid_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        # self.MySliders.win_size_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        # self.MySliders.ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        # self.MySliders.penalty_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        # self.MySliders.ref_len_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
-        self.MySliders.eps_ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     self.MySliders.amp_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     self.MySliders.cutoff0_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     self.MySliders.cutoff1_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     self.MySliders.numValid_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     # self.MySliders.win_size_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     # self.MySliders.ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     # self.MySliders.penalty_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     # self.MySliders.ref_len_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
+    #     self.MySliders.eps_ratio_slider_offset.param_slider.setStyleSheet(qss_slider_with_color(offset_color))
 
-        self.MySliders.amp_slider_offset.param_slider.setDisabled(slider_status)
-        self.MySliders.cutoff0_slider_offset.param_slider.setDisabled(slider_status)
-        self.MySliders.cutoff1_slider_offset.param_slider.setDisabled(slider_status)
-        self.MySliders.numValid_slider_offset.param_slider.setDisabled(slider_status)
-        # self.MySliders.win_size_slider_offset.param_slider.setDisabled(slider_status)
-        # self.MySliders.ratio_slider_offset.param_slider.setDisabled(slider_status)
-        # self.MySliders.penalty_slider_offset.param_slider.setDisabled(slider_status)
-        # self.MySliders.ref_len_slider_offset.param_slider.setDisabled(slider_status)
-        self.MySliders.eps_ratio_slider_offset.param_slider.setDisabled(slider_status)
+    #     self.MySliders.amp_slider_offset.param_slider.setDisabled(slider_status)
+    #     self.MySliders.cutoff0_slider_offset.param_slider.setDisabled(slider_status)
+    #     self.MySliders.cutoff1_slider_offset.param_slider.setDisabled(slider_status)
+    #     self.MySliders.numValid_slider_offset.param_slider.setDisabled(slider_status)
+    #     # self.MySliders.win_size_slider_offset.param_slider.setDisabled(slider_status)
+    #     # self.MySliders.ratio_slider_offset.param_slider.setDisabled(slider_status)
+    #     # self.MySliders.penalty_slider_offset.param_slider.setDisabled(slider_status)
+    #     # self.MySliders.ref_len_slider_offset.param_slider.setDisabled(slider_status)
+    #     self.MySliders.eps_ratio_slider_offset.param_slider.setDisabled(slider_status)
 
-        self.AudioViewer.showOffset = not slider_status
-        self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=self.AudioViewer.showOffset)
+    #     self.AudioViewer.showOffset = not slider_status
+    #     self.AudioViewer.hideXset(self.AudioViewer.tg_dict_tp["offset"], isVisible=self.AudioViewer.showOffset)
 
 
 
@@ -600,14 +603,14 @@ class MainWindow(QMainWindow):
     def showXsetNum(self):
 
         if not self.AudioViewer.tg_dict_tp['onset']:
-            self.run_onset.setText("Onset")
+            self.run_onset.setText("Onset | Offset")
         else:
-            self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])}")
+            self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])} | Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
 
-        if not self.AudioViewer.tg_dict_tp['offset']:
-            self.run_offset.setText("Offset")
-        else:
-            self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
+        # if not self.AudioViewer.tg_dict_tp['offset']:
+        #     self.run_offset.setText("Offset")
+        # else:
+        #     self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
@@ -617,8 +620,8 @@ class MainWindow(QMainWindow):
         # 检查采样率
         # print(self.AudioViewer.audio_samplerate)
         # print(self.MySliders.cutoff1_slider_onset.value_label.text())
-        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
+        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:# or \
+            # float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
 
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
@@ -628,23 +631,24 @@ class MainWindow(QMainWindow):
 
 
 
-        if not self.run_onset.isChecked():
-            try:
-                self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
-            except KeyError:
-                pass
-            self.AudioViewer.tg_dict_tp["onset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
-        else:
-            self.AudioViewer.tg_dict_tp["onset"] = []
+        # if not self.run_onset.isChecked():
+        try:
+            self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
+        except KeyError:
+            pass
+        self.AudioViewer.tg_dict_tp["onset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+        # else:
+        #     self.AudioViewer.tg_dict_tp["onset"] = []
 
-        if not self.run_offset.isChecked():
-            try:
-                self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
-            except KeyError:
-                pass
-            self.AudioViewer.tg_dict_tp["offset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
-        else:
-            self.AudioViewer.tg_dict_tp["offset"] = []
+        # if not self.run_offset.isChecked():
+        # if not self.run_onset.isChecked():
+        try:
+            self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
+        except KeyError:
+            pass
+        self.AudioViewer.tg_dict_tp["offset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+        # else:
+        #     self.AudioViewer.tg_dict_tp["offset"] = []
 
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
@@ -653,8 +657,8 @@ class MainWindow(QMainWindow):
 
 
     def testPraditorOnAudio(self):
-        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
+        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:# or \
+            #float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
 
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
@@ -664,27 +668,28 @@ class MainWindow(QMainWindow):
 
 
         _test_tg_dict_tp = {"onset": [], "offset": []}
-        if not self.run_onset.isChecked():
-            _test_tg_dict_tp["onset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
-        else:
-            _test_tg_dict_tp["onset"] = []
+        # if not self.run_onset.isChecked():
+        _test_tg_dict_tp["onset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+        # else:
+            # _test_tg_dict_tp["onset"] = []
 
-        if not self.run_offset.isChecked():
-            _test_tg_dict_tp["offset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
-        else:
-            _test_tg_dict_tp["offset"] = []
+        # if not self.run_offset.isChecked():
+        _test_tg_dict_tp["offset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+        # else:
+            # _test_tg_dict_tp["offset"] = []
         
 
 
         if not _test_tg_dict_tp['onset']:
-            self.run_onset.setText("Onset")
-        else:
-            self.run_onset.setText(f"Onset: {len(_test_tg_dict_tp['onset'])} ?")
+            self.run_onset.setText("Onset | Offset")
 
-        if not _test_tg_dict_tp['offset']:
-            self.run_offset.setText("Offset")
         else:
-            self.run_offset.setText(f"Offset: {len(_test_tg_dict_tp['offset'])} ?")
+            self.run_onset.setText(f"Onset: {len(_test_tg_dict_tp['onset'])} ? | Offset: {len(_test_tg_dict_tp['offset'])} ?")
+
+        # if not _test_tg_dict_tp['offset']:
+        #     self.run_offset.setText("Offset")
+        # else:
+        #     self.run_offset.setText(f"Offset: {len(_test_tg_dict_tp['offset'])} ?")
 
 
 
