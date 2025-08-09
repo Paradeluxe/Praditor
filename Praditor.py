@@ -343,12 +343,17 @@ class MainWindow(QMainWindow):
 
         # 初始化参数txt
         # 检查是否存在default mode
-        if not os.path.exists("params.txt"):
-            with open("params.txt", 'w') as txt_file:
-                txt_file.write(f"{self.MySliders.getParams()}")
-        else:
+        # if not os.path.exists("params.txt"):
+        #     with open("params.txt", 'w') as txt_file:
+        #         txt_file.write(f"{self.MySliders.getParams()}")
+        # else:
+        try:
             with open("params.txt", "r") as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
+        except KeyError or OSError:
+            with open("params.txt", 'w') as txt_file:
+                txt_file.write(f"{self.MySliders.getParams()}")
+
 
 
 

@@ -9,7 +9,7 @@ from QSS import qss_slider_with_color
 class SingleSlider(QMainWindow):
     single_slider_value_changed = Signal(int)
 
-    def __init__(self, param_name, minimum, step, maximum, font_color='#272727', color="#999999", scale=1, default=None):
+    def __init__(self, param_name, minimum, step, maximum, font_color='#272727', color="#1991D3", scale=1, default=None):
         super().__init__()
         # self.setWindowTitle('Slider App')
         self.scale = scale

@@ -10,15 +10,15 @@ class MySliders(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
-        self.cutoff0_slider_onset = SingleSlider("HighPass", 0, 1, 500, default=60, font_color="#7F7F7F")
-        self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
-        self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475)
+        self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147, color="#999999")
+        self.cutoff0_slider_onset = SingleSlider("HighPass", 0, 1, 500, default=60, font_color="#7F7F7F", color="#999999")
+        self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F", color="#999999")
+        self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475, color="#999999")
         # self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
         # self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97, font_color="#7F7F7F")
         # self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
         # self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000)
-        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20)
+        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20, color="#999999")
 
         # self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
         # self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)

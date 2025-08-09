@@ -738,7 +738,7 @@ class MainWindow(QMainWindow):
             self.which_one += 1
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+        self.setWindowTitle(f"Praditor (VAD) - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
         if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
