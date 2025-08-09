@@ -6,9 +6,10 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 # from dbscan import DBSCAN
 
-from textgrid import TextGrid, PointTier, Point
+from textgrid import TextGrid, PointTier, Point, IntervalTier, Interval
 
-from tool import bandpass_filter, get_current_time, ReadSound
+
+from tool_auto import bandpass_filter, get_current_time, ReadSound
 
 
 # plat = os.name.lower()
@@ -344,6 +345,10 @@ def autoPraditor(params, audio_obj, which_set):
 
 
 def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
+
+    onsets.sort()
+    offsets.sort()
+
     # 获取音频文件的目录和文件名（不包括扩展名）
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
@@ -353,7 +358,7 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     audio_samplerate = audio_obj.frame_rate
 
     # 创建一个新的TextGrid对象
-    tg_filename = os.path.join(audio_dir, audio_filename + ".TextGrid")
+    tg_filename = os.path.join(audio_dir, audio_filename + "_VAD.TextGrid")
     tg = TextGrid()
 
     # 时间
@@ -374,6 +379,17 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
                 continue
 
         tg.append(point_tier)
+    
+    # 间隔
+    interval_tier = IntervalTier(name="interval", minTime=0., maxTime=audio_duration)
+    for i in range(len(onsets)):
+        try:
+            interval_tier.addInterval(Interval(onsets[i], offsets[i], "sound"))
+        except ValueError:
+            continue
+    tg.append(interval_tier)
+
+
 
     tg.write(tg_filename)  # 将TextGrid对象写入文件
 

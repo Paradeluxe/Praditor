@@ -20,9 +20,9 @@ from PySide6.QtWidgets import (
 from QSS import *
 from core_auto import autoPraditorWithTimeRange, create_textgrid_with_time_point
 # from core_light import autoPraditorWithTimeRange, create_textgrid_with_time_point
-from sigplot.plot_audio import AudioViewer
+from sigplot.plot_audio_auto import AudioViewer
 from slider.slider_section_auto import MySliders
-from tool import isAudioFile, resource_path, get_frm_points_from_textgrid
+from tool_auto import isAudioFile, resource_path, get_frm_points_from_textgrid
 
 plat = os.name.lower()
 
