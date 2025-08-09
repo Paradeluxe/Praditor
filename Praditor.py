@@ -347,13 +347,16 @@ class MainWindow(QMainWindow):
         #     with open("params.txt", 'w') as txt_file:
         #         txt_file.write(f"{self.MySliders.getParams()}")
         # else:
-        try:
-            with open("params.txt", "r") as txt_file:
-                self.MySliders.resetParams(eval(txt_file.read()))
-        except KeyError or OSError:
+        if not os.path.exists("params.txt"):
             with open("params.txt", 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-
+        else:  # 存在default mode
+            try:
+                with open("params.txt", "r") as txt_file:
+                    self.MySliders.resetParams(eval(txt_file.read()))
+            except KeyError:
+                with open("params.txt", 'w') as txt_file:
+                    txt_file.write(f"{self.MySliders.getParams()}")
 
 
 

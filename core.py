@@ -84,9 +84,8 @@ def runPraditor(params, audio_obj, which_set):
 
 
 
-
     _eps = params["eps_ratio"] * float(np.max(np.sort(_audio_arr_ds)[:int(.8 * len(_audio_arr_ds))]))  # 找到合适的radius，防止异常值
-
+    print(_eps)
 
     del _audio_arr_ds
     gc.collect()

@@ -1,5 +1,6 @@
 import ctypes
 import os
+import shutil
 import sys
 import webbrowser
 
@@ -345,12 +346,18 @@ class MainWindow(QMainWindow):
 
         # 初始化参数txt
         # 检查是否存在default mode
-        if not os.path.exists("params.txt"):
-            with open("params.txt", 'w') as txt_file:
+
+        if not os.path.exists("params_vad.txt"):
+            with open("params_vad.txt", 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-        else:
-            with open("params.txt", "r") as txt_file:
-                self.MySliders.resetParams(eval(txt_file.read()))
+        else:  # 存在default mode
+            try:
+                with open("params_vad.txt", "r") as txt_file:
+                    self.MySliders.resetParams(eval(txt_file.read()))
+            except KeyError:
+                with open("params_vad.txt", 'w') as txt_file:
+                    txt_file.write(f"{self.MySliders.getParams()}")
+
 
 
 
@@ -476,9 +483,9 @@ class MainWindow(QMainWindow):
 
     def resetParams(self):
         if self.select_mode.text() == "Current":
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+            txt_file_path = os.path.splitext(self.file_path)[0] + "_vad.txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "params_vad.txt"
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -496,9 +503,9 @@ class MainWindow(QMainWindow):
     def saveParams(self):
         # print(resource_path("params.txt"))
         if self.select_mode.text() == "Current":
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+            txt_file_path = os.path.splitext(self.file_path)[0] + "_vad.txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "params_vad.txt"
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
@@ -508,9 +515,9 @@ class MainWindow(QMainWindow):
 
     def checkIfParamsExist(self):
         if self.select_mode.text() == "Current":
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+            txt_file_path = os.path.splitext(self.file_path)[0] + "_vad.txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "params_vad.txt"
 
         with open(txt_file_path, 'r') as txt_file:
             # print(str(txt_file.read()) == str(self.MySliders.getParams()))
@@ -535,20 +542,20 @@ class MainWindow(QMainWindow):
 
         # 第三步 如果是单独参数同时又不存在，那么先从默认参数复制一份到单独参数来
         if self.select_mode.text() == "Current":
-            if not os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
-                with open(os.path.splitext(self.file_path)[0] + ".txt", "w") as txt_file:
-                    with open("params.txt", "r") as default_txt_file:
+            if not os.path.exists(os.path.splitext(self.file_path)[0] + "_vad.txt"):
+                with open(os.path.splitext(self.file_path)[0] + "_vad.txt", "w") as txt_file:
+                    with open("params_vad.txt", "r") as default_txt_file:
                         txt_file.write(default_txt_file.read())
         elif self.select_mode.text() == "Default":
             pass
 
         # 第四步 根据按钮文字呈现参数
         if self.select_mode.text() == "Current":
-            with open(os.path.splitext(self.file_path)[0] + ".txt", 'r') as txt_file:
+            with open(os.path.splitext(self.file_path)[0] + "_vad.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(False)
         elif self.select_mode.text() == "Default":
-            with open("params.txt", 'r') as txt_file:
+            with open("params_vad.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(True)
 
@@ -586,7 +593,7 @@ class MainWindow(QMainWindow):
             print(f"Selected file: {self.file_path}")
             self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
-            if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
+            if os.path.exists(os.path.splitext(self.file_path)[0] + "_vad.txt"):
                 self.select_mode.setChecked(False)
             else:
                 self.select_mode.setChecked(True)
@@ -741,7 +748,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(f"Praditor (VAD) - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
-        if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
+        if os.path.exists(os.path.splitext(self.file_path)[0] + "_vad.txt"):
             self.select_mode.setChecked(False)
         else:
             self.select_mode.setChecked(True)

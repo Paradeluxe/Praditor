@@ -1,1 +1,0 @@
-{'onset': {'amp': '1.38', 'cutoff0': '60', 'cutoff1': '6970', 'numValid': '475', 'eps_ratio': '0.074'}, 'offset': {'amp': '1.38', 'cutoff0': '60', 'cutoff1': '6970', 'numValid': '475', 'eps_ratio': '0.074'}}
