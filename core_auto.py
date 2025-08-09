@@ -55,9 +55,7 @@ def autoPraditor(params, audio_obj, which_set):
         fs=_audio_obj.frame_rate
     )
 
-    # warning or auto change?
-    if which_set == "offset":
-        _audio_arr_filtered = np.flip(_audio_arr_filtered)
+
 
     # Audio已经准备好
     # 接下来就是第一步：DBSCAN聚类找噪声片段
@@ -66,19 +64,20 @@ def autoPraditor(params, audio_obj, which_set):
     # 1.1. 降采样
     # 把一秒钟的音频分成n=40份
 
-    _dsFactor = _audio_obj.frame_rate // 50
+    _dsFactor = _audio_obj.frame_rate // 40
     # _audio_arr_ds = _audio_arr_filtered
 
     # 用取余容易得到[:-0]，返回一个空list
     # 用整除解决这个问题
-    if len(_audio_arr_filtered) % _dsFactor == 0:
-        _audio_arr_ds = _audio_arr_filtered[:]
-    else:
-        _audio_arr_ds = _audio_arr_filtered[:-(len(_audio_arr_filtered) % _dsFactor)]
+    if len(_audio_arr_filtered) % _dsFactor != 0:
+        _audio_arr_filtered = _audio_arr_filtered[:-(len(_audio_arr_filtered) % _dsFactor)]
+    
+    # warning or auto change?
+    if which_set == "offset":
+        _audio_arr_filtered = np.flip(_audio_arr_filtered)
 
     # max_frm_num = len(_audio_arr_filtered)
-
-    _audio_arr_ds = _audio_arr_ds.reshape((len(_audio_arr_ds) // _dsFactor, _dsFactor))
+    _audio_arr_ds = _audio_arr_filtered.reshape((len(_audio_arr_filtered) // _dsFactor, _dsFactor))
     _audio_arr_ds = np.max(_audio_arr_ds, axis=1)  # 用max方法降采样
 
     # print(_audio_arr_ds[10:1000])
@@ -236,6 +235,12 @@ def autoPraditor(params, audio_obj, which_set):
         else:
             __ref_midpoint_next = len(_audio_arr_filtered)  # 设置为音频最后一帧的位置
 
+        if i > 0:
+            __ref_midpoint_prev = int(_onoffsets[i-1][0]*_dsFactor + (_onoffsets[i-1][1]-_onoffsets[i-1][0]) * _dsFactor * 0.8)
+        else:
+            __ref_midpoint_prev = 0  # 设置为音频第一帧的位置
+
+
         if __ref_midpoint < __sample_startpoint:
             __ref_midpoint = __sample_startpoint
         # print(np.argmin(candidate_y1_area), ref_midpoint)
@@ -250,7 +255,7 @@ def autoPraditor(params, audio_obj, which_set):
         __countBadPiece = 0
         __countDSTime = -1
 
-        
+        _final_answer = None
         while __ref_midpoint + __countDSTime < __ref_midpoint_next:  # 遍历从midpoint到next midpoint之间的每一帧
             __countDSTime += 1
 
@@ -281,10 +286,57 @@ def autoPraditor(params, audio_obj, which_set):
                 _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
 
                 if which_set == "offset":
-                    _final_answer = len(_audio_arr_filtered) - _final_answer
+                    _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
                 _answer_frames.append(_final_answer)
                 break
-    return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
+        
+        
+        if _final_answer is None:
+            continue
+
+        # # Try to find Offset
+        # __countValidPiece = 0
+        # __countBadPiece = 0
+        # __countDSTime = +1
+        # _final_answer = None
+        # while __ref_midpoint + __countDSTime > __ref_midpoint_prev:  # 遍历从midpoint到prev midpoint之间的每一帧
+        #     __countDSTime -= 1
+
+        #     __left_boundary = __ref_midpoint + __countDSTime
+        #     __right_boundary = __ref_midpoint + __countDSTime + params["win_size"]
+
+
+        #     try:
+        #         __raw_value = abs(_audio_arr_filtered[__left_boundary:__right_boundary] - _audio_arr_filtered[__left_boundary-1:__right_boundary-1])
+        #     except ValueError:
+        #         break
+        #     __raw_value.sort()
+        #     __raw_value = __raw_value[:int(len(__raw_value) * params["ratio"])]
+
+        #     __y1_value = sum(__raw_value)/len(__raw_value)
+
+        #     if __y1_value > __y1_threshold:
+        #         __countValidPiece += 1
+        #     else:
+        #         __countBadPiece += 1 #params["penalty"]
+
+        #     if __countValidPiece - __countBadPiece * params["penalty"]  <= 0:
+        #         __countValidPiece = 0
+        #         __countBadPiece = 0
+
+        #     elif __countValidPiece - __countBadPiece >= params["numValid"]:
+        #         _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
+
+        #         if which_set == "offset":
+        #             _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
+        #         _answer_frames.append(_final_answer)
+        #         break
+
+    # 对 _answer_frames 进行从小到大排序
+    _answer_frames.sort()
+    # print(_answer_frames)
+
+    return [frm/_audio_samplerate for frm in _answer_frames]
 
 
 

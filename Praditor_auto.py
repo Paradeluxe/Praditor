@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         self.file_paths = []
         self.file_path = None
         self.which_one = 0
-        self.setWindowTitle("Praditor (AutoPilot)")
+        self.setWindowTitle("Praditor (VAD)")
         self.setMinimumSize(950, 600)
 
 
@@ -636,7 +636,7 @@ class MainWindow(QMainWindow):
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
         except KeyError:
             pass
-        self.AudioViewer.tg_dict_tp["onset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+        onsets = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
         # else:
         #     self.AudioViewer.tg_dict_tp["onset"] = []
 
@@ -646,9 +646,33 @@ class MainWindow(QMainWindow):
             self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
         except KeyError:
             pass
-        self.AudioViewer.tg_dict_tp["offset"] = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+        offsets = autoPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
         # else:
         #     self.AudioViewer.tg_dict_tp["offset"] = []
+
+
+
+        # Select the one offset that is closest to onset and earlier than onset
+        new_onsets = []
+        new_offsets = []
+        for i, onset in enumerate(onsets):
+            # print(onset)
+            if i == 0:
+                new_offsets.append(offsets[-1])
+                new_onsets.append(onset)
+            else:
+                try:
+                    new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
+                    new_onsets.append(onset)
+
+                except ValueError:
+                    pass
+
+
+        self.AudioViewer.tg_dict_tp["onset"] = new_onsets
+        self.AudioViewer.tg_dict_tp["offset"] = new_offsets
+        # print(self.AudioViewer.tg_dict_tp)
+
 
         create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
         self.readXset()
@@ -725,9 +749,6 @@ class MainWindow(QMainWindow):
         self.showXsetNum()
         # self.update_current_param()
         # self.statusBar().showMessage("1", 0)
-
-
-
 
 
     def stopSound(self):
