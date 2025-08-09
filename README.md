@@ -143,8 +143,16 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 
 # 🗃️ Data and Materials
-
 If you would like to download the datasets that were used in developing _Praditor_, please refer to [our OSF storage](https://osf.io/9se8r/).
+
+# Citation
+If you use _Praditor_ in your research, please cite the following paper:
+
+```
+Liu, Z., Yu, X., Hu, W.C. et al. Praditor: A DBSCAN-based automation for speech onset detection. Behav Res 57, 247 (2025). https://doi.org/10.3758/s13428-025-02776-2
+```
+
+Or, you can go to our paper's [**About this article**](https://link.springer.com/article/10.3758/s13428-025-02776-2#article-info) to download .ris for whatever format you need~
 
 
 # 🙌 Acknowledgments
