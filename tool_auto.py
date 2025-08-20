@@ -137,7 +137,7 @@ def get_frm_points_from_textgrid(audio_file_path):
 
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
-    tg_file_path = os.path.join(audio_dir, audio_filename + "_VAD.TextGrid")
+    tg_file_path = os.path.join(audio_dir, audio_filename + ".TextGrid")
     if not os.path.exists(tg_file_path):
         return {"onset":[], "offset": []}
     tg = TextGrid(tg_file_path)

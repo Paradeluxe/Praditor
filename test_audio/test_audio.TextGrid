@@ -55,20 +55,26 @@ item []:
 				time = 6.685011337868481
 				mark = "offset"
 	item [3]:
-		class = "IntervalTier"
-		name = "interval"
+		class = "TextTier"
+		name = "offset"
 		xmin = 0.0
 		xmax = 7.762879818594104
-		intervals: size = 3
-			intervals [1]:
-				xmin = 0.0
-				xmax = 0.3014512471655329
-				text = ""
-			intervals [2]:
-				xmin = 0.3014512471655329
-				xmax = 6.685011337868481
-				text = "0"
-			intervals [3]:
-				xmin = 6.685011337868481
-				xmax = 7.762879818594104
-				text = ""
+		points: size = 6
+			points [1]:
+				time = 0.6349206349206349
+				mark = "offset"
+			points [2]:
+				time = 1.1396371882086167
+				mark = "offset"
+			points [3]:
+				time = 3.0326530612244897
+				mark = "offset"
+			points [4]:
+				time = 4.396961451247166
+				mark = "offset"
+			points [5]:
+				time = 4.712675736961451
+				mark = "offset"
+			points [6]:
+				time = 6.685011337868481
+				mark = "offset"

@@ -388,7 +388,7 @@ class MainWindow(QMainWindow):
 
     def readXset(self):
         self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
-
+        
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
