@@ -292,49 +292,13 @@ def autoPraditor(params, audio_obj, which_set):
                 break
         
         
-        if _final_answer is None:
-            continue
-
-        # # Try to find Offset
-        # __countValidPiece = 0
-        # __countBadPiece = 0
-        # __countDSTime = +1
-        # _final_answer = None
-        # while __ref_midpoint + __countDSTime > __ref_midpoint_prev:  # 遍历从midpoint到prev midpoint之间的每一帧
-        #     __countDSTime -= 1
-
-        #     __left_boundary = __ref_midpoint + __countDSTime
-        #     __right_boundary = __ref_midpoint + __countDSTime + params["win_size"]
-
-
-        #     try:
-        #         __raw_value = abs(_audio_arr_filtered[__left_boundary:__right_boundary] - _audio_arr_filtered[__left_boundary-1:__right_boundary-1])
-        #     except ValueError:
-        #         break
-        #     __raw_value.sort()
-        #     __raw_value = __raw_value[:int(len(__raw_value) * params["ratio"])]
-
-        #     __y1_value = sum(__raw_value)/len(__raw_value)
-
-        #     if __y1_value > __y1_threshold:
-        #         __countValidPiece += 1
-        #     else:
-        #         __countBadPiece += 1 #params["penalty"]
-
-        #     if __countValidPiece - __countBadPiece * params["penalty"]  <= 0:
-        #         __countValidPiece = 0
-        #         __countBadPiece = 0
-
-        #     elif __countValidPiece - __countBadPiece >= params["numValid"]:
-        #         _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
-
-        #         if which_set == "offset":
-        #             _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
-        #         _answer_frames.append(_final_answer)
-        #         break
+        # if _final_answer is None:
+            # continue
 
     # 对 _answer_frames 进行从小到大排序
-    _answer_frames.sort()
+    # print(_answer_frames)
+    if which_set == "offset":
+        _answer_frames.reverse()
     # print(_answer_frames)
 
     return [frm/_audio_samplerate for frm in _answer_frames]
@@ -346,8 +310,17 @@ def autoPraditor(params, audio_obj, which_set):
 
 def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
 
-    onsets.sort()
-    offsets.sort()
+
+    # 检测 onsets 和 offsets 的数量是否一致
+    if len(onsets) != len(offsets):
+        raise ValueError(f"The number of onsets ({len(onsets)}) and offsets ({len(offsets)}) does not match. ")
+
+    # 检测并删除包含 None 的对应元素
+    indices_to_remove = [i for i in range(len(onsets)) if onsets[i] is None or offsets[i] is None]
+    for idx in sorted(indices_to_remove, reverse=True):
+        del onsets[idx]
+        del offsets[idx]
+
 
     # 获取音频文件的目录和文件名（不包括扩展名）
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
