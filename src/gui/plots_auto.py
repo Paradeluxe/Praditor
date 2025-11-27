@@ -7,7 +7,7 @@ from PySide6.QtGui import QPen, QColor
 from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
     QWidget
 
-from src.utils.audio_auto import ReadSound, get_frm_points_from_textgrid
+from src.utils.audio import ReadSound, get_frm_intervals_from_textgrid
 
 
 def formatted_time(ms):
@@ -338,7 +338,7 @@ class AudioViewer(QWidget):
         if not self.tg_dict_tp:
             pass
         else:
-            self.tg_dict_tp = get_frm_points_from_textgrid(self.fpath)
+            self.tg_dict_tp = get_frm_intervals_from_textgrid(self.fpath)
 
         self.updateXset(self.tg_dict_tp)
 

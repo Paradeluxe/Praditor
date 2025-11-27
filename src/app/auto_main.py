@@ -25,7 +25,7 @@ from src.core.detection_auto import autoPraditorWithTimeRange, create_textgrid_w
 # from core_light import autoPraditorWithTimeRange, create_textgrid_with_time_point
 from src.gui.plots_auto import AudioViewer
 from src.gui.sliders_auto import MySliders
-from src.utils.audio_auto import isAudioFile, get_frm_points_from_textgrid
+from src.utils.audio import isAudioFile, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path, get_config_path
 
 plat = os.name.lower()
@@ -392,7 +392,7 @@ class MainWindow(QMainWindow):
 
 
     def readXset(self):
-        self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
+        self.AudioViewer.tg_dict_tp = get_frm_intervals_from_textgrid(self.file_path)
         
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
@@ -613,7 +613,7 @@ class MainWindow(QMainWindow):
 
 
     def showXsetNum(self):
-
+        print(self.AudioViewer.tg_dict_tp)
         if not self.AudioViewer.tg_dict_tp['onset']:
             self.run_onset.setText("")
         else:
@@ -665,8 +665,8 @@ class MainWindow(QMainWindow):
         ###########################
         # 如果头尾是从有声直接开始/结束，则为其赋值为0/音频长度
         ###########################
-        onsets.sort()
-        offsets.sort()
+        # onsets = sorted(onsets)
+        # offsets = sorted(offsets)
 
         if onsets[0] >= offsets[0]:
             onsets = [0.0] + onsets
@@ -674,6 +674,8 @@ class MainWindow(QMainWindow):
         if offsets[-1] <= onsets[-1]:
             offsets.append(self.AudioViewer.audio_obj.duration_seconds)
 
+        # print(onsets)
+        # print(offsets)
         #--------------------------#
 
 
@@ -697,6 +699,9 @@ class MainWindow(QMainWindow):
                 except ValueError:
                     pass
 
+
+        new_onsets = sorted(new_onsets)
+        new_offsets = sorted(new_offsets)
         #--------------------------#
 
 

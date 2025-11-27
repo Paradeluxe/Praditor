@@ -138,61 +138,32 @@ def get_frm_points_from_textgrid(audio_file_path):
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     tg_file_path = os.path.join(audio_dir, audio_filename + ".TextGrid")
+
+    dict_tg_time = {"onset":[], "offset": []}
     if not os.path.exists(tg_file_path):
-        return {"onset":[], "offset": []}
+        return dict_tg_time
+
     tg = TextGrid(tg_file_path)
     tg.read(tg_file_path)
-    dict_tg_time = {}
     for tier in tg.tiers:
         dict_tg_time[tier.name] = [p.time for p in tier]
     return dict_tg_time
 
 
-def get_frm_points_from_01(file_path):
-    if not os.path.exists(file_path):
-        return None
-    tg = TextGrid(file_path)
-    tg.read(file_path)
-    dict_tg = {}
+def get_frm_intervals_from_textgrid(audio_file_path):
+    audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
+    audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
+    tg_file_path = os.path.join(audio_dir, audio_filename + "_vad.TextGrid")
 
-    for tier in tg.tiers:
-        dict_tg["onset"] = [p.minTime for p in tier if p.mark == "1"]
-        dict_tg["offset"] = [p.maxTime for p in tier if p.mark == "1"]
+    dict_tg_time = {"onset": [], "offset": []}
+    if not os.path.exists(tg_file_path):
+        return dict_tg_time
 
-    return dict_tg
+    tg = TextGrid(tg_file_path)
+    tg.read(tg_file_path)
+    tier = tg.tiers[0]
 
+    dict_tg_time["onset"] = [interval.minTime for interval in tier if interval.mark == "sound"]
+    dict_tg_time["offset"] = [interval.maxTime for interval in tier if interval.mark == "sound"]
 
-def get_interval(file_path):
-    tg = TextGrid(file_path)
-    tg.read(file_path)
-
-    tg_onsets = []
-    tg_offsets = []
-
-    for tier in tg.tiers:
-        if tier.name == "onset":
-            tg_onsets = [p.time * 1000 for p in tier]
-        else:
-            tg_offsets = [p.time * 1000 for p in tier]
-
-    return list(zip(tg_onsets, tg_offsets))
-
-
-def get_time(file_path):
-    # 加载TextGrid文件
-    tg = TextGrid(file_path)
-    tg.read(file_path)
-    # 找到名为'onset'的PointTier
-    point_tier_onset = None
-
-    for tier in tg.tiers:
-        if tier.name == 'onset':
-            point_tier_onset = tier
-            break
-
-    # 如果找到了PointTier，获取第一个点的时间
-    if point_tier_onset:
-        return point_tier_onset.points[0].time
-        # print(f"The time of the first point in 'onset' tier is: {first_point_time}")
-    else:
-        return None
+    return dict_tg_time

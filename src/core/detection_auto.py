@@ -9,7 +9,7 @@ from sklearn.cluster import DBSCAN
 from textgrid import TextGrid, PointTier, Point, IntervalTier, Interval
 
 
-from src.utils.audio_auto import bandpass_filter, get_current_time, ReadSound
+from src.utils.audio import bandpass_filter, get_current_time, ReadSound
 
 
 # plat = os.name.lower()
@@ -336,6 +336,7 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     tg = TextGrid()
 
     interval_tier = IntervalTier(name="interval", minTime=0., maxTime=audio_obj.duration_seconds)
+
     for i in range(len(onsets)):
         try:
             interval_tier.addInterval(Interval(onsets[i], offsets[i], "sound"))
