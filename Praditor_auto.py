@@ -657,9 +657,26 @@ class MainWindow(QMainWindow):
         # else:
         #     self.AudioViewer.tg_dict_tp["offset"] = []
 
+        ###########################
+        # 如果头尾是从有声直接开始/结束，则为其赋值为0/音频长度
+        ###########################
+        onsets.sort()
+        offsets.sort()
+
+        if onsets[0] >= offsets[0]:
+            onsets = [0.0] + onsets
+
+        if offsets[-1] <= onsets[-1]:
+            offsets.append(self.AudioViewer.audio_obj.duration_seconds)
+
+        #--------------------------#
 
 
+
+        ##########################
         # Select the one offset that is closest to onset and earlier than onset
+        ##########################
+
         new_onsets = []
         new_offsets = []
         for i, onset in enumerate(onsets):
@@ -674,6 +691,8 @@ class MainWindow(QMainWindow):
 
                 except ValueError:
                     pass
+
+        #--------------------------#
 
 
         self.AudioViewer.tg_dict_tp["onset"] = new_onsets

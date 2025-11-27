@@ -3,7 +3,7 @@ import os
 import sys
 import webbrowser
 
-from PySide6.QtCore import Qt, QUrl, Signal
+from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 
 from QSS import *
 # from core import runPraditorWithTimeRange, create_textgrid_with_time_point
-from core_light import runPraditorWithTimeRange, create_textgrid_with_time_point
+from legacy.core_light import runPraditorWithTimeRange, create_textgrid_with_time_point
 from sigplot.plot_audio import AudioViewer
 from slider.slider_section import MySliders
 from tool import isAudioFile, resource_path, get_frm_points_from_textgrid
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         self.param_sets = []
         self.audio_sink = None
         self.buffer = None
-        self.setWindowIcon(QIcon(resource_path('icon.ico')))
+        self.setWindowIcon(QIcon(resource_path('../icon.ico')))
         self.file_paths = []
         self.file_path = None
         self.which_one = 0
@@ -325,11 +325,11 @@ class MainWindow(QMainWindow):
 
         # 初始化参数txt
         # 检查是否存在default mode
-        if not os.path.exists("params.txt"):
-            with open("params.txt", 'w') as txt_file:
+        if not os.path.exists("../params.txt"):
+            with open("../params.txt", 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
         else:
-            with open("params.txt", "r") as txt_file:
+            with open("../params.txt", "r") as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
 
         self.MySliders.anySliderValueChanged.connect(self.checkIfParamsExist)
@@ -359,7 +359,7 @@ class MainWindow(QMainWindow):
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setWindowIcon(QIcon(resource_path('../icon.png')))
             popup_window.setText(f"This audio file has no .TextGrid attached.")
             popup_window.exec()
             return
@@ -443,7 +443,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "../params.txt"
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -462,7 +462,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "../params.txt"
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
@@ -473,7 +473,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = "params.txt"
+            txt_file_path = "../params.txt"
 
         with open(txt_file_path, 'r') as txt_file:
             # print(str(txt_file.read()) == str(self.MySliders.getParams()))
@@ -499,7 +499,7 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             if not os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
                 with open(os.path.splitext(self.file_path)[0] + ".txt", "w") as txt_file:
-                    with open("params.txt", "r") as default_txt_file:
+                    with open("../params.txt", "r") as default_txt_file:
                         txt_file.write(default_txt_file.read())
         elif self.select_mode.text() == "Default":
             pass
@@ -510,7 +510,7 @@ class MainWindow(QMainWindow):
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(False)
         elif self.select_mode.text() == "Default":
-            with open("params.txt", 'r') as txt_file:
+            with open("../params.txt", 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(True)
 
@@ -583,7 +583,7 @@ class MainWindow(QMainWindow):
             self.AudioViewer.audio_samplerate) / 2:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setWindowIcon(QIcon(resource_path('../icon.png')))
             popup_window.setText(
                 f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate) / 2:.0f}")
             popup_window.exec()
@@ -621,7 +621,7 @@ class MainWindow(QMainWindow):
             self.AudioViewer.audio_samplerate) / 2:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setWindowIcon(QIcon(resource_path('../icon.png')))
             popup_window.setText(
                 f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate) / 2:.0f}")
             popup_window.exec()
@@ -699,8 +699,8 @@ window = MainWindow()
 
 # 加载图标文件
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
-print(resource_path('icon.ico'))
-print(os.path.exists(resource_path("icon.ico")))
+print(resource_path('../icon.ico'))
+print(os.path.exists(resource_path("../icon.ico")))
 # 设置窗口图标
 # window.setWindowIcon(QIcon(resource_path('icon.ico')))
 window.show()

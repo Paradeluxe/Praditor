@@ -24,6 +24,9 @@ def autoPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     else:
         ans_tps = autoPraditor(params, audio_obj[stime*1000:etime*1000], which_set)
         ans_tps = [tp + stime for tp in ans_tps if 5 < tp <ans_tps[-1] - 5]
+    
+    ans_tps = sorted(ans_tps)
+
     return ans_tps
 
 
@@ -327,42 +330,12 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     audio_extension = os.path.splitext(os.path.basename(audio_file_path))[1]
     audio_obj = ReadSound(os.path.join(audio_dir, audio_filename+audio_extension))
-    audio_duration = audio_obj.duration_seconds
-    audio_samplerate = audio_obj.frame_rate
 
-    # 创建一个新的TextGrid对象
-    tg_filename = os.path.join(audio_dir, audio_filename + ".TextGrid")
+
+    tg_filename = os.path.join(audio_dir, audio_filename + "_vad.TextGrid")
     tg = TextGrid()
 
-    # 时间
-    # time_points = [frm/audio_samplerate for frm in frame_points]
-
-    for set_mode in ["onset", "offset"]:
-        point_tier = PointTier(name=set_mode, minTime=0., maxTime=audio_duration)
-
-        if set_mode == "onset":
-            xsets = onsets
-        elif set_mode == "offset":
-            xsets = offsets
-            # print(xsets)
-        for time_point in xsets:
-            try:
-                point_tier.addPoint(Point(time_point, set_mode))
-            except ValueError:
-                continue
-
-        tg.append(point_tier)  # 不再使用pointtier
-    
-
-    tg.append(point_tier)
-    tg.write(tg_filename)  # 将TextGrid对象写入文件
-
-
-    tg_filename = os.path.join(audio_dir, audio_filename + "_VAD.TextGrid")
-    tg = TextGrid()
-
-    # 间隔
-    interval_tier = IntervalTier(name="interval", minTime=0., maxTime=audio_duration)
+    interval_tier = IntervalTier(name="interval", minTime=0., maxTime=audio_obj.duration_seconds)
     for i in range(len(onsets)):
         try:
             interval_tier.addInterval(Interval(onsets[i], offsets[i], "sound"))
@@ -372,8 +345,6 @@ def create_textgrid_with_time_point(audio_file_path, onsets=[], offsets=[]):
     tg.write(tg_filename)  # 将TextGrid对象写入文件
 
     print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
-
-
 
 
 
