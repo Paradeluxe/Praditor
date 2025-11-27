@@ -1,0 +1,352 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 30.10426303854875
+tiers? <exists>
+size = 3
+item []:
+	item [1]:
+		class = "TextTier"
+		name = "onset"
+		xmin = 0.0
+		xmax = 30.10426303854875
+		points: size = 23
+			points [1]:
+				time = 0.5641269841269841
+				mark = "onset"
+			points [2]:
+				time = 1.0013151927437642
+				mark = "onset"
+			points [3]:
+				time = 1.4524263038548753
+				mark = "onset"
+			points [4]:
+				time = 2.5238095238095237
+				mark = "onset"
+			points [5]:
+				time = 6.217097505668934
+				mark = "onset"
+			points [6]:
+				time = 7.836371882086167
+				mark = "onset"
+			points [7]:
+				time = 9.3118820861678
+				mark = "onset"
+			points [8]:
+				time = 10.730068027210883
+				mark = "onset"
+			points [9]:
+				time = 11.09233560090703
+				mark = "onset"
+			points [10]:
+				time = 12.985532879818594
+				mark = "onset"
+			points [11]:
+				time = 14.66625850340136
+				mark = "onset"
+			points [12]:
+				time = 14.923038548752835
+				mark = "onset"
+			points [13]:
+				time = 16.54607709750567
+				mark = "onset"
+			points [14]:
+				time = 17.856825396825396
+				mark = "onset"
+			points [15]:
+				time = 19.111428571428572
+				mark = "onset"
+			points [16]:
+				time = 19.808208616780046
+				mark = "onset"
+			points [17]:
+				time = 21.029614512471657
+				mark = "onset"
+			points [18]:
+				time = 22.916462585034015
+				mark = "onset"
+			points [19]:
+				time = 25.405487528344672
+				mark = "onset"
+			points [20]:
+				time = 26.258639455782312
+				mark = "onset"
+			points [21]:
+				time = 28.26748299319728
+				mark = "onset"
+			points [22]:
+				time = 28.606938775510205
+				mark = "onset"
+			points [23]:
+				time = 29.145124716553287
+				mark = "onset"
+	item [2]:
+		class = "TextTier"
+		name = "offset"
+		xmin = 0.0
+		xmax = 30.10426303854875
+		points: size = 23
+			points [1]:
+				time = 0.9490249433106576
+				mark = "offset"
+			points [2]:
+				time = 1.367482993197279
+				mark = "offset"
+			points [3]:
+				time = 1.9702040816326531
+				mark = "offset"
+			points [4]:
+				time = 5.570476190476191
+				mark = "offset"
+			points [5]:
+				time = 7.759727891156462
+				mark = "offset"
+			points [6]:
+				time = 8.467709750566893
+				mark = "offset"
+			points [7]:
+				time = 10.653378684807256
+				mark = "offset"
+			points [8]:
+				time = 11.026031746031746
+				mark = "offset"
+			points [9]:
+				time = 11.858911564625851
+				mark = "offset"
+			points [10]:
+				time = 14.593696145124717
+				mark = "offset"
+			points [11]:
+				time = 14.843174603174603
+				mark = "offset"
+			points [12]:
+				time = 15.471655328798185
+				mark = "offset"
+			points [13]:
+				time = 17.80829931972789
+				mark = "offset"
+			points [14]:
+				time = 18.909160997732425
+				mark = "offset"
+			points [15]:
+				time = 19.656507936507936
+				mark = "offset"
+			points [16]:
+				time = 20.93378684807256
+				mark = "offset"
+			points [17]:
+				time = 21.75387755102041
+				mark = "offset"
+			points [18]:
+				time = 25.280181405895693
+				mark = "offset"
+			points [19]:
+				time = 25.887619047619047
+				mark = "offset"
+			points [20]:
+				time = 28.074421768707484
+				mark = "offset"
+			points [21]:
+				time = 28.505578231292517
+				mark = "offset"
+			points [22]:
+				time = 29.091292517006803
+				mark = "offset"
+			points [23]:
+				time = 29.626621315192743
+				mark = "offset"
+	item [3]:
+		class = "IntervalTier"
+		name = "interval"
+		xmin = 0.0
+		xmax = 30.10426303854875
+		intervals: size = 47
+			intervals [1]:
+				xmin = 0.0
+				xmax = 0.5641269841269841
+				text = ""
+			intervals [2]:
+				xmin = 0.5641269841269841
+				xmax = 0.9490249433106576
+				text = "sound"
+			intervals [3]:
+				xmin = 0.9490249433106576
+				xmax = 1.0013151927437642
+				text = ""
+			intervals [4]:
+				xmin = 1.0013151927437642
+				xmax = 1.367482993197279
+				text = "sound"
+			intervals [5]:
+				xmin = 1.367482993197279
+				xmax = 1.4524263038548753
+				text = ""
+			intervals [6]:
+				xmin = 1.4524263038548753
+				xmax = 1.9702040816326531
+				text = "sound"
+			intervals [7]:
+				xmin = 1.9702040816326531
+				xmax = 2.5238095238095237
+				text = ""
+			intervals [8]:
+				xmin = 2.5238095238095237
+				xmax = 5.570476190476191
+				text = "sound"
+			intervals [9]:
+				xmin = 5.570476190476191
+				xmax = 6.217097505668934
+				text = ""
+			intervals [10]:
+				xmin = 6.217097505668934
+				xmax = 7.759727891156462
+				text = "sound"
+			intervals [11]:
+				xmin = 7.759727891156462
+				xmax = 7.836371882086167
+				text = ""
+			intervals [12]:
+				xmin = 7.836371882086167
+				xmax = 8.467709750566893
+				text = "sound"
+			intervals [13]:
+				xmin = 8.467709750566893
+				xmax = 9.3118820861678
+				text = ""
+			intervals [14]:
+				xmin = 9.3118820861678
+				xmax = 10.653378684807256
+				text = "sound"
+			intervals [15]:
+				xmin = 10.653378684807256
+				xmax = 10.730068027210883
+				text = ""
+			intervals [16]:
+				xmin = 10.730068027210883
+				xmax = 11.026031746031746
+				text = "sound"
+			intervals [17]:
+				xmin = 11.026031746031746
+				xmax = 11.09233560090703
+				text = ""
+			intervals [18]:
+				xmin = 11.09233560090703
+				xmax = 11.858911564625851
+				text = "sound"
+			intervals [19]:
+				xmin = 11.858911564625851
+				xmax = 12.985532879818594
+				text = ""
+			intervals [20]:
+				xmin = 12.985532879818594
+				xmax = 14.593696145124717
+				text = "sound"
+			intervals [21]:
+				xmin = 14.593696145124717
+				xmax = 14.66625850340136
+				text = ""
+			intervals [22]:
+				xmin = 14.66625850340136
+				xmax = 14.843174603174603
+				text = "sound"
+			intervals [23]:
+				xmin = 14.843174603174603
+				xmax = 14.923038548752835
+				text = ""
+			intervals [24]:
+				xmin = 14.923038548752835
+				xmax = 15.471655328798185
+				text = "sound"
+			intervals [25]:
+				xmin = 15.471655328798185
+				xmax = 16.54607709750567
+				text = ""
+			intervals [26]:
+				xmin = 16.54607709750567
+				xmax = 17.80829931972789
+				text = "sound"
+			intervals [27]:
+				xmin = 17.80829931972789
+				xmax = 17.856825396825396
+				text = ""
+			intervals [28]:
+				xmin = 17.856825396825396
+				xmax = 18.909160997732425
+				text = "sound"
+			intervals [29]:
+				xmin = 18.909160997732425
+				xmax = 19.111428571428572
+				text = ""
+			intervals [30]:
+				xmin = 19.111428571428572
+				xmax = 19.656507936507936
+				text = "sound"
+			intervals [31]:
+				xmin = 19.656507936507936
+				xmax = 19.808208616780046
+				text = ""
+			intervals [32]:
+				xmin = 19.808208616780046
+				xmax = 20.93378684807256
+				text = "sound"
+			intervals [33]:
+				xmin = 20.93378684807256
+				xmax = 21.029614512471657
+				text = ""
+			intervals [34]:
+				xmin = 21.029614512471657
+				xmax = 21.75387755102041
+				text = "sound"
+			intervals [35]:
+				xmin = 21.75387755102041
+				xmax = 22.916462585034015
+				text = ""
+			intervals [36]:
+				xmin = 22.916462585034015
+				xmax = 25.280181405895693
+				text = "sound"
+			intervals [37]:
+				xmin = 25.280181405895693
+				xmax = 25.405487528344672
+				text = ""
+			intervals [38]:
+				xmin = 25.405487528344672
+				xmax = 25.887619047619047
+				text = "sound"
+			intervals [39]:
+				xmin = 25.887619047619047
+				xmax = 26.258639455782312
+				text = ""
+			intervals [40]:
+				xmin = 26.258639455782312
+				xmax = 28.074421768707484
+				text = "sound"
+			intervals [41]:
+				xmin = 28.074421768707484
+				xmax = 28.26748299319728
+				text = ""
+			intervals [42]:
+				xmin = 28.26748299319728
+				xmax = 28.505578231292517
+				text = "sound"
+			intervals [43]:
+				xmin = 28.505578231292517
+				xmax = 28.606938775510205
+				text = ""
+			intervals [44]:
+				xmin = 28.606938775510205
+				xmax = 29.091292517006803
+				text = "sound"
+			intervals [45]:
+				xmin = 29.091292517006803
+				xmax = 29.145124716553287
+				text = ""
+			intervals [46]:
+				xmin = 29.145124716553287
+				xmax = 29.626621315192743
+				text = "sound"
+			intervals [47]:
+				xmin = 29.626621315192743
+				xmax = 30.10426303854875
+				text = ""
