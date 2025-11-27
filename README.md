@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="https://github.com/Paradeluxe/Praditor">
-    <img align="center" src="icon.png" alt="Praditor_icon" width="100" height="100">
+    <img align="center" src="resources/icons/icon.png" alt="Praditor_icon" width="100" height="100">
   </a>
 </p>
 
@@ -64,8 +64,8 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 <div align="center">
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <a href="https://www.bilibili.com/video/BV1UnKWzmEBz/"><img src=".\instructions\bilibili.PNG" width="30%" /></a>
-  <a href="https://youtu.be/68bqwj3q-Ag?si=yAwNLceIqdiQuNFE"><img src=".\instructions\youtube.PNG" width="30%" /></a>
+  <a href="https://www.bilibili.com/video/BV1UnKWzmEBz/"><img src="./instructions/bilibili.PNG" width="30%" /></a>
+  <a href="https://youtu.be/68bqwj3q-Ag?si=yAwNLceIqdiQuNFE"><img src="./instructions/youtube.PNG" width="30%" /></a>
 </div>
 
 
