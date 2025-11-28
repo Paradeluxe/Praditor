@@ -26,7 +26,7 @@ from src.core.detection_auto import autoPraditorWithTimeRange, create_textgrid_w
 from src.gui.plots_auto import AudioViewer
 from src.gui.sliders_auto import MySliders
 from src.utils.audio import isAudioFile, get_frm_intervals_from_textgrid
-from src.utils.resources import get_resource_path, get_config_path
+from src.utils.resources import get_resource_path
 
 plat = os.name.lower()
 
@@ -351,10 +351,14 @@ class MainWindow(QMainWindow):
         # 初始化参数txt
         # 检查是否存在default mode
 
-        default_params_path = get_config_path("params_vad.txt")
+        # 初始化参数文件，使用当前文件所在目录
+        default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params_vad.txt")
+        print(default_params_path)
         if not os.path.exists(default_params_path):
-            with open(default_params_path, 'w') as txt_file:
-                txt_file.write(f"{self.MySliders.getParams()}")
+            default_params_path = get_resource_path("src/app/params_vad.txt")
+            if not os.path.exists(default_params_path):
+                with open(default_params_path, 'w') as txt_file:
+                    txt_file.write(f"{self.MySliders.getParams()}")
         else:  # 存在default mode
             try:
                 with open(default_params_path, "r") as txt_file:
@@ -490,7 +494,8 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = get_config_path("params_vad.txt")
+            # 保存到当前文件所在目录
+            txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params_vad.txt")
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -510,7 +515,8 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = get_config_path("params_vad.txt")
+            txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params_vad.txt")
+
 
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
@@ -522,7 +528,10 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
         else:  # if self.select_mode.text() == "Default":
-            txt_file_path = get_config_path("params_vad.txt")
+            # 从当前文件所在目录读取
+            txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params_vad.txt")
+            if not os.path.exists(txt_file_path):
+                txt_file_path = get_resource_path("src/app/params_vad.txt")
 
         with open(txt_file_path, 'r') as txt_file:
             # print(str(txt_file.read()) == str(self.MySliders.getParams()))
@@ -549,7 +558,10 @@ class MainWindow(QMainWindow):
         if self.select_mode.text() == "Current":
             if not os.path.exists(os.path.splitext(self.file_path)[0] + "_vad.txt"):
                 with open(os.path.splitext(self.file_path)[0] + "_vad.txt", "w") as txt_file:
-                    with open(get_config_path("params_vad.txt"), "r") as default_txt_file:
+                    default_params_path = os.path.join(os.getcwd(), "params_vad.txt")
+                    if not os.path.exists(default_params_path):
+                        default_params_path = get_resource_path("src/app/params_vad.txt")
+                    with open(default_params_path, "r") as default_txt_file:
                         txt_file.write(default_txt_file.read())
         elif self.select_mode.text() == "Default":
             pass
@@ -560,7 +572,10 @@ class MainWindow(QMainWindow):
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(False)
         elif self.select_mode.text() == "Default":
-            with open(get_config_path("params_vad.txt"), 'r') as txt_file:
+            default_params_path = os.path.join(os.getcwd(), "params_vad.txt")
+            if not os.path.exists(default_params_path):
+                default_params_path = get_resource_path("src/app/params_vad.txt")
+            with open(default_params_path, 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
             self.select_mode.setChecked(True)
 

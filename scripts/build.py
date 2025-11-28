@@ -9,6 +9,7 @@ PyInstaller打包脚本，用于构建Praditor应用
    - python scripts/build.py --onefile  # 单文件模式
    - python scripts/build.py --debug    # 调试模式
    - python scripts/build.py --clean    # 清理之前的构建
+   - python scripts/build.py --console  # 控制台输出模式
 """
 
 import os
@@ -16,6 +17,9 @@ import sys
 import subprocess
 import argparse
 import shutil
+import requests
+import re
+
 
 # 项目根目录
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -35,7 +39,7 @@ RESOURCES = [
     # 图标文件
     (os.path.join(ROOT_DIR, 'resources', 'icons'), 'resources/icons'),
     # 配置文件
-    (os.path.join(ROOT_DIR, 'config'), 'config'),
+    (os.path.join(ROOT_DIR, 'src', 'app'), 'src/app'),
 ]
 
 # 命令行参数解析
@@ -43,16 +47,87 @@ parser = argparse.ArgumentParser(description='Build Praditor with PyInstaller')
 parser.add_argument('--onefile', action='store_true', help='Build as a single executable file')
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
 parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
-parser.add_argument('--auto', action='store_true', help='Build the auto-VAD version instead of the main version')
+parser.add_argument('--vad', action='store_true', help='Build the auto-VAD version instead of the main version')
+parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
+parser.add_argument('--console', action='store_true', help='Build with console output instead of windowed mode')
 args = parser.parse_args()
 
+def get_latest_github_version():
+    """从GitHub获取最新版本号"""
+    url = "https://github.com/Paradeluxe/Praditor/releases"
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        # 使用正则表达式匹配版本号，格式为 vX.Y.Z 或 vX.Y.Zb 等
+        version_pattern = r'Version\s+(v?\d+\.\d+\.\d+[a-zA-Z]*)'
+        matches = re.findall(version_pattern, response.text)
+        
+        if matches:
+            # 提取最新版本号（第一个匹配项）
+            latest_version = matches[0]
+            # 确保版本号以v开头
+            if not latest_version.startswith('v'):
+                latest_version = f'v{latest_version}'
+            return latest_version
+        else:
+            print("Warning: Could not find version pattern in GitHub releases")
+            return None
+    except Exception as e:
+        print(f"Warning: Failed to get latest version from GitHub: {e}")
+        return None
+
+def increment_version(version):
+    """递增版本号，规则：
+    - 去除v前缀
+    - 分割主版本号、次版本号、修订号
+    - 修订号加1
+    - 如果有后缀（如b、rc等），保留后缀
+    """
+    # 去除v前缀
+    version = version.lstrip('v')
+    
+    # 分离版本号和后缀
+    version_parts = re.match(r'(\d+)\.(\d+)\.(\d+)([a-zA-Z]*)', version)
+    if not version_parts:
+        print(f"Warning: Invalid version format: {version}")
+        return version
+    
+    major = int(version_parts.group(1))
+    minor = int(version_parts.group(2))
+    patch = int(version_parts.group(3))
+    suffix = version_parts.group(4)
+    
+    # 递增修订号
+    patch += 1
+    
+    # 重新组合版本号
+    new_version = f'v{major}.{minor}.{patch}{suffix}'
+    return new_version
+
+# 如果用户指定了版本号，则使用用户输入的版本号
+if args.version:
+    # 确保版本号以v开头
+    if not args.version.startswith('v'):
+        APP_VERSION = f'v{args.version}'
+    else:
+        APP_VERSION = args.version
+else:
+    # 从GitHub获取最新版本号并自动递增
+    latest_version = get_latest_github_version()
+    if latest_version:
+        APP_VERSION = increment_version(latest_version)
+        print(f"Auto-incrementing version from GitHub latest {latest_version} to {APP_VERSION}")
+
+
 # 根据参数选择入口文件
-if args.auto:
+if args.vad:
     ENTRY_FILE = AUTO_ENTRY_FILE
-    APP_NAME = 'AutoPraditor'
+    APP_NAME = f'Praditor_VAD_{APP_VERSION}'
 else:
     ENTRY_FILE = MAIN_ENTRY_FILE
-    APP_NAME = 'Praditor'
+    APP_NAME = f'Praditor_{APP_VERSION}'
+
 
 
 def clean_build():
@@ -62,9 +137,21 @@ def clean_build():
         shutil.rmtree(BUILD_DIR)
     if os.path.exists(OUTPUT_DIR):
         shutil.rmtree(OUTPUT_DIR)
-    spec_file = os.path.join(ROOT_DIR, 'scripts', 'build.spec')
-    if os.path.exists(spec_file):
-        os.remove(spec_file)
+    
+    # 清理根目录下的所有.spec文件
+    for file in os.listdir(ROOT_DIR):
+        if file.endswith('.spec'):
+            spec_file = os.path.join(ROOT_DIR, file)
+            os.remove(spec_file)
+            print(f"Removed {spec_file}")
+    
+    # 清理scripts目录下的所有.spec文件
+    scripts_dir = os.path.join(ROOT_DIR, 'scripts')
+    for file in os.listdir(scripts_dir):
+        if file.endswith('.spec'):
+            spec_file = os.path.join(scripts_dir, file)
+            os.remove(spec_file)
+            print(f"Removed {spec_file}")
 
 
 def build():
@@ -74,14 +161,20 @@ def build():
         clean_build()
     
     # 构建PyInstaller命令
+    # 指定spec文件输出目录为scripts文件夹
+    SPEC_DIR = os.path.join(ROOT_DIR, 'scripts')
     cmd = [
         'pyinstaller',
         f'--name={APP_NAME}',
-        '--windowed',  # 无控制台窗口
         f'--icon={os.path.join(ROOT_DIR, "resources", "icons", "icon.ico")}',
         f'--distpath={OUTPUT_DIR}',
         f'--workpath={BUILD_DIR}',
+        f'--specpath={SPEC_DIR}',
     ]
+    
+    # 窗口模式或控制台模式
+    if not args.console:
+        cmd.append('--windowed')  # 无控制台窗口
     
     # 单文件模式
     if args.onefile:
@@ -106,15 +199,6 @@ def build():
     if result.returncode == 0:
         print(f"\nBuild completed successfully!")
         print(f"Output directory: {OUTPUT_DIR}")
-        
-        # 复制README和LICENSE到输出目录
-        for file in ['README.md', 'README_zh.md', 'LICENSE']:
-            src = os.path.join(ROOT_DIR, file)
-            dst = os.path.join(OUTPUT_DIR, file)
-            if os.path.exists(src):
-                shutil.copy2(src, dst)
-                print(f"Copied {file} to output directory")
-        
         print(f"\nYou can find the executable in: {OUTPUT_DIR}")
     else:
         print(f"\nBuild failed with return code: {result.returncode}")

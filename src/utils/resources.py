@@ -20,19 +20,3 @@ def get_resource_path(relative_path):
     
     return os.path.normpath(os.path.join(base_path, relative_path))
 
-def get_config_path(config_name):
-    """
-    获取配置文件的路径，优先从当前目录读取，否则使用打包内的默认配置
-    
-    Args:
-        config_name: 配置文件名
-        
-    Returns:
-        配置文件的路径
-    """
-    # 优先从当前目录读取
-    local_path = os.path.join(os.getcwd(), config_name)
-    if os.path.exists(local_path):
-        return local_path
-    # 否则使用打包内的默认配置
-    return get_resource_path(f'config/{config_name}')
