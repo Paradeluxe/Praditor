@@ -109,7 +109,7 @@ class AudioViewer(QWidget):
         self.label_etime.setAlignment(Qt.AlignCenter)
 
         self._chart = QChart()
-        self._chart.setBackgroundRoundness(1)
+        self._chart.setBackgroundRoundness(8)
         # self._chart.setBorderColor(QColor('red'))
         self._chart.layout().setContentsMargins(0, 0, 0, 0)
         self._chart.setMargins(QMargins(0, 0, 0, 0))

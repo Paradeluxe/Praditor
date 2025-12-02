@@ -55,6 +55,9 @@ def downsampleXset(xsets, stime, duration, max_show_frm, samplerate):
 
 
 class AudioViewer(QWidget):
+    # 添加信号，用于通知MainWindow执行prev/next操作
+    prevClicked = Signal()
+    nextClicked = Signal()
 
     def __init__(self):#, interval_ms=40000, resolution=20000):
         super().__init__()
@@ -91,10 +94,14 @@ class AudioViewer(QWidget):
         self.audio_stime = QLabel(f"{formatted_time(0)}")
         self.audio_stime.setAlignment(Qt.AlignCenter)
         self.audio_stime.setFixedWidth(75)
+        self.audio_stime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
+        self.audio_stime.mousePressEvent = self.on_prev_clicked  # 连接点击事件
 
         self.audio_etime = QLabel(f"{formatted_time(self.maximum)}")
         self.audio_etime.setAlignment(Qt.AlignCenter)
         self.audio_etime.setFixedWidth(75)
+        self.audio_etime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
+        self.audio_etime.mousePressEvent = self.on_next_clicked  # 连接点击事件
         # --------------------------------------------
         # --------------------------------------------
 
@@ -104,12 +111,17 @@ class AudioViewer(QWidget):
         self.label_stime = QLabel(f"{formatted_time(0)}")
         self.label_stime.setAlignment(Qt.AlignCenter)
         self.label_stime.setFixedWidth(75)
+        self.label_stime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
+        self.label_stime.mousePressEvent = self.on_prev_clicked  # 连接点击事件
+        
         self.label_etime = QLabel(f"{formatted_time(self.interval_ms)}")
         self.label_etime.setFixedWidth(75)
         self.label_etime.setAlignment(Qt.AlignCenter)
+        self.label_etime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
+        self.label_etime.mousePressEvent = self.on_next_clicked  # 连接点击事件
 
         self._chart = QChart()
-        self._chart.setBackgroundRoundness(1)
+        # self._chart.setBackgroundRoundness(8)
         # self._chart.setBorderColor(QColor('red'))
         self._chart.layout().setContentsMargins(0, 0, 0, 0)
         self._chart.setMargins(QMargins(0, 0, 0, 0))
@@ -128,6 +140,7 @@ class AudioViewer(QWidget):
         self.chart_view = QChartView(self._chart)
         # self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
         # self.chart_view.setRenderHint(QPainter.TextAntialiasing)
+        self.chart_view.setStyleSheet("background: transparent; border: none;")
 
         # --------------------------------------------
         # --------------------------------------------
@@ -150,12 +163,13 @@ class AudioViewer(QWidget):
 
         self.setStyleSheet("""
             QLabel {
-
                 color: black;
                 font-weight: bold;
             }
-
-
+            
+            QLabel:hover {
+                color: #1991D3;
+            }
         """)
         self.setLayout(self.layout)
         self.setContentsMargins(0, 0, 0, 10)
@@ -247,56 +261,13 @@ class AudioViewer(QWidget):
         super().wheelEvent(event)
 
     def resizeEvent(self, event):
-        self.slider_timerange.setStyleSheet(f"""
-            /*horizontal ：水平QSlider*/
-            QSlider::groove:horizontal {{
-               border: 0px solid #bbb;
-            }}
-
-            /*1.滑动过的槽设计参数*/
-            QSlider::sub-page:horizontal {{
-                /*槽颜色*/
-               background: rgb(255,255, 255);
-                /*外环区域倒圆角度*/
-               border-radius: 2px;
-                /*上遮住区域高度*/
-               margin-top:2px;
-                /*下遮住区域高度*/
-               margin-bottom:2px;
-               /*width在这里无效，不写即可*/
-            }}
-
-            /*2.未滑动过的槽设计参数*/
-            QSlider::add-page:horizontal {{
-               /*槽颜色*/
-               background: rgb(255,255, 255);
-               /*外环区域倒圆角度*/
-               border-radius: 2px;
-                /*上遮住区域高度*/
-               margin-top:2px;
-                /*下遮住区域高度*/
-               margin-bottom:2px;
-            }}
-
-
-            /*3.平时滑动的滑块设计参数*/
-            QSlider::handle:horizontal {{
-               /*滑块颜色*/
-               background: #7f0020;
-               /*滑块的宽度*/
-               width: {self.slider_timerange.width() * self.interval_ms / self.maximum}px;
-                /*滑块外环倒圆角度*/
-               border-radius: 1px; 
-                /*上遮住区域高度*/
-               margin-top:2px;
-                /*下遮住区域高度*/
-               margin-bottom:2px;
-
-
-            }}
-
-           """)
-
+        slider_width = self.slider_timerange.width() * self.interval_ms / self.maximum
+        style = ""
+        style += "QSlider::groove:horizontal { border: 0px solid #bbb; }"
+        style += "QSlider::sub-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
+        style += "QSlider::add-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
+        style += f"QSlider::handle:horizontal {{ background: #7f0020; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
+        self.slider_timerange.setStyleSheet(style)
 
     def adjustWinSizeResolution(self):
         # 首先，一个时间窗的最大时间不可以超过这个音频的时间；若超过，则调整为音频时间
@@ -347,56 +318,13 @@ class AudioViewer(QWidget):
 
     def updateSlider(self):
         self.slider_timerange.setMaximum(self.maximum - self.interval_ms)
-        self.slider_timerange.setStyleSheet(f"""
-                /*horizontal ：水平QSlider*/
-                QSlider::groove:horizontal {{
-                   border: 0px solid #bbb;
-                }}
-
-                /*1.滑动过的槽设计参数*/
-                QSlider::sub-page:horizontal {{
-                    /*槽颜色*/
-                   background: rgb(255,255, 255);
-                    /*外环区域倒圆角度*/
-                   border-radius: 2px;
-                    /*上遮住区域高度*/
-                   margin-top:2px;
-                    /*下遮住区域高度*/
-                   margin-bottom:2px;
-                   /*width在这里无效，不写即可*/
-                }}
-
-                /*2.未滑动过的槽设计参数*/
-                QSlider::add-page:horizontal {{
-                   /*槽颜色*/
-                   background: rgb(255,255, 255);
-                   /*外环区域倒圆角度*/
-                   border-radius: 2px;
-                    /*上遮住区域高度*/
-                   margin-top:2px;
-                    /*下遮住区域高度*/
-                   margin-bottom:2px;
-                }}
-
-
-                /*3.平时滑动的滑块设计参数*/
-                QSlider::handle:horizontal {{
-                   /*滑块颜色*/
-                   background: #7f0020;
-                   /*滑块的宽度*/
-                   width: {self.slider_timerange.width() * self.interval_ms / self.maximum}px;
-                    /*滑块外环倒圆角度*/
-                   border-radius: 1px; 
-                    /*上遮住区域高度*/
-                   margin-top:2px;
-                    /*下遮住区域高度*/
-                   margin-bottom:2px;
-
-
-                }}
-
-               """)
-
+        slider_width = self.slider_timerange.width() * self.interval_ms / self.maximum
+        style = ""
+        style += "QSlider::groove:horizontal { border: 0px solid #bbb; }"
+        style += "QSlider::sub-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
+        style += "QSlider::add-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
+        style += f"QSlider::handle:horizontal {{ background: #7f0020; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
+        self.slider_timerange.setStyleSheet(style)
 
     def updateChart(self):
         self.label_stime.setText(f"{formatted_time(self.slider_timerange.sliderPosition())}")
@@ -503,7 +431,13 @@ class AudioViewer(QWidget):
         self.updateChart()
         self.updateXset(self.tg_dict_tp)
 
-
+    def on_prev_clicked(self, event):
+        """处理prev按钮点击事件"""
+        self.prevClicked.emit()
+    
+    def on_next_clicked(self, event):
+        """处理next按钮点击事件"""
+        self.nextClicked.emit()
 
 
 
@@ -513,8 +447,8 @@ if __name__ == "__main__":
     window = AudioViewer()#r"C:\Users\18357\Desktop\Py_GUI\test.wav")
     # window.readAudio(r"C:\Users\18357\Desktop\Py_GUI\test.wav")
     # window.show()
-    window.tgChanged.connect(lambda: print(f"值已改变: "))
-    window.tg_dict_tp = {1:1}
+    # window.tgChanged.connect(lambda: print(f"值已改变: "))
+    window.tg_dict_tp = {"onset": [], "offset": []}
     # window.resize(1200, 300)
 
     # sys.exit(app.exec())

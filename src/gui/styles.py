@@ -132,4 +132,3 @@ qss_button_normal = """
 """
 
 
-

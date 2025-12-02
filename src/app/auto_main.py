@@ -652,9 +652,10 @@ class MainWindow(QMainWindow):
 
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(resource_path('icon.png')))
+            popup_window.setWindowIcon(QIcon(get_resource_path('icon.png')))
             popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
             popup_window.exec()
+            return
 
 
 

@@ -6,8 +6,8 @@ import webbrowser
 # 将项目根目录添加到Python路径
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from PySide6.QtCore import Qt, QUrl, Signal
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import Qt, QUrl, Signal, QPoint, QRectF
+from PySide6.QtGui import QAction, QIcon, QCursor, QPainterPath, QRegion, QPainter, QColor
 from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
 from PySide6.QtWidgets import (
@@ -15,7 +15,8 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox
+    QHBoxLayout,
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox, QLabel
 )
 
 from src.gui.styles import *
@@ -38,11 +39,283 @@ else:
     pass
 
 
+class CustomTitleBar(QWidget):
+    """自定义Windows风格标题栏，类似Trae样式"""
+    
+    # 定义信号
+    close_signal = Signal()
+    minimize_signal = Signal()
+    maximize_signal = Signal()
+    file_menu_clicked = Signal()
+    help_menu_clicked = Signal()
+    run_signal = Signal()
+    test_signal = Signal()
+    trash_signal = Signal()
+    read_signal = Signal()
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # 初始化拖拽变量
+        self.drag_position = QPoint()
+        
+        # 设置标题栏样式，确保完全覆盖默认菜单栏区域
+        # 移除固定高度，改为随内容自适应
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #FFFFFF;
+                border: none;
+                margin: 0px;
+                padding: 4px 0;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
+        """)
+        
+        # 确保背景完全填充，没有任何间隙
+        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAutoFillBackground(True)
+        
+        # 创建布局，设置垂直居中对齐
+        layout = QHBoxLayout(self)  # 直接将布局应用到当前部件
+        layout.setContentsMargins(8, 0, 0, 0)  # 左侧边距，右侧无边距
+        layout.setSpacing(0)
+        layout.setAlignment(Qt.AlignVCenter)  # 垂直居中对齐
+        
+        # 创建菜单按钮
+        self.file_menu_btn = QPushButton("File")
+        self.help_menu_btn = QPushButton("Help")
+        
+        # 设置菜单按钮样式（Windows风格）
+        menu_btn_style = """
+            QPushButton {
+                background-color: white;
+                border: none;
+                color: #333333;
+                font-size: 13px;
+                padding: 8px 12px;
+                font-weight: normal;
+            }
+            QPushButton:hover {
+                background-color: #F0F0F0;
+            }
+        """
+        
+        for btn in [self.file_menu_btn, self.help_menu_btn]:
+            btn.setStyleSheet(menu_btn_style)
+            btn.setCursor(QCursor(Qt.PointingHandCursor))
+        
+        # 连接菜单按钮信号
+        self.file_menu_btn.clicked.connect(self.file_menu_clicked.emit)
+        self.help_menu_btn.clicked.connect(self.help_menu_clicked.emit)
+        
+        # 添加菜单按钮到布局左侧
+        layout.addWidget(self.file_menu_btn)
+        layout.addWidget(self.help_menu_btn)
+        
+        # 添加标题标签，设置居左显示（Windows风格）
+        self.title_label = QLabel("Praditor")
+        self.title_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # 居左垂直居中
+        self.title_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #333333; padding: 0 12px;")
+        layout.addWidget(self.title_label)
+        
+        # 添加伸缩空间，将按钮推到右侧
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        layout.addWidget(spacer)
+
+        # 添加trash按钮（用于清除onsets和offsets）
+        self.trash_btn = QPushButton()
+        self.trash_btn.setIcon(QIcon(get_resource_path('resources/icons/trash.svg')))
+        self.trash_btn.setFixedSize(32, 32)
+        self.trash_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.trash_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.trash_btn)
+        
+        # 添加read按钮（用于显示onsets和offsets）
+        self.read_btn = QPushButton()
+        self.read_btn.setIcon(QIcon(get_resource_path('resources/icons/read.svg')))
+        self.read_btn.setFixedSize(32, 32)
+        self.read_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.read_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.read_btn)
+        
+        # 添加运行按钮（类似IDE中的播放键）
+        self.run_btn = QPushButton()
+        self.run_btn.setIcon(QIcon(get_resource_path('resources/icons/play.svg')))
+        self.run_btn.setFixedSize(32, 32)
+        self.run_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.run_btn)
+        
+        # 添加测试按钮
+        self.test_btn = QPushButton()
+        self.test_btn.setIcon(QIcon(get_resource_path('resources/icons/test.svg')))
+        self.test_btn.setFixedSize(32, 32)
+        self.test_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.test_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.test_btn)
+        
+        # 创建窗口控制按钮（Windows风格）
+        self.close_btn = QPushButton()
+        self.minimize_btn = QPushButton()
+        self.maximize_btn = QPushButton()
+        
+        # 设置按钮样式和大小（Windows风格：方形按钮，较大尺寸）
+        btn_size = 32
+        for btn in [self.close_btn, self.minimize_btn, self.maximize_btn]:
+            btn.setFixedSize(btn_size, btn_size)
+            btn.setStyleSheet("background-color: white; border: none; color: #333333;")
+            btn.setCursor(QCursor(Qt.PointingHandCursor))
+        
+        # 使用SVG图标
+        self.minimize_btn.setIcon(QIcon(get_resource_path('resources/icons/minimize.svg')))
+        self.maximize_btn.setIcon(QIcon(get_resource_path('resources/icons/maximize.svg')))
+        self.close_btn.setIcon(QIcon(get_resource_path('resources/icons/close.svg')))
+        
+        # 按钮颜色配置（Windows风格）
+        self.btn_colors = {
+            'close': {
+                'normal': 'transparent',
+                'hover': '#FF5F57',
+                'pressed': '#FF453A'
+            },
+            'minimize': {
+                'normal': 'transparent',
+                'hover': '#F5F5F5',
+                'pressed': '#E0E0E0'
+            },
+            'maximize': {
+                'normal': 'transparent',
+                'hover': '#F5F5F5',
+                'pressed': '#E0E0E0'
+            }
+        }
+        
+        # 设置初始按钮颜色
+        self.update_button_style(self.close_btn, 'close', 'normal')
+        self.update_button_style(self.minimize_btn, 'minimize', 'normal')
+        self.update_button_style(self.maximize_btn, 'maximize', 'normal')
+        
+        # 连接按钮信号
+        self.trash_btn.clicked.connect(self.trash_signal.emit)
+        self.read_btn.clicked.connect(self.read_signal.emit)
+        self.run_btn.clicked.connect(self.run_signal.emit)
+        self.test_btn.clicked.connect(self.test_signal.emit)
+        self.close_btn.clicked.connect(self.close_signal.emit)
+        self.minimize_btn.clicked.connect(self.minimize_signal.emit)
+        self.maximize_btn.clicked.connect(self.maximize_signal.emit)
+        
+        # 连接按钮事件
+        self.connect_button_events()
+        
+        # 将按钮添加到布局右侧（顺序：最小化、最大化、关闭，Windows风格）
+        layout.addWidget(self.minimize_btn)
+        layout.addWidget(self.maximize_btn)
+        layout.addWidget(self.close_btn)
+    
+    def connect_button_events(self):
+        """连接按钮事件"""
+        # 关闭按钮
+        self.close_btn.enterEvent = lambda event: self.update_button_style(self.close_btn, 'close', 'hover')
+        self.close_btn.leaveEvent = lambda event: self.update_button_style(self.close_btn, 'close', 'normal')
+        self.close_btn.pressed.connect(lambda: self.update_button_style(self.close_btn, 'close', 'pressed'))
+        self.close_btn.released.connect(lambda: self.update_button_style(self.close_btn, 'close', 'hover'))
+        
+        # 最小化按钮
+        self.minimize_btn.enterEvent = lambda event: self.update_button_style(self.minimize_btn, 'minimize', 'hover')
+        self.minimize_btn.leaveEvent = lambda event: self.update_button_style(self.minimize_btn, 'minimize', 'normal')
+        self.minimize_btn.pressed.connect(lambda: self.update_button_style(self.minimize_btn, 'minimize', 'pressed'))
+        self.minimize_btn.released.connect(lambda: self.update_button_style(self.minimize_btn, 'minimize', 'hover'))
+        
+        # 最大化按钮
+        self.maximize_btn.enterEvent = lambda event: self.update_button_style(self.maximize_btn, 'maximize', 'hover')
+        self.maximize_btn.leaveEvent = lambda event: self.update_button_style(self.maximize_btn, 'maximize', 'normal')
+        self.maximize_btn.pressed.connect(lambda: self.update_button_style(self.maximize_btn, 'maximize', 'pressed'))
+        self.maximize_btn.released.connect(lambda: self.update_button_style(self.maximize_btn, 'maximize', 'hover'))
+        
+        # 运行按钮
+        self.run_btn.enterEvent = lambda event: self.run_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_btn.leaveEvent = lambda event: self.run_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        
+        # 测试按钮
+        self.test_btn.enterEvent = lambda event: self.test_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.test_btn.leaveEvent = lambda event: self.test_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        
+        # trash按钮
+        self.trash_btn.enterEvent = lambda event: self.trash_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.trash_btn.leaveEvent = lambda event: self.trash_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        
+        # read按钮
+        self.read_btn.enterEvent = lambda event: self.read_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.read_btn.leaveEvent = lambda event: self.read_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+    
+    def update_button_style(self, btn, btn_type, state):
+        """更新按钮样式（现代Windows风格）"""
+        # 当状态为normal时，使用白色背景，否则使用配置的颜色
+        if state == 'normal':
+            color = 'white'
+        else:
+            color = self.btn_colors[btn_type][state]
+        
+        # 为不同按钮设置不同的字体大小，确保图标比例协调
+        font_sizes = {
+            'minimize': 18,
+            'maximize': 14,
+            'close': 20
+        }
+        font_size = font_sizes.get(btn_type, 16)
+        
+        # 对于关闭按钮，悬停和按下时文字颜色变为白色
+        if btn_type == 'close' and (state == 'hover' or state == 'pressed'):
+            btn.setStyleSheet(f"background-color: {color}; border: none; color: white; font-size: {font_size}px; font-weight: normal; text-align: center; padding: 0px; margin: 0px;")
+        else:
+            # 其他按钮保持默认文字颜色
+            btn.setStyleSheet(f"background-color: {color}; border: none; color: #333333; font-size: {font_size}px; font-weight: normal; text-align: center; padding: 0px; margin: 0px;")
+    
+    def mousePressEvent(self, event):
+        """实现拖拽功能"""
+        if event.button() == Qt.LeftButton:
+            self.drag_position = event.globalPosition().toPoint() - self.parent().frameGeometry().topLeft()
+            event.accept()
+    
+    def mouseMoveEvent(self, event):
+        """实现拖拽功能"""
+        if event.buttons() == Qt.LeftButton:
+            self.parent().move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()
+    
+    def set_title(self, title):
+        """设置标题，确保Praditor部分加粗"""
+        if "Praditor" in title:
+            # 将Praditor部分加粗，其他部分保持正常
+            parts = title.split("Praditor")
+            formatted_title = f"<b>Praditor</b>{parts[1] if len(parts) > 1 else ''}"
+            self.title_label.setText(formatted_title)
+        else:
+            # 如果标题中没有Praditor，直接设置
+            self.title_label.setText(title)
+        # 确保标签支持HTML格式
+        self.title_label.setTextFormat(Qt.RichText)
+    
+    def update_maximize_button(self, is_maximized):
+        """更新最大化按钮状态"""
+        # macOS风格下，最大化按钮样式不变，只改变功能
+        pass
+
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
 
+        # 隐藏默认标题栏，使用自定义标题栏
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint | Qt.WindowMinMaxButtonsHint)
+        
+        # 设置窗口属性，实现带有抗锯齿的圆角
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setAttribute(Qt.WA_NoSystemBackground, False)
+        self.setAttribute(Qt.WA_StyledBackground, False)
+        
         # load window icon
         # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
         self.param_sets = []
@@ -53,7 +326,7 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
-        self.setMinimumSize(950, 720)
+        self.setMinimumSize(1000, 750)
 
 
 
@@ -72,9 +345,10 @@ class MainWindow(QMainWindow):
         self.statusBar().setStyleSheet("""
             QStatusBar {
                 background-color: #7f0020;
-                
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
             }
-        
+
         """)
         self.statusBar().setFixedHeight(20)
 
@@ -120,6 +394,10 @@ class MainWindow(QMainWindow):
         }
 
         """)
+        
+        # 隐藏默认菜单栏，我们将在自定义标题栏中集成菜单功能
+        self.menuBar().setVisible(False)
+        
         # --------------------------------------
 
 
@@ -152,53 +430,6 @@ class MainWindow(QMainWindow):
         # ---------------------------------------------------------------
         toolbar.addSeparator()
 
-        self.clear_xset = QPushButton("Clear", self)  # Reload
-        self.clear_xset.setFixedSize(50, 25)
-        self.clear_xset.setStatusTip("Clear Onsets and Offsets from the screen")
-        self.clear_xset.setStyleSheet(qss_button_normal)
-        self.clear_xset.pressed.connect(self.clearXset)
-
-        toolbar.addWidget(self.clear_xset)
-
-
-        self.read_xset = QPushButton("Show", self)
-        self.read_xset.setFixedSize(50, 25)
-        self.read_xset.setStatusTip("Read Onsets and Offsets if there is the existing .TextGrid")
-        self.read_xset.setStyleSheet(qss_button_normal)
-        self.read_xset.pressed.connect(self.readXset)
-        toolbar.addWidget(self.read_xset)
-
-        toolbar.addSeparator()
-
-        self.prev_audio = QPushButton("Prev", self)
-        self.prev_audio.setFixedSize(50, 25)
-        self.prev_audio.setStatusTip("Go to PREVIOUS audio in the folder")
-        self.prev_audio.setStyleSheet(qss_button_normal)
-        self.prev_audio.pressed.connect(self.prevnext_audio)
-        toolbar.addWidget(self.prev_audio)
-
-        self.run_praditor = QPushButton("Run", self)
-        self.run_praditor.setFixedSize(50, 25)
-        self.run_praditor.setStatusTip("Extract speech onsets/offsets")
-        self.run_praditor.setStyleSheet(qss_button_normal)
-        self.run_praditor.pressed.connect(self.runPraditorOnAudio)
-        toolbar.addWidget(self.run_praditor)
-        
-        self.test_praditor = QPushButton("Test", self)
-        self.test_praditor.setFixedSize(50, 25)
-        self.test_praditor.setStatusTip("Test the number of onsets/offsets but no change to .TextGrid")
-        self.test_praditor.setStyleSheet(qss_button_normal)
-        self.test_praditor.pressed.connect(self.testPraditorOnAudio)
-        toolbar.addWidget(self.test_praditor)
-        
-
-        self.next_audio = QPushButton("Next", self)
-        self.next_audio.setFixedSize(50, 25)
-        self.next_audio.setStatusTip("Go to NEXT audio in the folder")
-        self.next_audio.setStyleSheet(qss_button_normal)
-        self.next_audio.pressed.connect(self.prevnext_audio)
-        toolbar.addWidget(self.next_audio)
-        toolbar.addSeparator()
 
         # ----------------------------------------------
         # ----------------------------------------------
@@ -291,10 +522,37 @@ class MainWindow(QMainWindow):
 
 
 
+        # 创建自定义标题栏并设置为菜单栏部件，使其显示在工具栏上方
+        self.title_bar = CustomTitleBar(self)
+        self.setMenuWidget(self.title_bar)
+        
+        # 连接标题栏信号
+        self.title_bar.close_signal.connect(self.close)
+        self.title_bar.minimize_signal.connect(self.showMinimized)
+        self.title_bar.maximize_signal.connect(self.toggleMaximize)
+        self.title_bar.trash_signal.connect(self.clearXset)
+        self.title_bar.read_signal.connect(self.readXset)
+        self.title_bar.run_signal.connect(self.runPraditorOnAudio)
+        self.title_bar.test_signal.connect(self.testPraditorOnAudio)
+        
+        # 连接菜单按钮信号到相应方法
+        self.title_bar.file_menu_clicked.connect(self.openFileDialog)
+        self.title_bar.help_menu_clicked.connect(self.browseInstruction)
+        
+        # 创建主部件和布局
+        main_widget = QWidget()
+        main_widget.setObjectName("centralwidget")
+        self.setCentralWidget(main_widget)
+        
+        # 创建垂直布局，包含内容
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        main_widget.setLayout(main_layout)
+        
+        # 创建内容部件和布局
         central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-
-        layout = QVBoxLayout()  # 创建一个水平布局
+        layout = QVBoxLayout()  # 创建一个垂直布局
         central_widget.setLayout(layout)
         # file_menu.addSeparator()
         # file_menu.addAction(button_action2)
@@ -302,6 +560,9 @@ class MainWindow(QMainWindow):
         self.AudioViewer = AudioViewer()
         self.AudioViewer.setMinimumHeight(200)
         layout.addWidget(self.AudioViewer)
+        # 连接AudioViewer的信号到prevnext_audio方法
+        self.AudioViewer.prevClicked.connect(lambda: self.prevnext_audio("prev"))
+        self.AudioViewer.nextClicked.connect(lambda: self.prevnext_audio("next"))
         # ---------------------------------------------------
 
         # ---------------------------------------------------
@@ -336,13 +597,27 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.MySliders)
         # ---------------------------------------------------
         layout.setContentsMargins(10, 20, 10, 40)
+        # 将内容部件添加到主布局
+        main_layout.addWidget(central_widget)
+        
+        # 移除可能冲突的CSS圆角设置，因为我们使用paintEvent绘制圆角
         self.setStyleSheet("""
             QMainWindow {
-                background-color: #E9EDF1; 
-
+                background-color: transparent; 
             }
 
         """)
+        
+        # 移除可能冲突的CSS圆角设置，因为我们使用paintEvent绘制圆角
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: transparent; 
+            }
+
+        """)
+        
+        # 调整主窗口的边距
+        main_layout.setContentsMargins(0, 0, 0, 0)
 
 
         # 初始化参数txt
@@ -618,7 +893,10 @@ class MainWindow(QMainWindow):
             else:
                 self.select_mode.setChecked(True)
             self.showParams()
-            self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+
+            dir_name = os.path.basename(os.path.dirname(self.file_path))
+            base_name = os.path.basename(self.file_path)
+            self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
 
             self.showXsetNum()
             self.param_sets.append(self.MySliders.getParams())
@@ -731,16 +1009,31 @@ class MainWindow(QMainWindow):
 
 
 
-    def prevnext_audio(self):
-        print(self.sender().text())
+    def prevnext_audio(self, direction=None):
+        """处理prev/next音频切换
+        direction: None表示从按钮触发，使用sender判断；"prev"或"next"表示从信号触发
+        """
         self.player.stop()
-        if self.sender().text() == "Prev":
-            self.which_one -= 1
-        else:  # "Next"
-            self.which_one += 1
+        
+        # 确定切换方向
+        if direction is not None:
+            if direction == "prev":
+                self.which_one -= 1
+            else:  # "next"
+                self.which_one += 1
+        else:
+            # 兼容旧的按钮点击方式
+            sender = self.sender()
+            if hasattr(sender, "text") and sender.text() == "Prev":
+                self.which_one -= 1
+            else:  # "Next" 或其他
+                self.which_one += 1
+        
         self.which_one %= len(self.file_paths)
         self.file_path = self.file_paths[self.which_one]
-        self.setWindowTitle(f"Praditor - {self.file_path} ({self.which_one+1}/{len(self.file_paths)})")
+        dir_name = os.path.basename(os.path.dirname(self.file_path))
+        base_name = os.path.basename(self.file_path)
+        self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
 
         if os.path.exists(os.path.splitext(self.file_path)[0] + ".txt"):
@@ -753,9 +1046,6 @@ class MainWindow(QMainWindow):
         # self.statusBar().showMessage("1", 0)
 
 
-
-
-
     def stopSound(self):
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
@@ -764,6 +1054,43 @@ class MainWindow(QMainWindow):
                 print("Audio stopped")
         except AttributeError:
             pass
+    
+    def toggleMaximize(self):
+        # 切换窗口最大化/还原状态
+        if self.isMaximized():
+            self.showNormal()
+        else:
+            self.showMaximized()
+    
+    def setWindowTitle(self, title):
+        # 重写setWindowTitle方法，同时更新自定义标题栏
+        super().setWindowTitle(title)
+        if hasattr(self, 'title_bar'):
+            self.title_bar.set_title(title)
+    
+    def paintEvent(self, event):
+        # 重写paintEvent事件，绘制带有抗锯齿的圆角背景
+        painter = QPainter(self)
+        
+        # 设置高质量渲染提示（仅使用支持的属性）
+        painter.setRenderHint(QPainter.Antialiasing, True)  # 抗锯齿
+        painter.setRenderHint(QPainter.SmoothPixmapTransform, True)  # 平滑像素图变换
+        painter.setRenderHint(QPainter.TextAntialiasing, True)  # 文本抗锯齿
+        
+        # 主窗口背景色
+        background_color = QColor(233, 237, 241)  # #E9EDF1
+        
+        # 创建圆角矩形路径
+        radius = 8  # 与CSS中设置的border-radius保持一致
+        rounded_rect = QRectF(self.rect())
+        path = QPainterPath()
+        path.addRoundedRect(rounded_rect, radius, radius)
+        
+        # 填充圆角背景
+        painter.fillPath(path, background_color)
+        
+        # 调用父类的paintEvent确保其他部件正常绘制
+        super().paintEvent(event)
 
 
 
