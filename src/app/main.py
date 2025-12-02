@@ -52,6 +52,8 @@ class CustomTitleBar(QWidget):
     test_signal = Signal()
     trash_signal = Signal()
     read_signal = Signal()
+    onset_signal = Signal()
+    offset_signal = Signal()
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -117,6 +119,32 @@ class CustomTitleBar(QWidget):
         self.title_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # 居左垂直居中
         self.title_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #333333; padding: 0 12px;")
         layout.addWidget(self.title_label)
+        
+        # 添加onset和offset按钮
+        self.onset_btn = QPushButton("Onset")
+        self.onset_btn.setStatusTip("Extract Onsets")
+        self.onset_btn.setFixedSize(80, 25)
+        onset_color = "#1991D3"
+        self.onset_btn.setStyleSheet(f"QPushButton {{ background: {onset_color}; color: white; font-weight: bold; border: 2px solid {onset_color}; border-radius: 5px; margin: 0px; font-size: 13px; }} QPushButton:pressed {{ background: #666666; color: {onset_color}; font-weight: bold; border: 2px solid {onset_color}; border-radius: 5px; margin: 0px; }} QPushButton:checked {{ background-color: white; color: {onset_color}; border: 2px solid {onset_color}; font-weight: bold; border-radius: 5px; margin: 0px; }}")
+        self.onset_btn.setCheckable(True)
+        self.onset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.onset_btn)
+        
+        # 添加按钮之间的空格
+        layout.addSpacing(8)
+        
+        self.offset_btn = QPushButton("Offset")
+        self.offset_btn.setStatusTip("Extract Offsets")
+        self.offset_btn.setFixedSize(80, 25)
+        offset_color = "#2AD25E"
+        self.offset_btn.setStyleSheet(f"QPushButton {{ background: {offset_color}; color: white; font-weight: bold; border: 2px solid {offset_color}; border-radius: 5px; margin: 0px; font-size: 13px; }} QPushButton:pressed {{ background: #666666; color: {offset_color}; font-weight: bold; border: 2px solid {offset_color}; border-radius: 5px; margin: 0px; }} QPushButton:checked {{ background-color: white; color: {offset_color}; border: 2px solid {offset_color}; font-weight: bold; border-radius: 5px; margin: 0px; }}")
+        self.offset_btn.setCheckable(True)
+        self.offset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addWidget(self.offset_btn)
+        
+        # 连接onset和offset按钮信号
+        self.onset_btn.pressed.connect(self.onset_signal.emit)
+        self.offset_btn.pressed.connect(self.offset_signal.emit)
         
         # 添加伸缩空间，将按钮推到右侧
         spacer = QWidget()
@@ -436,23 +464,6 @@ class MainWindow(QMainWindow):
         # ----------------------------------------------
 
 
-        self.run_onset = QPushButton("Onset", self)
-        self.run_onset.setStatusTip("Extract Onsets")
-        self.run_onset.setFixedSize(80, 25)
-        self.run_onset.pressed.connect(self.turnOnset)
-        self.run_onset.setStyleSheet(qss_button_checkable_with_color())
-        self.run_onset.setCheckable(True)
-        # self.run_onset.setChecked(False)
-        toolbar.addWidget(self.run_onset)
-
-        self.run_offset = QPushButton("Offset", self)
-        self.run_offset.setStatusTip("Extract Offsets")
-        self.run_offset.setFixedSize(80, 25)
-        self.run_offset.pressed.connect(self.turnOffset)
-        self.run_offset.setStyleSheet(qss_button_checkable_with_color("#2AD25E"))
-        self.run_offset.setCheckable(True)
-        # self.run_offset.setChecked(False)
-        toolbar.addWidget(self.run_offset)
 
 
 
@@ -534,6 +545,12 @@ class MainWindow(QMainWindow):
         self.title_bar.read_signal.connect(self.readXset)
         self.title_bar.run_signal.connect(self.runPraditorOnAudio)
         self.title_bar.test_signal.connect(self.testPraditorOnAudio)
+        self.title_bar.onset_signal.connect(self.turnOnset)
+        self.title_bar.offset_signal.connect(self.turnOffset)
+        
+        # 更新run_onset和run_offset属性，使其指向标题栏中的按钮
+        self.run_onset = self.title_bar.onset_btn
+        self.run_offset = self.title_bar.offset_btn
         
         # 连接菜单按钮信号到相应方法
         self.title_bar.file_menu_clicked.connect(self.openFileDialog)
