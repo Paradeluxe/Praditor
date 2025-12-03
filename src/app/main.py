@@ -842,102 +842,85 @@ class MainWindow(QMainWindow):
         if self.file_btn.isChecked():
             # File模式：保存到file同名
             self.saveParamsWithFileName()
+        
+        # 保存参数后检查是否与任何模式匹配，更新下划线
+        self.checkIfParamsExist()
 
 
     def checkIfParamsExist(self):
         current_params = str(self.MySliders.getParams())
         current_params_dict = self.MySliders.getParams()
         
-        # 重置所有按钮样式为默认
-        default_style = qss_save_location_button
-        
-        # 定义下划线样式（在原有样式基础上添加下划线，不改变按钮大小）
-        def getUnderlinedStyle(base_style):
-            # 添加下划线样式，不改变按钮大小
-            styled = base_style
-            # 处理黑色文本情况
-            if "color: black;" in styled:
-                styled = styled.replace("color: black;", "color: black; text-decoration: underline;")
-            # 处理灰色文本情况
-            if "color: gray;" in styled:
-                styled = styled.replace("color: gray;", "color: gray; text-decoration: underline;")
-            return styled
-        
         # 检查Default模式
-        try:
-            default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
-            if not os.path.exists(default_params_path):
-                default_params_path = get_resource_path("src/app/params.txt")
-            
-            with open(default_params_path, 'r') as txt_file:
-                saved_params = txt_file.read()
-                if saved_params == current_params:
-                    self.default_btn.setStyleSheet(getUnderlinedStyle(qss_save_location_button))
-                else:
-                    self.default_btn.setStyleSheet(default_style)
-        except FileNotFoundError:
-            self.default_btn.setStyleSheet(default_style)
+        default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
+        if not os.path.exists(default_params_path):
+            default_params_path = get_resource_path("src/app/params.txt")
+        
+        # 只检查文件是否存在，不比较参数内容
+        params_exists = os.path.exists(default_params_path)
+        
+        # 设置default_btn的file_exists属性
+        self.default_btn.setProperty("file_exists", params_exists)
+        self.default_btn.style().polish(self.default_btn)  # 刷新样式
         
         # 检查Folder模式
-        try:
-            if self.file_path:
-                folder_path = os.path.dirname(self.file_path)
-                folder_name = os.path.basename(folder_path)
-                folder_params_path = os.path.join(folder_path, f"{folder_name}.txt")
-                
-                with open(folder_params_path, 'r') as txt_file:
-                    saved_params = txt_file.read()
-                    if saved_params == current_params:
-                        self.folder_btn.setStyleSheet(getUnderlinedStyle(qss_save_location_button))
-                    else:
-                        self.folder_btn.setStyleSheet(default_style)
-            else:
-                self.folder_btn.setStyleSheet(default_style)
-        except FileNotFoundError:
-            self.folder_btn.setStyleSheet(default_style)
+        folder_params_exists = False
+        if self.file_path:
+            folder_path = os.path.dirname(self.file_path)
+            folder_params_path = os.path.join(folder_path, "params.txt")
+            
+            # 只检查文件是否存在，不比较参数内容
+            folder_params_exists = os.path.exists(folder_params_path)
+        
+        # 设置folder_btn的file_exists属性
+        self.folder_btn.setProperty("file_exists", folder_params_exists)
+        self.folder_btn.style().polish(self.folder_btn)  # 刷新样式
         
         # 检查File模式
-        try:
-            if self.file_path:
-                file_params_path = os.path.splitext(self.file_path)[0] + ".txt"
-                
-                with open(file_params_path, 'r') as txt_file:
-                    saved_params = txt_file.read()
-                    if saved_params == current_params:
-                        self.file_btn.setStyleSheet(getUnderlinedStyle(qss_save_location_button))
-                    else:
-                        self.file_btn.setStyleSheet(default_style)
-            else:
-                self.file_btn.setStyleSheet(default_style)
-        except FileNotFoundError:
-            self.file_btn.setStyleSheet(default_style)
-
-        # defaul和last
-
+        file_params_exists = False
+        if self.file_path:
+            file_params_path = os.path.splitext(self.file_path)[0] + ".txt"
+            
+            # 只检查文件是否存在，不比较参数内容
+            file_params_exists = os.path.exists(file_params_path)
+        
+        # 设置file_btn的file_exists属性
+        self.file_btn.setProperty("file_exists", file_params_exists)
+        self.file_btn.style().polish(self.file_btn)  # 刷新样式
 
     def showParams(self):
-        # 简化版showParams，只处理默认参数
+        # 简化版showParams，处理多种参数模式
         if self.file_path is None:
             return
         
-        # 默认只使用文件同名参数
+        # 默认使用文件同名参数
         txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        params_to_use = None
         
-        # 如果参数文件不存在，创建一个默认的
-        if not os.path.exists(txt_file_path):
-            default_params_path = os.path.join(os.getcwd(), "params.txt")
-            if not os.path.exists(default_params_path):
-                default_params_path = get_resource_path("src/app/params.txt")
-                
-            with open(default_params_path, "r") as default_txt_file:
-                default_params = default_txt_file.read()
+        # 检查文件同名参数是否存在
+        if os.path.exists(txt_file_path):
+            with open(txt_file_path, "r") as txt_file:
+                params_to_use = txt_file.read()
+        else:
+            # 检查folder模式的params.txt是否存在
+            folder_path = os.path.dirname(self.file_path)
+            folder_params_path = os.path.join(folder_path, "params.txt")
             
-            with open(txt_file_path, "w") as txt_file:
-                txt_file.write(default_params)
+            if os.path.exists(folder_params_path):
+                with open(folder_params_path, "r") as txt_file:
+                    params_to_use = txt_file.read()
+            else:
+                # 最后使用默认的params.txt
+                default_params_path = os.path.join(os.getcwd(), "params.txt")
+                if not os.path.exists(default_params_path):
+                    default_params_path = get_resource_path("src/app/params.txt")
+                    
+                with open(default_params_path, "r") as default_txt_file:
+                    params_to_use = default_txt_file.read()
         
-        # 读取并应用参数
-        with open(txt_file_path, 'r') as txt_file:
-            self.MySliders.resetParams(eval(txt_file.read()))
+        # 应用参数
+        if params_to_use:
+            self.MySliders.resetParams(eval(params_to_use))
 
 
 
@@ -986,6 +969,8 @@ class MainWindow(QMainWindow):
             # 更新save和reset按钮的可用性
             self.updateSaveResetButtonsState()
             self.showParams()
+            # 检查参数匹配，更新下划线
+            self.checkIfParamsExist()
 
             dir_name = os.path.basename(os.path.dirname(self.file_path))
             base_name = os.path.basename(self.file_path)
@@ -1154,18 +1139,8 @@ class MainWindow(QMainWindow):
         self.reset_svg_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
     
     def onModeButtonClicked(self):
-        """模式按钮点击事件处理，确保单选效果
-        当点击一个按钮时，确保它是唯一选中的，除非是取消选中
+        """模式按钮点击事件处理，允许同时选中多个模式
         """
-        sender = self.sender()
-        
-        # 如果点击的按钮当前是选中状态，取消选中
-        if sender.isChecked():
-            # 取消其他两个按钮的选中状态
-            for btn in [self.default_btn, self.folder_btn, self.file_btn]:
-                if btn != sender:
-                    btn.setChecked(False)
-        
         # 更新save和reset按钮状态
         self.updateSaveResetButtonsState()
 
@@ -1211,6 +1186,9 @@ class MainWindow(QMainWindow):
         # 更新save和reset按钮的可用性
         self.updateSaveResetButtonsState()
         self.showParams()
+
+        # 检查参数匹配，更新下划线
+        self.checkIfParamsExist()
         self.showXsetNum()
         # self.update_current_param()
         # self.statusBar().showMessage("1", 0)
@@ -1226,15 +1204,14 @@ class MainWindow(QMainWindow):
             pass
     
     def saveParamsWithFolderName(self):
-        """保存参数到当前文件夹，文件名与文件夹同名"""
+        """保存参数到当前文件夹，文件名为params.txt"""
         if hasattr(self, 'file_path') and self.file_path:
             folder_path = os.path.dirname(self.file_path)
-            folder_name = os.path.basename(folder_path)
-            txt_file_path = os.path.join(folder_path, f"{folder_name}.txt")
+            txt_file_path = os.path.join(folder_path, "params.txt")
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"Params saved to folder with name: {txt_file_path}")
+            print(f"Params saved to folder as params.txt: {txt_file_path}")
     
     def saveParamsToExeLocation(self):
         """保存参数到exe所在位置"""

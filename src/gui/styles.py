@@ -132,7 +132,8 @@ qss_button_normal = """
 """
 
 qss_save_location_button = """
-        QPushButton {
+        /* 未选中且文件不存在 */
+        QPushButton[file_exists="false"] {
             background: transparent; 
             color: gray; 
             font-weight: bold; 
@@ -141,7 +142,49 @@ qss_save_location_button = """
             padding: 8px 6px; 
             margin: 0px 2px; 
             font-size: 13px; 
+            text-decoration: none;
         } 
+        
+        /* 未选中且文件存在 */
+        QPushButton[file_exists="true"] {
+            background: transparent; 
+            color: gray; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+            font-size: 13px; 
+            text-decoration: underline;
+        } 
+        
+        /* 选中且文件不存在 */
+        QPushButton:checked[file_exists="false"] {
+            background-color: transparent; 
+            color: black; 
+            border: none; 
+            font-weight: bold; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+            font-size: 13px; 
+            text-decoration: none;
+        }
+        
+        /* 选中且文件存在 */
+        QPushButton:checked[file_exists="true"] {
+            background-color: transparent; 
+            color: black; 
+            border: none; 
+            font-weight: bold; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+            font-size: 13px; 
+            text-decoration: underline;
+        }
+        
+        /* 按下状态 */
         QPushButton:pressed {
             background: #F0F0F0; 
             color: gray; 
@@ -151,15 +194,6 @@ qss_save_location_button = """
             padding: 8px 6px; 
             margin: 0px 2px; 
         } 
-        QPushButton:checked {
-            background-color: transparent; 
-            color: black; 
-            border: none; 
-            font-weight: bold; 
-            border-radius: 0px; 
-            padding: 8px 6px; 
-            margin: 0px 2px; 
-        }
 """
 
 
