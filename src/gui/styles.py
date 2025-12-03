@@ -131,4 +131,35 @@ qss_button_normal = """
         }
 """
 
+qss_save_location_button = """
+        QPushButton {
+            background: transparent; 
+            color: gray; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+            font-size: 13px; 
+        } 
+        QPushButton:pressed {
+            background: #F0F0F0; 
+            color: gray; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+        } 
+        QPushButton:checked {
+            background-color: transparent; 
+            color: black; 
+            border: none; 
+            font-weight: bold; 
+            border-radius: 0px; 
+            padding: 8px 6px; 
+            margin: 0px 2px; 
+        }
+"""
+
 

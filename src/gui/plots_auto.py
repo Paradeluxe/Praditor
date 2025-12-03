@@ -64,8 +64,8 @@ class AudioViewer(QWidget):
         self.max_amp = None
         self.audio_clip = None
         self.time_unit = 441
-        # self.setMinimumHeight(200)
-        # self.setMinimumSize(800, 200)
+        self.setMinimumHeight(400)  # 增大plot的最小高度
+        self.setMinimumSize(800, 400)
         self.interval_ms = 1
         self.fpath = ""
         self.resolution = 1
@@ -128,6 +128,16 @@ class AudioViewer(QWidget):
         self.chart_view = QChartView(self._chart)
         # self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
         # self.chart_view.setRenderHint(QPainter.TextAntialiasing)
+        
+        # 为图表添加拖动功能
+        self.chart_view.setMouseTracking(True)  # 启用鼠标跟踪
+        self.chart_view.mousePressEvent = self.chart_mouse_press_event
+        self.chart_view.mouseMoveEvent = self.chart_mouse_move_event
+        self.chart_view.mouseReleaseEvent = self.chart_mouse_release_event
+        
+        # 拖动状态变量
+        self.is_dragging = False
+        self.last_mouse_pos = 0
 
         # --------------------------------------------
         # --------------------------------------------
@@ -141,12 +151,19 @@ class AudioViewer(QWidget):
 
         self.layout.addLayout(layout)
 
-        layout = QHBoxLayout()
-        layout.addWidget(self.label_stime)
-        layout.addWidget(self.chart_view)
-        layout.addWidget(self.label_etime)
-        layout.setSpacing(0)
-        self.layout.addLayout(layout)
+        # 图表区域布局（只包含图表，不包含两侧时间标签）
+        chart_layout = QHBoxLayout()
+        chart_layout.addWidget(self.chart_view)
+        chart_layout.setSpacing(0)
+        self.layout.addLayout(chart_layout)
+        
+        # 图表底部时间标签布局
+        time_label_layout = QHBoxLayout()
+        time_label_layout.addWidget(self.label_stime)  # 左下角
+        time_label_layout.addStretch()  # 中间拉伸空间
+        time_label_layout.addWidget(self.label_etime)  # 右下角
+        time_label_layout.setSpacing(0)
+        self.layout.addLayout(time_label_layout)
 
         self.setStyleSheet("""
             QLabel {
@@ -502,9 +519,42 @@ class AudioViewer(QWidget):
     def sliderValueChanged(self):
         self.updateChart()
         self.updateXset(self.tg_dict_tp)
-
-
-
+    
+    def chart_mouse_press_event(self, event):
+        """处理图表鼠标按下事件"""
+        if event.button() == Qt.LeftButton:
+            self.is_dragging = True
+            self.last_mouse_pos = event.position().x()
+    
+    def chart_mouse_move_event(self, event):
+        """处理图表鼠标移动事件"""
+        if self.is_dragging:
+            current_pos = event.position().x()
+            delta_x = current_pos - self.last_mouse_pos
+            
+            # 根据鼠标移动距离计算滑块需要移动的值
+            # 假设图表宽度与整个音频长度成正比
+            chart_width = self.chart_view.width()
+            if chart_width > 0:
+                # 计算每像素对应的时间（毫秒）
+                pixel_to_ms = (self.interval_ms) / chart_width
+                # 计算滑块需要移动的值（取反，因为鼠标向右移动时，音频应该向前播放）
+                # 增加拖动速度（乘以1.5倍）
+                slider_delta = int(-delta_x * pixel_to_ms * 1.5)
+                
+                # 更新滑块值
+                new_value = self.slider_timerange.value() + slider_delta
+                # 确保滑块值在有效范围内
+                new_value = max(0, min(new_value, self.maximum - self.interval_ms))
+                self.slider_timerange.setValue(new_value)
+                
+                # 更新最后鼠标位置
+                self.last_mouse_pos = current_pos
+    
+    def chart_mouse_release_event(self, event):
+        """处理图表鼠标释放事件"""
+        if event.button() == Qt.LeftButton:
+            self.is_dragging = False
 
 
 if __name__ == "__main__":

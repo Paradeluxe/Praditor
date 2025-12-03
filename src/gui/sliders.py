@@ -1,5 +1,5 @@
-from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QGridLayout, QApplication, QMainWindow, QWidget
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtWidgets import QGridLayout, QApplication, QMainWindow, QWidget, QLabel
 
 from src.gui.slider_single import SingleSlider
 
@@ -10,58 +10,99 @@ class MySliders(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.amp_slider_onset = SingleSlider("Threshold", 100, 1, 300, scale=0.01, default=147)
-        self.cutoff0_slider_onset = SingleSlider("HighPass", 1, 1, 500, default=60, font_color="#7F7F7F")
-        self.cutoff1_slider_onset = SingleSlider("LowPass", 4000, 1, 20000, default=10800, font_color="#7F7F7F")
-        self.numValid_slider_onset = SingleSlider("NetActive", 0, 1, 8000, default=475)
-        self.win_size_slider_onset = SingleSlider("KernelSize", 2, 1, 500, default=152, font_color="#7F7F7F")
-        self.ratio_slider_onset = SingleSlider("KernelFrm%", 50, 1, 100, scale=0.01, default=97, font_color="#7F7F7F")
-        self.penalty_slider_onset = SingleSlider("Penalty", 0, 1, 200, scale=0.1, default=147)
-        self.ref_len_slider_onset = SingleSlider("RefLen", 1, 1, 2000, default=1000)
-        self.eps_ratio_slider_onset = SingleSlider("EPS%", 0, 1, 300, scale=0.001, default=20)
+        # 创建滑块实例，移除param_name参数
+        self.amp_slider_onset = SingleSlider(100, 1, 300, scale=0.01, default=147)
+        self.cutoff0_slider_onset = SingleSlider(1, 1, 500, default=60)
+        self.cutoff1_slider_onset = SingleSlider(4000, 1, 20000, default=10800)
+        self.numValid_slider_onset = SingleSlider(0, 1, 8000, default=475)
+        self.win_size_slider_onset = SingleSlider(2, 1, 500, default=152)
+        self.ratio_slider_onset = SingleSlider(50, 1, 100, scale=0.01, default=97)
+        self.penalty_slider_onset = SingleSlider(0, 1, 200, scale=0.1, default=147)
+        self.ref_len_slider_onset = SingleSlider(1, 1, 2000, default=1000)
+        self.eps_ratio_slider_onset = SingleSlider(0, 1, 300, scale=0.001, default=20)
 
-        self.amp_slider_offset = SingleSlider("", 100, 1, 300, scale=0.01, color="#2AD25E", default=194)
-        self.cutoff0_slider_offset = SingleSlider("", 1, 1, 500, color="#2AD25E", default=200)
-        self.cutoff1_slider_offset = SingleSlider("", 4000, 1, 20000, color="#2AD25E", default=10200)
-        self.numValid_slider_offset = SingleSlider("", 0, 1, 8000, color="#2AD25E", default=3335)
-        self.win_size_slider_offset = SingleSlider("", 2, 1, 500, color="#2AD25E", default=102)
-        self.ratio_slider_offset = SingleSlider("", 50, 1, 100, scale=0.01, color="#2AD25E", default=87)
-        self.penalty_slider_offset = SingleSlider("", 0, 1, 200, scale=0.1, color="#2AD25E", default=108)
-        self.ref_len_slider_offset = SingleSlider("", 1, 1, 2000, color="#2AD25E", default=1000)
-        self.eps_ratio_slider_offset = SingleSlider("", 0, 1, 300, scale=0.001, color="#2AD25E", default=15)
+        self.amp_slider_offset = SingleSlider(100, 1, 300, scale=0.01, color="#2AD25E", default=194)
+        self.cutoff0_slider_offset = SingleSlider(1, 1, 500, color="#2AD25E", default=200)
+        self.cutoff1_slider_offset = SingleSlider(4000, 1, 20000, color="#2AD25E", default=10200)
+        self.numValid_slider_offset = SingleSlider(0, 1, 8000, color="#2AD25E", default=3335)
+        self.win_size_slider_offset = SingleSlider(2, 1, 500, color="#2AD25E", default=102)
+        self.ratio_slider_offset = SingleSlider(50, 1, 100, scale=0.01, color="#2AD25E", default=87)
+        self.penalty_slider_offset = SingleSlider(0, 1, 200, scale=0.1, color="#2AD25E", default=108)
+        self.ref_len_slider_offset = SingleSlider(1, 1, 2000, color="#2AD25E", default=1000)
+        self.eps_ratio_slider_offset = SingleSlider(0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
         layout = QGridLayout()
-        layout.setSpacing(0)
-        layout.setContentsMargins(75, 0, 75, 0)
+        layout.setHorizontalSpacing(20)  # 增加水平间距
+        layout.setVerticalSpacing(5)    # 保持垂直间距
+        layout.setContentsMargins(10, 0, 10, 0)  # 调整左右边距，让offset sliders贴右侧
+        
+        # 设置列宽，确保onset和offset sliders尺寸一致
+        layout.setColumnStretch(1, 1)  # onset sliders列
+        layout.setColumnStretch(2, 1)  # offset sliders列
 
-        layout.addWidget(self.amp_slider_onset, 0, 0)
-        layout.addWidget(self.numValid_slider_onset, 1, 0)
-        layout.addWidget(self.penalty_slider_onset, 2, 0)
-        layout.addWidget(self.ref_len_slider_onset, 3, 0)
+        # 创建名称标签并添加到第一列
+        self.name_labels = {
+            "Threshold": QLabel("Threshold"),
+            "NetActive": QLabel("NetActive"),
+            "Penalty": QLabel("Penalty"),
+            "RefLen": QLabel("RefLen"),
+            "KernelFrm%": QLabel("KernelFrm%"),
+            "KernelSize": QLabel("KernelSize"),
+            "EPS%": QLabel("EPS%"),
+            "LowPass": QLabel("LowPass"),
+            "HighPass": QLabel("HighPass")
+        }
 
-        layout.addWidget(self.ratio_slider_onset, 4, 0)
-        layout.addWidget(self.win_size_slider_onset, 5, 0)
+        # 设置标签样式
+        for label in self.name_labels.values():
+            label.setFixedWidth(90)
+            label.setFixedHeight(25)
+            label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+            label.setStyleSheet("""
+                QLabel {
+                    font-size: 13px;
+                    background-color: RGB(35, 35, 35);
+                    font-weight: bold;
+                    color: #272727;
+                }
+            """)
 
-        layout.addWidget(self.eps_ratio_slider_onset, 6, 0)
+        # 添加标签到第一列，滑块到第二列和第三列
+        layout.addWidget(self.name_labels["Threshold"], 0, 0)
+        layout.addWidget(self.amp_slider_onset, 0, 1)
+        layout.addWidget(self.amp_slider_offset, 0, 2)
 
-        layout.addWidget(self.cutoff1_slider_onset, 7, 0)
-        layout.addWidget(self.cutoff0_slider_onset, 8, 0)
+        layout.addWidget(self.name_labels["NetActive"], 1, 0)
+        layout.addWidget(self.numValid_slider_onset, 1, 1)
+        layout.addWidget(self.numValid_slider_offset, 1, 2)
 
+        layout.addWidget(self.name_labels["Penalty"], 2, 0)
+        layout.addWidget(self.penalty_slider_onset, 2, 1)
+        layout.addWidget(self.penalty_slider_offset, 2, 2)
 
+        layout.addWidget(self.name_labels["RefLen"], 3, 0)
+        layout.addWidget(self.ref_len_slider_onset, 3, 1)
+        layout.addWidget(self.ref_len_slider_offset, 3, 2)
 
+        layout.addWidget(self.name_labels["KernelFrm%"], 4, 0)
+        layout.addWidget(self.ratio_slider_onset, 4, 1)
+        layout.addWidget(self.ratio_slider_offset, 4, 2)
 
-        layout.addWidget(self.amp_slider_offset, 0, 1)
-        layout.addWidget(self.numValid_slider_offset, 1, 1)
-        layout.addWidget(self.penalty_slider_offset, 2, 1)
-        layout.addWidget(self.ref_len_slider_offset, 3, 1)
+        layout.addWidget(self.name_labels["KernelSize"], 5, 0)
+        layout.addWidget(self.win_size_slider_onset, 5, 1)
+        layout.addWidget(self.win_size_slider_offset, 5, 2)
 
-        layout.addWidget(self.ratio_slider_offset, 4, 1)
-        layout.addWidget(self.win_size_slider_offset, 5, 1)
+        layout.addWidget(self.name_labels["EPS%"], 6, 0)
+        layout.addWidget(self.eps_ratio_slider_onset, 6, 1)
+        layout.addWidget(self.eps_ratio_slider_offset, 6, 2)
 
-        layout.addWidget(self.eps_ratio_slider_offset, 6, 1)
+        layout.addWidget(self.name_labels["LowPass"], 7, 0)
+        layout.addWidget(self.cutoff1_slider_onset, 7, 1)
+        layout.addWidget(self.cutoff1_slider_offset, 7, 2)
 
-        layout.addWidget(self.cutoff1_slider_offset, 7, 1)
-        layout.addWidget(self.cutoff0_slider_offset, 8, 1)
+        layout.addWidget(self.name_labels["HighPass"], 8, 0)
+        layout.addWidget(self.cutoff0_slider_onset, 8, 1)
+        layout.addWidget(self.cutoff0_slider_offset, 8, 2)
 
         
         self.amp_slider_onset.single_slider_value_changed.connect(self.sliderValueDidChange)

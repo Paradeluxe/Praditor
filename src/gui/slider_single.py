@@ -9,7 +9,7 @@ from src.gui.styles import qss_slider_with_color
 class SingleSlider(QMainWindow):
     single_slider_value_changed = Signal(int)
 
-    def __init__(self, param_name, minimum, step, maximum, font_color='#272727', color="#1991D3", scale=1, default=None):
+    def __init__(self, minimum, step, maximum, color="#1991D3", scale=1, default=None):
         super().__init__()
         # self.setWindowTitle('Slider App')
         self.scale = scale
@@ -21,38 +21,6 @@ class SingleSlider(QMainWindow):
         self.setFixedHeight(35)
         # self.setMinimumHeight(20)
         self.setContentsMargins(0, 0, 0, 0)
-
-        self.name_label = QLabel(param_name)
-        self.name_label.setFixedWidth(90)
-        self.name_label.setFixedHeight(25)
-        self.name_label.setContentsMargins(0, 0, 0, 0)
-        # self.name_label.setFixedSize(90, 20)
-
-        # if param_name:
-        #     self.name_label.setFixedSize(90, 20)
-        # else:
-        #     self.name_label.setFixedSize(0, 20)
-
-        self.name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.name_label.setStyleSheet(f"""
-
-            QLabel {{
-                font-size: 13px;
-                background-color: RGB(35, 35, 35);
-                font-weight: bold;
-                color: {font_color};
-            }}
-
-
-        """)
-
-        # QLabel
-        # {
-        #     font - size: 14px;
-        # background - color: RGB(35, 35, 35);
-        # font - weight: bold;
-        # color:  # 272727;
-        # }
 
         self.param_slider = QSlider(Qt.Orientation.Horizontal)
 
@@ -99,7 +67,6 @@ class SingleSlider(QMainWindow):
 
 
         layout = QHBoxLayout()
-        layout.addWidget(self.name_label)
         layout.addWidget(self.param_slider)
         layout.addWidget(self.value_label)
         container = QWidget()
