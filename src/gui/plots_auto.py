@@ -88,10 +88,7 @@ class AudioViewer(QWidget):
         # self.slider_timerange.sliderPressed.connect(self.slider_pressed_h)
         # self.slider_timerange.sliderReleased.connect(self.slider_released_h)
 
-        self.audio_stime = QLabel(f"{formatted_time(0)}")
-        self.audio_stime.setAlignment(Qt.AlignCenter)
-        self.audio_stime.setFixedWidth(75)
-
+        # 只保留结束时间label，删除开始时间label
         self.audio_etime = QLabel(f"{formatted_time(self.maximum)}")
         self.audio_etime.setAlignment(Qt.AlignCenter)
         self.audio_etime.setFixedWidth(75)
@@ -144,7 +141,7 @@ class AudioViewer(QWidget):
 
         self.layout = QVBoxLayout()
         layout = QHBoxLayout()
-        layout.addWidget(self.audio_stime)
+        # 只添加结束时间label，删除开始时间label
         layout.addWidget(self.slider_timerange)
         layout.addWidget(self.audio_etime)
         layout.setSpacing(0)
@@ -264,6 +261,8 @@ class AudioViewer(QWidget):
         super().wheelEvent(event)
 
     def resizeEvent(self, event):
+        # 计算slider宽度，确保有最小宽度20px，防止handler不可见
+        slider_width = max(20, self.slider_timerange.width() * self.interval_ms / self.maximum)
         self.slider_timerange.setStyleSheet(f"""
             /*horizontal ：水平QSlider*/
             QSlider::groove:horizontal {{
@@ -299,9 +298,9 @@ class AudioViewer(QWidget):
             /*3.平时滑动的滑块设计参数*/
             QSlider::handle:horizontal {{
                /*滑块颜色*/
-               background: #7f0020;
+               background: #333333;
                /*滑块的宽度*/
-               width: {self.slider_timerange.width() * self.interval_ms / self.maximum}px;
+               width: {slider_width}px;
                 /*滑块外环倒圆角度*/
                border-radius: 1px; 
                 /*上遮住区域高度*/
@@ -311,7 +310,6 @@ class AudioViewer(QWidget):
 
 
             }}
-
            """)
 
 
@@ -364,6 +362,8 @@ class AudioViewer(QWidget):
 
     def updateSlider(self):
         self.slider_timerange.setMaximum(self.maximum - self.interval_ms)
+        # 计算slider宽度，确保有最小宽度20px，防止handler不可见
+        slider_width = max(20, self.slider_timerange.width() * self.interval_ms / self.maximum)
         self.slider_timerange.setStyleSheet(f"""
                 /*horizontal ：水平QSlider*/
                 QSlider::groove:horizontal {{
@@ -399,9 +399,9 @@ class AudioViewer(QWidget):
                 /*3.平时滑动的滑块设计参数*/
                 QSlider::handle:horizontal {{
                    /*滑块颜色*/
-                   background: #7f0020;
+                   background: #333333;
                    /*滑块的宽度*/
-                   width: {self.slider_timerange.width() * self.interval_ms / self.maximum}px;
+                   width: {slider_width}px;
                     /*滑块外环倒圆角度*/
                    border-radius: 1px; 
                     /*上遮住区域高度*/
@@ -411,8 +411,7 @@ class AudioViewer(QWidget):
 
 
                 }}
-
-               """)
+           """)
 
 
     def updateChart(self):

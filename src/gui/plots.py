@@ -4,8 +4,8 @@ import numpy as np
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 from PySide6.QtCore import Qt, QMargins, Signal, Property
 from PySide6.QtGui import QPen, QColor
-from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
-    QWidget
+from PySide6.QtWidgets import (QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, 
+    QWidget, QGridLayout)
 
 from src.utils.audio import ReadSound, get_frm_points_from_textgrid
 
@@ -91,17 +91,14 @@ class AudioViewer(QWidget):
         # self.slider_timerange.sliderPressed.connect(self.slider_pressed_h)
         # self.slider_timerange.sliderReleased.connect(self.slider_released_h)
 
-        self.audio_stime = QLabel(f"{formatted_time(0)}")
-        self.audio_stime.setAlignment(Qt.AlignCenter)
-        self.audio_stime.setFixedWidth(75)
-        self.audio_stime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
-        self.audio_stime.mousePressEvent = self.on_prev_clicked  # 连接点击事件
-
+        # 只保留结束时间label，删除开始时间label
         self.audio_etime = QLabel(f"{formatted_time(self.maximum)}")
         self.audio_etime.setAlignment(Qt.AlignCenter)
         self.audio_etime.setFixedWidth(75)
         self.audio_etime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
         self.audio_etime.mousePressEvent = self.on_next_clicked  # 连接点击事件
+        # 设置上面的label为灰色
+        self.audio_etime.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
         # --------------------------------------------
         # --------------------------------------------
 
@@ -113,12 +110,16 @@ class AudioViewer(QWidget):
         self.label_stime.setFixedWidth(75)
         self.label_stime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
         self.label_stime.mousePressEvent = self.on_prev_clicked  # 连接点击事件
+        # 设置下面的label为黑色，恢复原来的颜色
+        self.label_stime.setStyleSheet("color: black; font-weight: bold;")
         
         self.label_etime = QLabel(f"{formatted_time(self.interval_ms)}")
         self.label_etime.setFixedWidth(75)
         self.label_etime.setAlignment(Qt.AlignCenter)
         self.label_etime.setCursor(Qt.PointingHandCursor)  # 设置鼠标指针为手形
         self.label_etime.mousePressEvent = self.on_next_clicked  # 连接点击事件
+        # 设置下面的label为黑色，恢复原来的颜色
+        self.label_etime.setStyleSheet("color: black; font-weight: bold;")
 
         self._chart = QChart()
         # self._chart.setBackgroundRoundness(8)
@@ -156,36 +157,46 @@ class AudioViewer(QWidget):
         # --------------------------------------------
 
         self.layout = QVBoxLayout()
-        layout = QHBoxLayout()
-        layout.addWidget(self.audio_stime)
-        layout.addWidget(self.slider_timerange)
-        layout.addWidget(self.audio_etime)
-        layout.setSpacing(0)
-
-        self.layout.addLayout(layout)
-
-        # 图表区域布局（只包含图表，不包含两侧时间标签）
-        chart_layout = QHBoxLayout()
-        chart_layout.addWidget(self.chart_view)
-        chart_layout.setSpacing(0)
-        self.layout.addLayout(chart_layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         
-        # 图表底部时间标签布局
-        time_label_layout = QHBoxLayout()
-        time_label_layout.addWidget(self.label_stime)  # 左下角
-        time_label_layout.addStretch()  # 中间拉伸空间
-        time_label_layout.addWidget(self.label_etime)  # 右下角
-        time_label_layout.setSpacing(0)
-        self.layout.addLayout(time_label_layout)
+        # 创建slider容器，使用QGridLayout实现label与slider重叠
+        slider_container = QWidget()
+        slider_layout = QGridLayout(slider_container)
+        slider_layout.setContentsMargins(0, 0, 0, 0)
+        slider_layout.setSpacing(0)
+        
+        # 添加slider到网格布局，占据整个宽度
+        slider_layout.addWidget(self.slider_timerange, 0, 0, 1, 3)
+        
+        # 只添加结束时间label，删除开始时间label
+        slider_layout.addWidget(self.audio_etime, 0, 2, Qt.AlignRight | Qt.AlignVCenter)
+        
+        self.layout.addWidget(slider_container)
+
+        # 创建图表容器，使用QGridLayout实现图表和时间标签的重叠布局
+        chart_container = QWidget()
+        chart_container.setStyleSheet("background: transparent;")
+        chart_layout = QGridLayout(chart_container)
+        chart_layout.setContentsMargins(0, 0, 0, 20)  # 增加内部下方padding 20px
+        chart_layout.setSpacing(0)
+        
+        # 添加图表到网格布局，占据整个宽度，高度设为1行
+        chart_layout.addWidget(self.chart_view, 0, 0, 1, 3)
+        
+        # 将时间标签添加到网格布局，与图表重叠，定位在下方padding区域
+        chart_layout.addWidget(self.label_stime, 0, 0, Qt.AlignLeft | Qt.AlignBottom)
+        chart_layout.addWidget(self.label_etime, 0, 2, Qt.AlignRight | Qt.AlignBottom)
+        
+        # 设置标签样式，确保它们清晰可见
+        self.label_stime.setStyleSheet("color: black; font-weight: bold; background: transparent;")
+        self.label_etime.setStyleSheet("color: black; font-weight: bold; background: transparent;")
+        
+        # 将图表容器添加到主布局
+        self.layout.addWidget(chart_container)
 
         self.setStyleSheet("""
-            QLabel {
-                color: black;
-                font-weight: bold;
-            }
-            
-            QLabel:hover {
-                color: #1991D3;
+            QSlider {
+                background: transparent;
             }
         """)
         self.setLayout(self.layout)
@@ -283,7 +294,7 @@ class AudioViewer(QWidget):
         style += "QSlider::groove:horizontal { border: 0px solid #bbb; }"
         style += "QSlider::sub-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
         style += "QSlider::add-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
-        style += f"QSlider::handle:horizontal {{ background: #7f0020; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
+        style += f"QSlider::handle:horizontal {{ background: #333333; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
         self.slider_timerange.setStyleSheet(style)
 
     def adjustWinSizeResolution(self):
@@ -335,12 +346,13 @@ class AudioViewer(QWidget):
 
     def updateSlider(self):
         self.slider_timerange.setMaximum(self.maximum - self.interval_ms)
-        slider_width = self.slider_timerange.width() * self.interval_ms / self.maximum
+        # 计算slider宽度，确保有最小宽度20px，防止handler不可见
+        slider_width = max(20, self.slider_timerange.width() * self.interval_ms / self.maximum)
         style = ""
         style += "QSlider::groove:horizontal { border: 0px solid #bbb; }"
         style += "QSlider::sub-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
         style += "QSlider::add-page:horizontal { background: rgb(255,255, 255); border-radius: 2px; margin-top:2px; margin-bottom:2px; }"
-        style += f"QSlider::handle:horizontal {{ background: #7f0020; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
+        style += f"QSlider::handle:horizontal {{ background: #333333; width: {slider_width}px; border-radius: 1px; margin-top:2px; margin-bottom:2px; }}"
         self.slider_timerange.setStyleSheet(style)
 
     def updateChart(self):
@@ -469,14 +481,17 @@ class AudioViewer(QWidget):
             delta_x = current_pos - self.last_mouse_pos
             
             # 根据鼠标移动距离计算滑块需要移动的值
-            # 假设图表宽度与整个音频长度成正比
             chart_width = self.chart_view.width()
             if chart_width > 0:
                 # 计算每像素对应的时间（毫秒）
                 pixel_to_ms = (self.interval_ms) / chart_width
                 # 计算滑块需要移动的值（取反，因为鼠标向右移动时，音频应该向前播放）
-                # 增加拖动速度（乘以1.5倍）
-                slider_delta = int(-delta_x * pixel_to_ms * 1.5)
+                # 增加拖动速度，并设置最小拖动速度，确保在interval_ms很小时也能正常拖动
+                base_speed = 1.5
+                min_speed = 20  # 最小拖动速度（毫秒/像素）
+                # 计算实际速度，取设定的最小速度和计算速度的最大值
+                actual_speed = max(min_speed, pixel_to_ms * base_speed)
+                slider_delta = int(-delta_x * actual_speed)
                 
                 # 更新滑块值
                 new_value = self.slider_timerange.value() + slider_delta

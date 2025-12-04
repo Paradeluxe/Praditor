@@ -123,18 +123,22 @@ class MainWindow(QMainWindow):
         toolbar.setStyleSheet("""
         QToolBar {
             background-color:white;
-            spacing: 10px;
+            spacing: 0px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            margin: 0px;
+            padding: 5px 10px;
         }
 
         QToolBar::separator {
-            background-color: #DBDBDB; /* 将分隔线的背景色设置为红色 */
-            width: 1px; /* 设置分隔线的宽度 */
-            margin-left: 5px; /* 左边距 */
-            margin-right: 5px; /* 右边距 */
-            margin-top: 5px; /* 上边距 */
-            margin-bottom: 5px; /* 下边距 */
+            background-color: #DBDBDB;
+            width: 1px;
+            margin-left: 8px;
+            margin-right: 8px;
+            margin-top: 8px;
+            margin-bottom: 8px;
         }
-        """)  # 使用对象名称设置样式
+        "")  # 使用对象名称设置样式
         # toolbar.setIconSize(QSize(16, 16))
 
         self.addToolBar(toolbar)

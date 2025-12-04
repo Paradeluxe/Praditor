@@ -53,6 +53,8 @@ class CustomTitleBar(QWidget):
     read_signal = Signal()
     onset_signal = Signal()
     offset_signal = Signal()
+    prev_audio_signal = Signal()
+    next_audio_signal = Signal()
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -78,46 +80,60 @@ class CustomTitleBar(QWidget):
         
         # 创建布局，设置垂直居中对齐
         layout = QHBoxLayout(self)  # 直接将布局应用到当前部件
-        layout.setContentsMargins(8, 0, 0, 0)  # 左侧边距，右侧无边距
+        layout.setContentsMargins(8, 0, 8, 0)  # 左右各8px边距，上下无边距
         layout.setSpacing(0)
         layout.setAlignment(Qt.AlignVCenter)  # 垂直居中对齐
+
         
-        # 创建菜单按钮
-        self.file_menu_btn = QPushButton("File")
-        self.help_menu_btn = QPushButton("Help")
-        
-        # 设置菜单按钮样式（Windows风格）
-        menu_btn_style = """
-            QPushButton {
-                background-color: white;
-                border: none;
-                color: #333333;
-                font-size: 13px;
-                padding: 8px 12px;
-                font-weight: normal;
-            }
-            QPushButton:hover {
-                background-color: #F0F0F0;
-            }
-        """
-        
-        for btn in [self.file_menu_btn, self.help_menu_btn]:
-            btn.setStyleSheet(menu_btn_style)
-            btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.help_menu_btn = QPushButton()
+        self.help_menu_btn.setIcon(QIcon(get_resource_path('resources/icons/question.svg')))
+        self.help_menu_btn.setFixedSize(32, 32)
+        self.help_menu_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.help_menu_btn.setCursor(QCursor(Qt.PointingHandCursor))
         
         # 连接菜单按钮信号
-        self.file_menu_btn.clicked.connect(self.file_menu_clicked.emit)
         self.help_menu_btn.clicked.connect(self.help_menu_clicked.emit)
         
-        # 添加菜单按钮到布局左侧
-        layout.addWidget(self.file_menu_btn)
+        # 添加hover事件
+        self.help_menu_btn.enterEvent = lambda event: self.help_menu_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.help_menu_btn.leaveEvent = lambda event: self.help_menu_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        
+        # 添加设置按钮到布局左侧
         layout.addWidget(self.help_menu_btn)
         
         # 添加标题标签，设置居左显示（Windows风格）
         self.title_label = QLabel("Praditor")
         self.title_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # 居左垂直居中
-        self.title_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #333333; padding: 0 12px;")
+        self.title_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #333333; padding: 5px 10px 5px 5px;")
+        # 设置标题标签为可点击，鼠标指针为手形
+        self.title_label.setCursor(QCursor(Qt.PointingHandCursor))
+        # 将标题点击事件连接到file_menu_clicked信号
+        self.title_label.mousePressEvent = lambda event: self.file_menu_clicked.emit()
         layout.addWidget(self.title_label)
+        
+        # 添加前一个音频按钮
+        self.prev_audio_btn = QPushButton()
+        self.prev_audio_btn.setIcon(QIcon(get_resource_path('resources/icons/prev_audio.svg')))
+        self.prev_audio_btn.setFixedSize(32, 32)
+        self.prev_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.prev_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.prev_audio_btn.setStatusTip("Previous Audio")
+        # 添加hover事件
+        self.prev_audio_btn.enterEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.prev_audio_btn.leaveEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        layout.addWidget(self.prev_audio_btn)
+        
+        # 添加后一个音频按钮
+        self.next_audio_btn = QPushButton()
+        self.next_audio_btn.setIcon(QIcon(get_resource_path('resources/icons/next_audio.svg')))
+        self.next_audio_btn.setFixedSize(32, 32)
+        self.next_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.next_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.next_audio_btn.setStatusTip("Next Audio")
+        # 添加hover事件
+        self.next_audio_btn.enterEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.next_audio_btn.leaveEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        layout.addWidget(self.next_audio_btn)
         
         # 添加伸缩空间，将按钮推到右侧
         spacer = QWidget()
@@ -134,8 +150,7 @@ class CustomTitleBar(QWidget):
         self.onset_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.onset_btn)
         
-        # 添加按钮之间的空格
-        layout.addSpacing(8)
+        layout.addSpacing(8)  # 添加按钮之间的空格
         
         self.offset_btn = QPushButton("Offset")
         self.offset_btn.setStatusTip("Extract Offsets")
@@ -146,8 +161,7 @@ class CustomTitleBar(QWidget):
         self.offset_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.offset_btn)
         
-        # 添加按钮之间的空格
-        layout.addSpacing(8)
+        layout.addSpacing(8)  # 添加按钮之间的空格
         
         # 连接onset和offset按钮信号
         self.onset_btn.pressed.connect(self.onset_signal.emit)
@@ -211,13 +225,13 @@ class CustomTitleBar(QWidget):
             },
             'minimize': {
                 'normal': 'transparent',
-                'hover': '#F5F5F5',
-                'pressed': '#E0E0E0'
+                'hover': '#E8E8E8',
+                'pressed': '#D5D5D5'
             },
             'maximize': {
                 'normal': 'transparent',
-                'hover': '#F5F5F5',
-                'pressed': '#E0E0E0'
+                'hover': '#E8E8E8',
+                'pressed': '#D5D5D5'
             }
         }
         
@@ -231,6 +245,8 @@ class CustomTitleBar(QWidget):
         self.read_btn.clicked.connect(self.read_signal.emit)
         self.run_btn.clicked.connect(self.run_signal.emit)
         self.test_btn.clicked.connect(self.test_signal.emit)
+        self.prev_audio_btn.clicked.connect(self.prev_audio_signal.emit)
+        self.next_audio_btn.clicked.connect(self.next_audio_signal.emit)
         self.close_btn.clicked.connect(self.close_signal.emit)
         self.minimize_btn.clicked.connect(self.minimize_signal.emit)
         self.maximize_btn.clicked.connect(self.maximize_signal.emit)
@@ -264,19 +280,19 @@ class CustomTitleBar(QWidget):
         self.maximize_btn.released.connect(lambda: self.update_button_style(self.maximize_btn, 'maximize', 'hover'))
         
         # 运行按钮
-        self.run_btn.enterEvent = lambda event: self.run_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_btn.enterEvent = lambda event: self.run_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.run_btn.leaveEvent = lambda event: self.run_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # 测试按钮
-        self.test_btn.enterEvent = lambda event: self.test_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.test_btn.enterEvent = lambda event: self.test_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.test_btn.leaveEvent = lambda event: self.test_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # trash按钮
-        self.trash_btn.enterEvent = lambda event: self.trash_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.trash_btn.enterEvent = lambda event: self.trash_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.trash_btn.leaveEvent = lambda event: self.trash_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # read按钮
-        self.read_btn.enterEvent = lambda event: self.read_btn.setStyleSheet("background-color: #F5F5F5; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.read_btn.enterEvent = lambda event: self.read_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.read_btn.leaveEvent = lambda event: self.read_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
     
     def update_button_style(self, btn, btn_type, state):
@@ -437,6 +453,9 @@ class MainWindow(QMainWindow):
         self.title_bar.test_signal.connect(self.testPraditorOnAudio)
         self.title_bar.onset_signal.connect(self.turnOnset)
         self.title_bar.offset_signal.connect(self.turnOffset)
+        # 连接前后音频按钮信号
+        self.title_bar.prev_audio_signal.connect(lambda: self.prevnext_audio("prev"))
+        self.title_bar.next_audio_signal.connect(lambda: self.prevnext_audio("next"))
         
         # 更新run_onset和run_offset属性，使其指向标题栏中的按钮
         self.run_onset = self.title_bar.onset_btn
@@ -484,7 +503,7 @@ class MainWindow(QMainWindow):
         self.MySliders.numValid_slider_onset.setStatusTip(" Onset  |  Accumulated net count of above-threshold frames")
         self.MySliders.penalty_slider_onset.setStatusTip(" Onset  |  Penalty for below-threshold frames")
         self.MySliders.ref_len_slider_onset.setStatusTip(" Onset  |  Length of the reference segment used to generate baseline (useful in detecting in-utterance silent pause)")
-        self.MySliders.ratio_slider_onset.setStatusTip(" Onset  |  % of frames retained in the kernel")
+        self.MySliders.ratio_slider_onset.setStatusTip(r" Onset  |  % of frames retained in the kernel")
         self.MySliders.win_size_slider_onset.setStatusTip(" Onset  |  Size of the kernel (in frames)")
         self.MySliders.eps_ratio_slider_onset.setStatusTip(" Onset  |  Neighborhood radius in DBSCAN clustering (useful in detecting in-utterance silent pause)")
         self.MySliders.cutoff1_slider_onset.setStatusTip(" Onset  |  Higher cutoff frequency of bandpass filter")
@@ -504,7 +523,7 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.MySliders)
         # ---------------------------------------------------
-        layout.setContentsMargins(10, 10, 10, 30)
+        layout.setContentsMargins(30, 15, 30, 30)  # 调整左右边距为15px，上下保持不变
         # 将内容部件添加到主布局
         main_layout.addWidget(central_widget)
         
@@ -512,7 +531,7 @@ class MainWindow(QMainWindow):
         # ---------------------
 
         toolbar = QToolBar("My main toolbar")
-        # 移除固定高度，改为自适应高度
+
         toolbar.setMovable(False)
         toolbar.setStyleSheet("""
         QToolBar {
@@ -521,49 +540,26 @@ class MainWindow(QMainWindow):
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
             margin: 0px;
-            padding: 5px 0px;
         }
 
         QToolBar::separator {
-            background-color: #DBDBDB; /* 将分隔线的背景色设置为红色 */
-            width: 1px; /* 设置分隔线的宽度 */
-            margin-left: 5px; /* 左边距 */
-            margin-right: 5px; /* 右边距 */
-            margin-top: 5px; /* 上边距 */
-            margin-bottom: 5px; /* 下边距 */
+            background-color: #DBDBDB;
+            width: 1px;
+            margin: 8px;
         }
         """)  # 使用对象名称设置样式
-        # 设置工具栏边距与标题栏一致
-        toolbar.layout().setContentsMargins(8, 5, 8, 5)
-        # toolbar.setIconSize(QSize(16, 16))
+        
 
         self.addToolBar(Qt.BottomToolBarArea, toolbar)
         # 保存工具栏引用，以便在resizeEvent中使用
         self.toolbar = toolbar
         # ---------------------------------------------------------------
 
-        toolbar.addSeparator()
+        # 添加自定义长度的spacer到最左侧
+        left_spacer = QWidget()
+        left_spacer.setFixedWidth(10)  # 自定义宽度为20px
+        toolbar.addWidget(left_spacer)
         
-        # 保存按钮
-        self.save_btn = QPushButton("Save", self)
-        self.save_btn.setIcon(QIcon(get_resource_path('resources/icons/save.svg')))
-        self.save_btn.setStatusTip("Save params to the selected location")
-        self.save_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;")
-        self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.save_btn.clicked.connect(self.saveParams)
-        toolbar.addWidget(self.save_btn)
-        
-        # Reset按钮
-        self.reset_svg_btn = QPushButton("Reset", self)
-        self.reset_svg_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
-        self.reset_svg_btn.setStatusTip("Reset to params that has been saved")
-        self.reset_svg_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;")
-        self.reset_svg_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.reset_svg_btn.clicked.connect(self.resetParams)
-        toolbar.addWidget(self.reset_svg_btn)
-
-        toolbar.addSeparator()
-
         # Default按钮
         self.default_btn = QPushButton("Default", self)
         self.default_btn.setCheckable(True)
@@ -591,11 +587,30 @@ class MainWindow(QMainWindow):
                 
         toolbar.addSeparator()
         
+        # 保存按钮
+        self.save_btn = QPushButton("Save", self)
+        self.save_btn.setIcon(QIcon(get_resource_path('resources/icons/save.svg')))
+        self.save_btn.setStatusTip("Save params to the selected location")
+        self.save_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.save_btn.clicked.connect(self.saveParams)
+        toolbar.addWidget(self.save_btn)
+        
+        # Reset按钮
+        self.reset_svg_btn = QPushButton("Reset", self)
+        self.reset_svg_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
+        self.reset_svg_btn.setStatusTip("Reset to params that has been saved")
+        self.reset_svg_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.reset_svg_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.reset_svg_btn.clicked.connect(self.resetParams)
+        toolbar.addWidget(self.reset_svg_btn)
+
+        
         # Backward按钮
         self.backward_btn = QPushButton("Backward", self)
         self.backward_btn.setIcon(QIcon(get_resource_path('resources/icons/backward.svg')))
         self.backward_btn.setStatusTip("Load previous params")
-        self.backward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;")
+        self.backward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.backward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.backward_btn.clicked.connect(self.loadPreviousParams)
         toolbar.addWidget(self.backward_btn)
@@ -604,7 +619,7 @@ class MainWindow(QMainWindow):
         self.forward_btn = QPushButton("Forward", self)
         self.forward_btn.setIcon(QIcon(get_resource_path('resources/icons/forward.svg')))
         self.forward_btn.setStatusTip("Load next params")
-        self.forward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;")
+        self.forward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.forward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.forward_btn.clicked.connect(self.loadNextParams)
         toolbar.addWidget(self.forward_btn)
@@ -614,24 +629,29 @@ class MainWindow(QMainWindow):
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         toolbar.addWidget(spacer)
         
+        # 参数图标
+        self.params_icon_btn = QPushButton(self)
+        self.params_icon_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
+        self.params_icon_btn.setFixedSize(24, 24)  # 减小图标尺寸
+        self.params_icon_btn.setStyleSheet("background-color: transparent; border: none; color: #666666; font-size: 16px; text-align: center;")
+        self.params_icon_btn.setCursor(QCursor(Qt.ArrowCursor))  # 鼠标指针为箭头，不是手形
+        toolbar.addWidget(self.params_icon_btn)
+        
         # 参数索引标签
         self.param_index_label = QLabel("0/0", self)
-        self.param_index_label.setStyleSheet("color: #666666; font-size: 12px; padding: 0 10px;")
+        self.param_index_label.setStyleSheet("color: #666666; font-size: 12px; padding: 8px 10px 8px 5px;")  # 调整内边距，上下8px，右侧10px，左侧5px
         toolbar.addWidget(self.param_index_label)
+        
+        # 添加自定义长度的spacer到最右侧
+        right_spacer = QWidget()
+        right_spacer.setFixedWidth(8)  # 自定义宽度为20px，与左侧保持一致
+        toolbar.addWidget(right_spacer)
         
         # ---------------------
         # TOOLBAR
 
 
 
-        # 移除可能冲突的CSS圆角设置，因为我们使用paintEvent绘制圆角
-        self.setStyleSheet("""
-            QMainWindow {
-                background-color: transparent; 
-            }
-
-        """)
-        
         # 移除可能冲突的CSS圆角设置，因为我们使用paintEvent绘制圆角
         self.setStyleSheet("""
             QMainWindow {
@@ -1121,7 +1141,7 @@ class MainWindow(QMainWindow):
     
     def updateSaveResetButtonsState(self):
         """根据模式按钮的选中状态更新save和reset按钮的可用性和样式
-        当三个模式按钮都未选中时，禁用save和reset按钮并将文字变为灰色
+        # 当三个模式按钮都未选中时，禁用save和reset按钮并将文字变为灰色
         """
         # 检查是否有任何模式按钮被选中
         any_mode_selected = self.default_btn.isChecked() or self.folder_btn.isChecked() or self.file_btn.isChecked()
@@ -1139,12 +1159,9 @@ class MainWindow(QMainWindow):
         self.reset_svg_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
     
     def onModeButtonClicked(self):
-        """模式按钮点击事件处理，允许同时选中多个模式
-        """
+        """模式按钮点击事件处理，允许同时选中多个模式"""
         # 更新save和reset按钮状态
         self.updateSaveResetButtonsState()
-
-
 
     def prevnext_audio(self, direction=None):
         """处理prev/next音频切换

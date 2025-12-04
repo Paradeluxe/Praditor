@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QGridLayout, QApplication, QMainWindow, QWidget, Q
 from src.gui.slider_single import SingleSlider
 
 
-class MySliders(QMainWindow):
+class MySliders(QWidget):
     anySliderValueChanged = Signal(bool)
 
     def __init__(self):
@@ -32,9 +32,9 @@ class MySliders(QMainWindow):
         self.eps_ratio_slider_offset = SingleSlider(0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
         layout = QGridLayout()
-        layout.setHorizontalSpacing(20)  # 增加水平间距
+        layout.setHorizontalSpacing(25)  # 增加水平间距，使onset和offset sliders之间距离更大
         layout.setVerticalSpacing(5)    # 保持垂直间距
-        layout.setContentsMargins(10, 0, 10, 0)  # 调整左右边距，让offset sliders贴右侧
+        layout.setContentsMargins(0, 0, 0, 0)  # 调整左右边距，与AudioViewer保持一致
         
         # 设置列宽，确保onset和offset sliders尺寸一致
         layout.setColumnStretch(1, 1)  # onset sliders列
@@ -128,10 +128,8 @@ class MySliders(QMainWindow):
         
         
 
-        container = QWidget()
-        container.setLayout(layout)
-
-        self.setCentralWidget(container)
+        # 直接设置布局，不使用container和setCentralWidget
+        self.setLayout(layout)
         # self.get_params()
 
     
