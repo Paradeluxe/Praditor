@@ -88,15 +88,51 @@ class CustomTitleBar(QWidget):
         self.help_menu_btn = QPushButton()
         self.help_menu_btn.setIcon(QIcon(get_resource_path('resources/icons/question.svg')))
         self.help_menu_btn.setFixedSize(32, 32)
-        self.help_menu_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.help_menu_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.help_menu_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        
+        # 创建help提示框 - 使用独立窗口，模仿Windows风格
+        self.help_tooltip = QLabel()
+        self.help_tooltip.setText("Open help documentation")
+        self.help_tooltip.setStyleSheet("""
+            QLabel {
+                background-color: #FFFFE1;
+                color: #000000;
+                padding: 8px 12px;
+                border: 1px solid #D4D4D4;
+                border-radius: 3px;
+                font-size: 14px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+        """)
+        self.help_tooltip.setAlignment(Qt.AlignLeft)
+        self.help_tooltip.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint)
+        self.help_tooltip.hide()
         
         # 连接菜单按钮信号
         self.help_menu_btn.clicked.connect(self.help_menu_clicked.emit)
         
         # 添加hover事件
-        self.help_menu_btn.enterEvent = lambda event: self.help_menu_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.help_menu_btn.leaveEvent = lambda event: self.help_menu_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        def show_help_tooltip(event):
+            self.help_menu_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
+            # 计算提示框位置：按钮右下角
+            btn_pos = self.help_menu_btn.mapToGlobal(QPoint(0, 0))
+            # 先调整大小以确保size准确
+            self.help_tooltip.adjustSize()
+            # 位置：按钮右下角，提示框左上角与按钮右下角完全对齐
+            x = btn_pos.x() + self.help_menu_btn.width()
+            y = btn_pos.y() + self.help_menu_btn.height()
+            self.help_tooltip.move(x, y)
+            self.help_tooltip.show()
+            event.accept()
+        
+        def hide_help_tooltip(event):
+            self.help_menu_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+            self.help_tooltip.hide()
+            event.accept()
+        
+        self.help_menu_btn.enterEvent = show_help_tooltip
+        self.help_menu_btn.leaveEvent = hide_help_tooltip
         
         # 添加设置按钮到布局左侧
         layout.addWidget(self.help_menu_btn)
@@ -110,36 +146,42 @@ class CustomTitleBar(QWidget):
         # 将标题点击事件连接到file_menu_clicked信号
         self.title_label.mousePressEvent = lambda event: self.file_menu_clicked.emit()
         layout.addWidget(self.title_label)
+ 
         
+        # 添加伸缩空间，将按钮推到右侧
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        layout.addWidget(spacer)
+          
+
         # 添加前一个音频按钮
         self.prev_audio_btn = QPushButton()
         self.prev_audio_btn.setIcon(QIcon(get_resource_path('resources/icons/prev_audio.svg')))
         self.prev_audio_btn.setFixedSize(32, 32)
-        self.prev_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.prev_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.prev_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.prev_audio_btn.setStatusTip("Previous Audio")
         # 添加hover事件
         self.prev_audio_btn.enterEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.prev_audio_btn.leaveEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.prev_audio_btn.leaveEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         layout.addWidget(self.prev_audio_btn)
         
         # 添加后一个音频按钮
         self.next_audio_btn = QPushButton()
         self.next_audio_btn.setIcon(QIcon(get_resource_path('resources/icons/next_audio.svg')))
         self.next_audio_btn.setFixedSize(32, 32)
-        self.next_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.next_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.next_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_audio_btn.setStatusTip("Next Audio")
         # 添加hover事件
         self.next_audio_btn.enterEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.next_audio_btn.leaveEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.next_audio_btn.leaveEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         layout.addWidget(self.next_audio_btn)
-        
-        # 添加伸缩空间，将按钮推到右侧
-        spacer = QWidget()
-        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        layout.addWidget(spacer)
-        
+
+
+        layout.addSpacing(8)  # 添加按钮之间的空格
+
+
         # 添加onset和offset按钮
         self.onset_btn = QPushButton("Onset")
         self.onset_btn.setStatusTip("Extract Onsets")
@@ -171,7 +213,7 @@ class CustomTitleBar(QWidget):
         self.trash_btn = QPushButton()
         self.trash_btn.setIcon(QIcon(get_resource_path('resources/icons/trash.svg')))
         self.trash_btn.setFixedSize(32, 32)
-        self.trash_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.trash_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.trash_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.trash_btn)
         
@@ -179,7 +221,7 @@ class CustomTitleBar(QWidget):
         self.read_btn = QPushButton()
         self.read_btn.setIcon(QIcon(get_resource_path('resources/icons/read.svg')))
         self.read_btn.setFixedSize(32, 32)
-        self.read_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.read_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.read_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.read_btn)
         
@@ -187,7 +229,7 @@ class CustomTitleBar(QWidget):
         self.run_btn = QPushButton()
         self.run_btn.setIcon(QIcon(get_resource_path('resources/icons/play.svg')))
         self.run_btn.setFixedSize(32, 32)
-        self.run_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.run_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.run_btn)
         
@@ -195,7 +237,7 @@ class CustomTitleBar(QWidget):
         self.test_btn = QPushButton()
         self.test_btn.setIcon(QIcon(get_resource_path('resources/icons/test.svg')))
         self.test_btn.setFixedSize(32, 32)
-        self.test_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.test_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.test_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addWidget(self.test_btn)
         
@@ -281,25 +323,25 @@ class CustomTitleBar(QWidget):
         
         # 运行按钮
         self.run_btn.enterEvent = lambda event: self.run_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.run_btn.leaveEvent = lambda event: self.run_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_btn.leaveEvent = lambda event: self.run_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # 测试按钮
         self.test_btn.enterEvent = lambda event: self.test_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.test_btn.leaveEvent = lambda event: self.test_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.test_btn.leaveEvent = lambda event: self.test_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # trash按钮
         self.trash_btn.enterEvent = lambda event: self.trash_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.trash_btn.leaveEvent = lambda event: self.trash_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.trash_btn.leaveEvent = lambda event: self.trash_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         
         # read按钮
         self.read_btn.enterEvent = lambda event: self.read_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.read_btn.leaveEvent = lambda event: self.read_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.read_btn.leaveEvent = lambda event: self.read_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
     
     def update_button_style(self, btn, btn_type, state):
         """更新按钮样式（现代Windows风格）"""
-        # 当状态为normal时，使用白色背景，否则使用配置的颜色
+        # 当状态为normal时，使用透明背景，否则使用配置的颜色
         if state == 'normal':
-            color = 'white'
+            color = 'transparent'
         else:
             color = self.btn_colors[btn_type][state]
         
@@ -399,13 +441,7 @@ class MainWindow(QMainWindow):
         button_action.setStatusTip("Read audio files HERE!")
         button_action.triggered.connect(self.openFileDialog)
         file_menu.addAction(button_action)
-        # file_menu.setStyleSheet("""
-        #     QMenu {
-        #         color: black;
-        #         background-color: white;
-        #
-        #     }
-        # """)
+
 
         file_menu = self.menuBar().addMenu("&Help")
         button_action = QAction("&Instructions", self)
@@ -486,9 +522,7 @@ class MainWindow(QMainWindow):
         self.AudioViewer = AudioViewer()
         self.AudioViewer.setMinimumHeight(200)
         layout.addWidget(self.AudioViewer, 1)  # 添加拉伸因子1，让AudioViewer占据更多空间
-        # 连接AudioViewer的信号到prevnext_audio方法
-        self.AudioViewer.prevClicked.connect(lambda: self.prevnext_audio("prev"))
-        self.AudioViewer.nextClicked.connect(lambda: self.prevnext_audio("next"))
+        
         # ---------------------------------------------------
 
         # ---------------------------------------------------
@@ -523,7 +557,7 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.MySliders)
         # ---------------------------------------------------
-        layout.setContentsMargins(30, 15, 30, 30)  # 调整左右边距为15px，上下保持不变
+        layout.setContentsMargins(50, 15, 50, 30)  # 调整左右边距为15px，上下保持不变
         # 将内容部件添加到主布局
         main_layout.addWidget(central_widget)
         
@@ -693,9 +727,9 @@ class MainWindow(QMainWindow):
         self.MySliders.anySliderValueChanged.connect(self.checkIfParamsExist)
         
         # 模式按钮点击事件连接
-        self.default_btn.clicked.connect(self.onModeButtonClicked)
-        self.folder_btn.clicked.connect(self.onModeButtonClicked)
-        self.file_btn.clicked.connect(self.onModeButtonClicked)
+        self.default_btn.clicked.connect(lambda: self.onModeButtonClicked(self.default_btn))
+        self.folder_btn.clicked.connect(lambda: self.onModeButtonClicked(self.folder_btn))
+        self.file_btn.clicked.connect(lambda: self.onModeButtonClicked(self.file_btn))
         
         # 初始化时检查一次参数匹配，确保刚载入GUI时也能显示下划线
         self.checkIfParamsExist()
@@ -876,36 +910,59 @@ class MainWindow(QMainWindow):
         if not os.path.exists(default_params_path):
             default_params_path = get_resource_path("src/app/params.txt")
         
-        # 只检查文件是否存在，不比较参数内容
-        params_exists = os.path.exists(default_params_path)
+        default_params_match = False
+        if os.path.exists(default_params_path):
+            try:
+                with open(default_params_path, 'r') as txt_file:
+                    default_params = str(eval(txt_file.read()))
+                    default_params_match = (current_params == default_params)
+            except:
+                pass
         
-        # 设置default_btn的file_exists属性
-        self.default_btn.setProperty("file_exists", params_exists)
+        # 设置default_btn的file_exists和param_matched属性
+        self.default_btn.setProperty("file_exists", os.path.exists(default_params_path))
+        self.default_btn.setProperty("param_matched", default_params_match)
         self.default_btn.style().polish(self.default_btn)  # 刷新样式
         
         # 检查Folder模式
         folder_params_exists = False
+        folder_params_match = False
         if self.file_path:
             folder_path = os.path.dirname(self.file_path)
             folder_params_path = os.path.join(folder_path, "params.txt")
             
-            # 只检查文件是否存在，不比较参数内容
-            folder_params_exists = os.path.exists(folder_params_path)
+            if os.path.exists(folder_params_path):
+                folder_params_exists = True
+                try:
+                    with open(folder_params_path, 'r') as txt_file:
+                        folder_params = str(eval(txt_file.read()))
+                        folder_params_match = (current_params == folder_params)
+                except:
+                    pass
         
-        # 设置folder_btn的file_exists属性
+        # 设置folder_btn的file_exists和param_matched属性
         self.folder_btn.setProperty("file_exists", folder_params_exists)
+        self.folder_btn.setProperty("param_matched", folder_params_match)
         self.folder_btn.style().polish(self.folder_btn)  # 刷新样式
         
         # 检查File模式
         file_params_exists = False
+        file_params_match = False
         if self.file_path:
             file_params_path = os.path.splitext(self.file_path)[0] + ".txt"
             
-            # 只检查文件是否存在，不比较参数内容
-            file_params_exists = os.path.exists(file_params_path)
+            if os.path.exists(file_params_path):
+                file_params_exists = True
+                try:
+                    with open(file_params_path, 'r') as txt_file:
+                        file_params = str(eval(txt_file.read()))
+                        file_params_match = (current_params == file_params)
+                except:
+                    pass
         
-        # 设置file_btn的file_exists属性
+        # 设置file_btn的file_exists和param_matched属性
         self.file_btn.setProperty("file_exists", file_params_exists)
+        self.file_btn.setProperty("param_matched", file_params_match)
         self.file_btn.style().polish(self.file_btn)  # 刷新样式
 
     def showParams(self):
@@ -1023,8 +1080,8 @@ class MainWindow(QMainWindow):
         # 检查采样率
         # print(self.AudioViewer.audio_samplerate)
         # print(self.MySliders.cutoff1_slider_onset.value_label.text())
-        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
+        if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
+            float(self.MySliders.cutoff1_slider_offset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2:
 
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
@@ -1059,8 +1116,8 @@ class MainWindow(QMainWindow):
 
 
     def testPraditorOnAudio(self):
-        if float(self.MySliders.cutoff1_slider_onset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_label.text()) >= float(self.AudioViewer.audio_samplerate)/2:
+        if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
+            float(self.MySliders.cutoff1_slider_offset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2:
 
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
@@ -1158,8 +1215,12 @@ class MainWindow(QMainWindow):
         self.reset_svg_btn.setEnabled(any_mode_selected)
         self.reset_svg_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
     
-    def onModeButtonClicked(self):
-        """模式按钮点击事件处理，允许同时选中多个模式"""
+    def onModeButtonClicked(self, clicked_btn):
+        """模式按钮点击事件处理，确保一次只能选中一个模式"""
+        # 取消其他两个按钮的选中状态
+        for btn in [self.default_btn, self.folder_btn, self.file_btn]:
+            if btn != clicked_btn:
+                btn.setChecked(False)
         # 更新save和reset按钮状态
         self.updateSaveResetButtonsState()
 

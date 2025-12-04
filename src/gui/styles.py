@@ -97,8 +97,8 @@ qss_button_normal = """
 """
 
 qss_save_location_button = """
-        /* 未选中且文件不存在 */
-        QPushButton[file_exists="false"] {
+        /* 基础样式 */
+        QPushButton {
             background: transparent; 
             color: gray; 
             font-weight: bold; 
@@ -110,54 +110,37 @@ qss_save_location_button = """
             text-decoration: none;
         } 
         
-        /* 未选中且文件存在 */
+        /* 未选中但文件存在 */
         QPushButton[file_exists="true"] {
-            background: transparent; 
-            color: gray; 
-            font-weight: bold; 
-            border: none; 
-            border-radius: 0px; 
-            padding: 8px 6px; 
-            margin: 0px 2px; 
-            font-size: 13px; 
             text-decoration: underline;
         } 
         
-        /* 选中且文件不存在 */
-        QPushButton:checked[file_exists="false"] {
-            background-color: transparent; 
-            color: black; 
-            border: none; 
-            font-weight: bold; 
-            border-radius: 0px; 
-            padding: 8px 6px; 
-            margin: 0px 2px; 
-            font-size: 13px; 
-            text-decoration: none;
+        /* 未选中但参数匹配 */
+        QPushButton[param_matched="true"] {
+            color: black;
+        }
+        
+        /* 选中状态 */
+        QPushButton:checked {
+            border: 2px solid black;
+            border-radius: 4px;
+            padding: 6px 4px; /* 调整padding，避免文字被边框遮挡 */
         }
         
         /* 选中且文件存在 */
         QPushButton:checked[file_exists="true"] {
-            background-color: transparent; 
-            color: black; 
-            border: none; 
-            font-weight: bold; 
-            border-radius: 0px; 
-            padding: 8px 6px; 
-            margin: 0px 2px; 
-            font-size: 13px; 
             text-decoration: underline;
+        }
+        
+        /* 选中且参数匹配 */
+        QPushButton:checked[param_matched="true"] {
+            color: black;
         }
         
         /* 按下状态 */
         QPushButton:pressed {
             background: #F0F0F0; 
             color: gray; 
-            font-weight: bold; 
-            border: none; 
-            border-radius: 0px; 
-            padding: 8px 6px; 
-            margin: 0px 2px; 
         } 
 """
 

@@ -55,7 +55,7 @@ class MySliders(QWidget):
 
         # 设置标签样式
         for label in self.name_labels.values():
-            label.setFixedWidth(90)
+            label.setFixedWidth(100)  # 增加宽度，增大name label和slider之间的距离
             label.setFixedHeight(25)
             label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             label.setStyleSheet("""
@@ -140,28 +140,28 @@ class MySliders(QWidget):
     def getParams(self):
         params = {
             "onset": {
-                "amp": self.amp_slider_onset.value_label.text(),
-                "cutoff0": self.cutoff0_slider_onset.value_label.text(),
-                "cutoff1": self.cutoff1_slider_onset.value_label.text(),
-                "numValid": self.numValid_slider_onset.value_label.text(),
-                "win_size": self.win_size_slider_onset.value_label.text(),
-                "ratio": self.ratio_slider_onset.value_label.text(),
-                "penalty": self.penalty_slider_onset.value_label.text(),
-                "ref_len": self.ref_len_slider_onset.value_label.text(),
-                "eps_ratio": self.eps_ratio_slider_onset.value_label.text()
+                "amp": self.amp_slider_onset.value_edit.text(),
+                "cutoff0": self.cutoff0_slider_onset.value_edit.text(),
+                "cutoff1": self.cutoff1_slider_onset.value_edit.text(),
+                "numValid": self.numValid_slider_onset.value_edit.text(),
+                "win_size": self.win_size_slider_onset.value_edit.text(),
+                "ratio": self.ratio_slider_onset.value_edit.text(),
+                "penalty": self.penalty_slider_onset.value_edit.text(),
+                "ref_len": self.ref_len_slider_onset.value_edit.text(),
+                "eps_ratio": self.eps_ratio_slider_onset.value_edit.text()
 
             },
 
             "offset": {
-                "amp": self.amp_slider_offset.value_label.text(),
-                "cutoff0": self.cutoff0_slider_offset.value_label.text(),
-                "cutoff1": self.cutoff1_slider_offset.value_label.text(),
-                "numValid": self.numValid_slider_offset.value_label.text(),
-                "win_size": self.win_size_slider_offset.value_label.text(),
-                "ratio": self.ratio_slider_offset.value_label.text(),
-                "penalty": self.penalty_slider_offset.value_label.text(),
-                "ref_len": self.ref_len_slider_offset.value_label.text(),
-                "eps_ratio": self.eps_ratio_slider_offset.value_label.text()
+                "amp": self.amp_slider_offset.value_edit.text(),
+                "cutoff0": self.cutoff0_slider_offset.value_edit.text(),
+                "cutoff1": self.cutoff1_slider_offset.value_edit.text(),
+                "numValid": self.numValid_slider_offset.value_edit.text(),
+                "win_size": self.win_size_slider_offset.value_edit.text(),
+                "ratio": self.ratio_slider_offset.value_edit.text(),
+                "penalty": self.penalty_slider_offset.value_edit.text(),
+                "ref_len": self.ref_len_slider_offset.value_edit.text(),
+                "eps_ratio": self.eps_ratio_slider_offset.value_edit.text()
 
             }
 
