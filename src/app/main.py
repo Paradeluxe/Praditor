@@ -91,10 +91,8 @@ class CustomTitleBar(QWidget):
         self.help_menu_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.help_menu_btn.setCursor(QCursor(Qt.PointingHandCursor))
         
-        # 创建help提示框 - 使用独立窗口，模仿Windows风格
-        self.help_tooltip = QLabel()
-        self.help_tooltip.setText("Open help documentation")
-        self.help_tooltip.setStyleSheet("""
+        # 通用提示框样式
+        self.tooltip_style = """
             QLabel {
                 background-color: #FFFFE1;
                 color: #000000;
@@ -104,33 +102,52 @@ class CustomTitleBar(QWidget):
                 font-size: 14px;
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
-        """)
-        self.help_tooltip.setAlignment(Qt.AlignLeft)
-        self.help_tooltip.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint)
-        self.help_tooltip.hide()
+        """
+        
+        # 通用提示框创建函数
+        def create_tooltip(text):
+            tooltip = QLabel()
+            tooltip.setText(text)
+            tooltip.setStyleSheet(self.tooltip_style)
+            tooltip.setAlignment(Qt.AlignLeft)
+            tooltip.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint)
+            tooltip.hide()
+            return tooltip
+        
+        # 通用hover事件处理函数
+        def create_hover_handlers(btn, tooltip):
+            def show_tooltip(event):
+                # 保存原始样式
+                original_style = btn.styleSheet()
+                # 应用hover样式
+                if btn != self.onset_btn and btn != self.offset_btn:
+                    btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
+                # 计算提示框位置：按钮右下角
+                btn_pos = btn.mapToGlobal(QPoint(0, 0))
+                # 先调整大小以确保size准确
+                tooltip.adjustSize()
+                # 位置：按钮右下角，提示框左上角与按钮右下角完全对齐
+                x = btn_pos.x() + btn.width()
+                y = btn_pos.y() + btn.height()
+                tooltip.move(x, y)
+                tooltip.show()
+                event.accept()
+            
+            def hide_tooltip(event):
+                # 恢复原始样式
+                if btn != self.onset_btn and btn != self.offset_btn:
+                    btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+                tooltip.hide()
+                event.accept()
+            
+            return show_tooltip, hide_tooltip
         
         # 连接菜单按钮信号
         self.help_menu_btn.clicked.connect(self.help_menu_clicked.emit)
         
-        # 添加hover事件
-        def show_help_tooltip(event):
-            self.help_menu_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-            # 计算提示框位置：按钮右下角
-            btn_pos = self.help_menu_btn.mapToGlobal(QPoint(0, 0))
-            # 先调整大小以确保size准确
-            self.help_tooltip.adjustSize()
-            # 位置：按钮右下角，提示框左上角与按钮右下角完全对齐
-            x = btn_pos.x() + self.help_menu_btn.width()
-            y = btn_pos.y() + self.help_menu_btn.height()
-            self.help_tooltip.move(x, y)
-            self.help_tooltip.show()
-            event.accept()
-        
-        def hide_help_tooltip(event):
-            self.help_menu_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
-            self.help_tooltip.hide()
-            event.accept()
-        
+        # 为help按钮添加提示框
+        self.help_tooltip = create_tooltip("Open help documentation")
+        show_help_tooltip, hide_help_tooltip = create_hover_handlers(self.help_menu_btn, self.help_tooltip)
         self.help_menu_btn.enterEvent = show_help_tooltip
         self.help_menu_btn.leaveEvent = hide_help_tooltip
         
@@ -161,9 +178,11 @@ class CustomTitleBar(QWidget):
         self.prev_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.prev_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.prev_audio_btn.setStatusTip("Previous Audio")
-        # 添加hover事件
-        self.prev_audio_btn.enterEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.prev_audio_btn.leaveEvent = lambda event: self.prev_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+        # 为prev_audio_btn添加提示框
+        self.prev_audio_tooltip = create_tooltip("Previous Audio")
+        show_prev_tooltip, hide_prev_tooltip = create_hover_handlers(self.prev_audio_btn, self.prev_audio_tooltip)
+        self.prev_audio_btn.enterEvent = show_prev_tooltip
+        self.prev_audio_btn.leaveEvent = hide_prev_tooltip
         layout.addWidget(self.prev_audio_btn)
         
         # 添加后一个音频按钮
@@ -173,9 +192,11 @@ class CustomTitleBar(QWidget):
         self.next_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.next_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_audio_btn.setStatusTip("Next Audio")
-        # 添加hover事件
-        self.next_audio_btn.enterEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.next_audio_btn.leaveEvent = lambda event: self.next_audio_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+        # 为next_audio_btn添加提示框
+        self.next_audio_tooltip = create_tooltip("Next Audio")
+        show_next_tooltip, hide_next_tooltip = create_hover_handlers(self.next_audio_btn, self.next_audio_tooltip)
+        self.next_audio_btn.enterEvent = show_next_tooltip
+        self.next_audio_btn.leaveEvent = hide_next_tooltip
         layout.addWidget(self.next_audio_btn)
 
 
@@ -190,6 +211,11 @@ class CustomTitleBar(QWidget):
         self.onset_btn.setStyleSheet(f"QPushButton {{ background: {onset_color}; color: white; font-weight: bold; border: 2px solid {onset_color}; border-radius: 5px; margin: 0px; font-size: 13px; }} QPushButton:pressed {{ background: #666666; color: {onset_color}; font-weight: bold; border: 2px solid {onset_color}; border-radius: 5px; margin: 0px; }} QPushButton:checked {{ background-color: white; color: {onset_color}; border: 2px solid {onset_color}; font-weight: bold; border-radius: 5px; margin: 0px; }}")
         self.onset_btn.setCheckable(True)
         self.onset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为onset_btn添加提示框
+        self.onset_tooltip = create_tooltip("Extract Onsets")
+        show_onset_tooltip, hide_onset_tooltip = create_hover_handlers(self.onset_btn, self.onset_tooltip)
+        self.onset_btn.enterEvent = show_onset_tooltip
+        self.onset_btn.leaveEvent = hide_onset_tooltip
         layout.addWidget(self.onset_btn)
         
         layout.addSpacing(8)  # 添加按钮之间的空格
@@ -201,6 +227,11 @@ class CustomTitleBar(QWidget):
         self.offset_btn.setStyleSheet(f"QPushButton {{ background: {offset_color}; color: white; font-weight: bold; border: 2px solid {offset_color}; border-radius: 5px; margin: 0px; font-size: 13px; }} QPushButton:pressed {{ background: #666666; color: {offset_color}; font-weight: bold; border: 2px solid {offset_color}; border-radius: 5px; margin: 0px; }} QPushButton:checked {{ background-color: white; color: {offset_color}; border: 2px solid {offset_color}; font-weight: bold; border-radius: 5px; margin: 0px; }}")
         self.offset_btn.setCheckable(True)
         self.offset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为offset_btn添加提示框
+        self.offset_tooltip = create_tooltip("Extract Offsets")
+        show_offset_tooltip, hide_offset_tooltip = create_hover_handlers(self.offset_btn, self.offset_tooltip)
+        self.offset_btn.enterEvent = show_offset_tooltip
+        self.offset_btn.leaveEvent = hide_offset_tooltip
         layout.addWidget(self.offset_btn)
         
         layout.addSpacing(8)  # 添加按钮之间的空格
@@ -215,6 +246,11 @@ class CustomTitleBar(QWidget):
         self.trash_btn.setFixedSize(32, 32)
         self.trash_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.trash_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为trash_btn添加提示框
+        self.trash_tooltip = create_tooltip("Clear onsets and offsets")
+        show_trash_tooltip, hide_trash_tooltip = create_hover_handlers(self.trash_btn, self.trash_tooltip)
+        self.trash_btn.enterEvent = show_trash_tooltip
+        self.trash_btn.leaveEvent = hide_trash_tooltip
         layout.addWidget(self.trash_btn)
         
         # 添加read按钮（用于显示onsets和offsets）
@@ -223,6 +259,11 @@ class CustomTitleBar(QWidget):
         self.read_btn.setFixedSize(32, 32)
         self.read_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.read_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为read_btn添加提示框
+        self.read_tooltip = create_tooltip("Display onsets and offsets")
+        show_read_tooltip, hide_read_tooltip = create_hover_handlers(self.read_btn, self.read_tooltip)
+        self.read_btn.enterEvent = show_read_tooltip
+        self.read_btn.leaveEvent = hide_read_tooltip
         layout.addWidget(self.read_btn)
         
         # 添加运行按钮（类似IDE中的播放键）
@@ -231,6 +272,11 @@ class CustomTitleBar(QWidget):
         self.run_btn.setFixedSize(32, 32)
         self.run_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.run_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为run_btn添加提示框
+        self.run_tooltip = create_tooltip("Run Praditor on audio")
+        show_run_tooltip, hide_run_tooltip = create_hover_handlers(self.run_btn, self.run_tooltip)
+        self.run_btn.enterEvent = show_run_tooltip
+        self.run_btn.leaveEvent = hide_run_tooltip
         layout.addWidget(self.run_btn)
         
         # 添加测试按钮
@@ -239,6 +285,11 @@ class CustomTitleBar(QWidget):
         self.test_btn.setFixedSize(32, 32)
         self.test_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.test_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为test_btn添加提示框
+        self.test_tooltip = create_tooltip("Test Praditor on audio")
+        show_test_tooltip, hide_test_tooltip = create_hover_handlers(self.test_btn, self.test_tooltip)
+        self.test_btn.enterEvent = show_test_tooltip
+        self.test_btn.leaveEvent = hide_test_tooltip
         layout.addWidget(self.test_btn)
         
         # 创建窗口控制按钮（Windows风格）
@@ -282,6 +333,11 @@ class CustomTitleBar(QWidget):
         self.update_button_style(self.minimize_btn, 'minimize', 'normal')
         self.update_button_style(self.maximize_btn, 'maximize', 'normal')
         
+        # 为窗口控制按钮添加提示框
+        self.minimize_tooltip = create_tooltip("Minimize window")
+        self.maximize_tooltip = create_tooltip("Maximize window")
+        self.close_tooltip = create_tooltip("Close window")
+        
         # 连接按钮信号
         self.trash_btn.clicked.connect(self.trash_signal.emit)
         self.read_btn.clicked.connect(self.read_signal.emit)
@@ -304,38 +360,75 @@ class CustomTitleBar(QWidget):
     def connect_button_events(self):
         """连接按钮事件"""
         # 关闭按钮
-        self.close_btn.enterEvent = lambda event: self.update_button_style(self.close_btn, 'close', 'hover')
-        self.close_btn.leaveEvent = lambda event: self.update_button_style(self.close_btn, 'close', 'normal')
+        def close_enter_event(event):
+            self.update_button_style(self.close_btn, 'close', 'hover')
+            # 显示提示框
+            btn_pos = self.close_btn.mapToGlobal(QPoint(0, 0))
+            self.close_tooltip.adjustSize()
+            x = btn_pos.x() + self.close_btn.width()
+            y = btn_pos.y() + self.close_btn.height()
+            self.close_tooltip.move(x, y)
+            self.close_tooltip.show()
+            event.accept()
+        
+        def close_leave_event(event):
+            self.update_button_style(self.close_btn, 'close', 'normal')
+            # 隐藏提示框
+            self.close_tooltip.hide()
+            event.accept()
+        
+        self.close_btn.enterEvent = close_enter_event
+        self.close_btn.leaveEvent = close_leave_event
         self.close_btn.pressed.connect(lambda: self.update_button_style(self.close_btn, 'close', 'pressed'))
         self.close_btn.released.connect(lambda: self.update_button_style(self.close_btn, 'close', 'hover'))
         
         # 最小化按钮
-        self.minimize_btn.enterEvent = lambda event: self.update_button_style(self.minimize_btn, 'minimize', 'hover')
-        self.minimize_btn.leaveEvent = lambda event: self.update_button_style(self.minimize_btn, 'minimize', 'normal')
+        def minimize_enter_event(event):
+            self.update_button_style(self.minimize_btn, 'minimize', 'hover')
+            # 显示提示框
+            btn_pos = self.minimize_btn.mapToGlobal(QPoint(0, 0))
+            self.minimize_tooltip.adjustSize()
+            x = btn_pos.x() + self.minimize_btn.width()
+            y = btn_pos.y() + self.minimize_btn.height()
+            self.minimize_tooltip.move(x, y)
+            self.minimize_tooltip.show()
+            event.accept()
+        
+        def minimize_leave_event(event):
+            self.update_button_style(self.minimize_btn, 'minimize', 'normal')
+            # 隐藏提示框
+            self.minimize_tooltip.hide()
+            event.accept()
+        
+        self.minimize_btn.enterEvent = minimize_enter_event
+        self.minimize_btn.leaveEvent = minimize_leave_event
         self.minimize_btn.pressed.connect(lambda: self.update_button_style(self.minimize_btn, 'minimize', 'pressed'))
         self.minimize_btn.released.connect(lambda: self.update_button_style(self.minimize_btn, 'minimize', 'hover'))
         
         # 最大化按钮
-        self.maximize_btn.enterEvent = lambda event: self.update_button_style(self.maximize_btn, 'maximize', 'hover')
-        self.maximize_btn.leaveEvent = lambda event: self.update_button_style(self.maximize_btn, 'maximize', 'normal')
+        def maximize_enter_event(event):
+            self.update_button_style(self.maximize_btn, 'maximize', 'hover')
+            # 显示提示框
+            btn_pos = self.maximize_btn.mapToGlobal(QPoint(0, 0))
+            self.maximize_tooltip.adjustSize()
+            x = btn_pos.x() + self.maximize_btn.width()
+            y = btn_pos.y() + self.maximize_btn.height()
+            self.maximize_tooltip.move(x, y)
+            self.maximize_tooltip.show()
+            event.accept()
+        
+        def maximize_leave_event(event):
+            self.update_button_style(self.maximize_btn, 'maximize', 'normal')
+            # 隐藏提示框
+            self.maximize_tooltip.hide()
+            event.accept()
+        
+        self.maximize_btn.enterEvent = maximize_enter_event
+        self.maximize_btn.leaveEvent = maximize_leave_event
         self.maximize_btn.pressed.connect(lambda: self.update_button_style(self.maximize_btn, 'maximize', 'pressed'))
         self.maximize_btn.released.connect(lambda: self.update_button_style(self.maximize_btn, 'maximize', 'hover'))
         
-        # 运行按钮
-        self.run_btn.enterEvent = lambda event: self.run_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.run_btn.leaveEvent = lambda event: self.run_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
-        
-        # 测试按钮
-        self.test_btn.enterEvent = lambda event: self.test_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.test_btn.leaveEvent = lambda event: self.test_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
-        
-        # trash按钮
-        self.trash_btn.enterEvent = lambda event: self.trash_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.trash_btn.leaveEvent = lambda event: self.trash_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
-        
-        # read按钮
-        self.read_btn.enterEvent = lambda event: self.read_btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
-        self.read_btn.leaveEvent = lambda event: self.read_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+        # 运行按钮、测试按钮、trash按钮和read按钮的hover事件已在__init__方法中设置
     
     def update_button_style(self, btn, btn_type, state):
         """更新按钮样式（现代Windows风格）"""
@@ -663,23 +756,123 @@ class MainWindow(QMainWindow):
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         toolbar.addWidget(spacer)
         
-        # 参数图标
-        self.params_icon_btn = QPushButton(self)
-        self.params_icon_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
-        self.params_icon_btn.setFixedSize(24, 24)  # 减小图标尺寸
-        self.params_icon_btn.setStyleSheet("background-color: transparent; border: none; color: #666666; font-size: 16px; text-align: center;")
-        self.params_icon_btn.setCursor(QCursor(Qt.ArrowCursor))  # 鼠标指针为箭头，不是手形
-        toolbar.addWidget(self.params_icon_btn)
-        
-        # 参数索引标签
-        self.param_index_label = QLabel("0/0", self)
-        self.param_index_label.setStyleSheet("color: #666666; font-size: 12px; padding: 8px 10px 8px 5px;")  # 调整内边距，上下8px，右侧10px，左侧5px
-        toolbar.addWidget(self.param_index_label)
+        # 合并参数图标和索引标签为一个按钮
+        self.params_btn = QPushButton(self)
+        self.params_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
+        self.params_btn.setText("0/0")
+        self.params_btn.setFixedHeight(24)  # 固定高度
+        self.params_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                border: none;
+                color: #666666;
+                font-size: 12px;
+                text-align: left;
+                padding: 0px 10px;
+            }
+        """)
+        self.params_btn.setCursor(QCursor(Qt.ArrowCursor))  # 鼠标指针为箭头，不是手形
+        toolbar.addWidget(self.params_btn)
         
         # 添加自定义长度的spacer到最右侧
         right_spacer = QWidget()
         right_spacer.setFixedWidth(8)  # 自定义宽度为20px，与左侧保持一致
         toolbar.addWidget(right_spacer)
+        
+        # ---------------------------------------------------------------
+        # 为toolbar按钮添加提示框功能
+        # ---------------------------------------------------------------
+        
+        # 通用提示框样式
+        self.toolbar_tooltip_style = """
+            QLabel {
+                background-color: #FFFFE1;
+                color: #000000;
+                padding: 8px 12px;
+                border: 1px solid #D4D4D4;
+                border-radius: 3px;
+                font-size: 14px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+        """
+        
+        # 通用提示框创建函数
+        def create_toolbar_tooltip(text):
+            tooltip = QLabel(self)
+            tooltip.setText(text)
+            tooltip.setStyleSheet(self.toolbar_tooltip_style)
+            tooltip.setAlignment(Qt.AlignLeft)
+            tooltip.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint)
+            tooltip.hide()
+            return tooltip
+        
+        # 通用hover事件处理函数
+        def create_toolbar_hover_handlers(btn, tooltip):
+            def show_tooltip(event):
+                # 显示提示框
+                btn_pos = btn.mapToGlobal(QPoint(0, 0))
+                tooltip.adjustSize()
+                # 位置：按钮右下角，提示框左上角与按钮右下角完全对齐
+                x = btn_pos.x() + btn.width()
+                y = btn_pos.y() + btn.height()
+                tooltip.move(x, y)
+                tooltip.show()
+                event.accept()
+            
+            def hide_tooltip(event):
+                # 隐藏提示框
+                tooltip.hide()
+                event.accept()
+            
+            return show_tooltip, hide_tooltip
+        
+        # 为Default按钮添加提示框
+        self.default_tooltip = create_toolbar_tooltip("Use default parameters")
+        default_enter, default_leave = create_toolbar_hover_handlers(self.default_btn, self.default_tooltip)
+        self.default_btn.enterEvent = default_enter
+        self.default_btn.leaveEvent = default_leave
+        
+        # 为Folder按钮添加提示框
+        self.folder_tooltip = create_toolbar_tooltip("Use folder-specific parameters")
+        folder_enter, folder_leave = create_toolbar_hover_handlers(self.folder_btn, self.folder_tooltip)
+        self.folder_btn.enterEvent = folder_enter
+        self.folder_btn.leaveEvent = folder_leave
+        
+        # 为File按钮添加提示框
+        self.file_tooltip = create_toolbar_tooltip("Use file-specific parameters")
+        file_enter, file_leave = create_toolbar_hover_handlers(self.file_btn, self.file_tooltip)
+        self.file_btn.enterEvent = file_enter
+        self.file_btn.leaveEvent = file_leave
+        
+        # 为Save按钮添加提示框
+        self.save_tooltip = create_toolbar_tooltip("Save parameters to selected location")
+        save_enter, save_leave = create_toolbar_hover_handlers(self.save_btn, self.save_tooltip)
+        self.save_btn.enterEvent = save_enter
+        self.save_btn.leaveEvent = save_leave
+        
+        # 为Reset按钮添加提示框
+        self.reset_tooltip = create_toolbar_tooltip("Reset parameters to saved values")
+        reset_enter, reset_leave = create_toolbar_hover_handlers(self.reset_svg_btn, self.reset_tooltip)
+        self.reset_svg_btn.enterEvent = reset_enter
+        self.reset_svg_btn.leaveEvent = reset_leave
+        
+        # 为Backward按钮添加提示框
+        self.backward_tooltip = create_toolbar_tooltip("Load previous parameters")
+        backward_enter, backward_leave = create_toolbar_hover_handlers(self.backward_btn, self.backward_tooltip)
+        self.backward_btn.enterEvent = backward_enter
+        self.backward_btn.leaveEvent = backward_leave
+        
+        # 为Forward按钮添加提示框
+        self.forward_tooltip = create_toolbar_tooltip("Load next parameters")
+        forward_enter, forward_leave = create_toolbar_hover_handlers(self.forward_btn, self.forward_tooltip)
+        self.forward_btn.enterEvent = forward_enter
+        self.forward_btn.leaveEvent = forward_leave
+        
+        # 为params_btn添加提示框
+        self.params_tooltip = create_toolbar_tooltip("Parameters index")
+        params_enter, params_leave = create_toolbar_hover_handlers(self.params_btn, self.params_tooltip)
+        self.params_btn.enterEvent = params_enter
+        self.params_btn.leaveEvent = params_leave
         
         # ---------------------
         # TOOLBAR
@@ -1190,11 +1383,11 @@ class MainWindow(QMainWindow):
     
     def updateParamIndexLabel(self):
         """更新参数索引标签"""
-        if hasattr(self, 'param_index_label'):
+        if hasattr(self, 'params_btn'):
             # 当前索引从1开始显示，最多10套
             display_index = self.current_param_index + 1 if self.param_sets else 0
             total_count = len(self.param_sets) if self.param_sets else 0
-            self.param_index_label.setText(f"{display_index}/{min(total_count, 10)}")
+            self.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
     
     def updateSaveResetButtonsState(self):
         """根据模式按钮的选中状态更新save和reset按钮的可用性和样式
