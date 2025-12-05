@@ -1044,7 +1044,7 @@ class MainWindow(QMainWindow):
             # Folder模式：从当前文件夹的同名txt文件读取
             folder_path = os.path.dirname(self.file_path)
             folder_name = os.path.basename(folder_path)
-            txt_file_path = os.path.join(folder_path, f"{folder_name}.txt")
+            txt_file_path = os.path.join(folder_path, f"params.txt")
         else:  # Default模式
             # 从应用程序所在目录读取
             txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
