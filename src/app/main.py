@@ -119,10 +119,11 @@ class CustomTitleBar(QWidget):
         # 通用hover事件处理函数
         def create_hover_handlers(btn, tooltip):
             def show_tooltip(event):
-                # 保存原始样式
-                original_style = btn.styleSheet()
-                # 应用hover样式
-                if btn != self.onset_btn and btn != self.offset_btn:
+                # 只有当控件不是title_label、onset_btn和offset_btn时才应用hover样式
+                if btn != self.title_label and btn != self.onset_btn and btn != self.offset_btn:
+                    # 保存原始样式
+                    original_style = btn.styleSheet()
+                    # 应用hover样式
                     btn.setStyleSheet("background-color: #E8E8E8; border: none; color: #333333; font-size: 16px; text-align: center;")
                 # 计算提示框位置：按钮右下角
                 btn_pos = btn.mapToGlobal(QPoint(0, 0))
@@ -136,8 +137,9 @@ class CustomTitleBar(QWidget):
                 event.accept()
             
             def hide_tooltip(event):
-                # 恢复原始样式
-                if btn != self.onset_btn and btn != self.offset_btn:
+                # 只有当控件不是title_label、onset_btn和offset_btn时才恢复原始样式
+                if btn != self.title_label and btn != self.onset_btn and btn != self.offset_btn:
+                    # 恢复原始样式
                     btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
                 tooltip.hide()
                 event.accept()
@@ -164,6 +166,12 @@ class CustomTitleBar(QWidget):
         self.title_label.setCursor(QCursor(Qt.PointingHandCursor))
         # 将标题点击事件连接到file_menu_clicked信号
         self.title_label.mousePressEvent = lambda event: self.file_menu_clicked.emit()
+
+        # 为prev_audio_btn添加提示框
+        self.title_label_tooltip = create_tooltip("Select an audio file")
+        show_title_label_tooltip, hide_title_label_tooltip = create_hover_handlers(self.title_label, self.title_label_tooltip)
+        self.title_label.enterEvent = show_title_label_tooltip
+        self.title_label.leaveEvent = hide_title_label_tooltip
         layout.addWidget(self.title_label)
  
         
