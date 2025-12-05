@@ -84,9 +84,7 @@ class AudioViewer(QWidget):
         self.slider_timerange.setMaximum(self.maximum-self.interval_ms)
         self.slider_timerange.setSingleStep(1)
         self.slider_timerange.valueChanged.connect(self.sliderValueChanged)
-        # self.slider_timerange.sliderMoved.connect(slider_mouse_changed)
-        # self.slider_timerange.sliderPressed.connect(self.slider_pressed_h)
-        # self.slider_timerange.sliderReleased.connect(self.slider_released_h)
+
 
         # 只保留结束时间label，删除开始时间label
         self.audio_etime = QLabel(f"{formatted_time(self.maximum)}")
@@ -207,6 +205,9 @@ class AudioViewer(QWidget):
         # 第二次设置初始值
         self.interval_ms = 100 * 128
         self.resolution = self.time_unit * 10  # 100 ms 的长度作为所有samplerate的分辨率
+
+
+
 
     def keyPressEvent(self, event):
 
@@ -341,25 +342,38 @@ class AudioViewer(QWidget):
     def updateSlider(self):
         
         self.slider_timerange.setMaximum(self.maximum - self.interval_ms)
-        # 计算slider宽度，确保有最小宽度20px，防止handler不可见
-        slider_width = max(20, self.slider_timerange.width() * self.interval_ms / self.maximum) - 5
+        # 计算slider宽度，确保有最小宽度20px，防止handler不可见，同时最大宽度不超过slider本身长度-1
+        slider_width = int(max(20, self.slider_timerange.width() * self.interval_ms / self.maximum))
+        # 设置滑块最大长度为slider本身长度-1
+        slider_width = min(slider_width, self.slider_timerange.width() - 1)
+        # print("滑块长度:", slider_width, "slider本身长度:", self.slider_timerange.width(), "滑轨最大长度:", self.slider_timerange.maximum(), "滑块位置:", self.slider_timerange.sliderPosition())
+        
+        # 根据是否导入音频决定滑块样式
+        handle_bg = "transparent" if not self.fpath else "#333333"
         
         style = ""
-        style += "QSlider::groove:horizontal { border: 1px solid #ddd; border-radius: 3px; background: #f0f0f0; }"
-        style += "QSlider::sub-page:horizontal { background: #e0e0e0; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
-        style += "QSlider::add-page:horizontal { background: #f0f0f0; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
-        style += f"QSlider::handle:horizontal {{ background: #333333; width: {slider_width}px; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
+        style += "QSlider::groove:horizontal { border: 1px solid #e0e0e0; border-radius: 3px; background: #ffffff; }"
+        style += "QSlider::sub-page:horizontal { background: #ffffff; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
+        style += "QSlider::add-page:horizontal { background: #ffffff; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
+        style += f"QSlider::handle:horizontal {{ background: {handle_bg}; width: {slider_width}px; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
         self.slider_timerange.setStyleSheet(style)
 
-    def resizeEvent(self, event):
-        slider_width = self.slider_timerange.width() * self.interval_ms / self.maximum
+
+
+    def resizeEvent(self, event):  # 窗口大小改变时调用 (包括初始化设置写完之后)
+        slider_width = int(self.slider_timerange.width() * self.interval_ms / self.maximum) 
+        
+        # 根据是否导入音频决定滑块样式
+        handle_bg = "transparent" if not self.fpath else "#333333"
+        page_bg = "transparent" if not self.fpath else "#ffffff"
         
         style = ""
-        style += "QSlider::groove:horizontal { border: 1px solid #ddd; border-radius: 3px; background: #f0f0f0; }"
-        style += "QSlider::sub-page:horizontal { background: #e0e0e0; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
-        style += "QSlider::add-page:horizontal { background: #f0f0f0; border-radius: 3px; padding-top:2px; padding-bottom:2px; }"
-        style += f"QSlider::handle:horizontal {{ background: #333333; width: {slider_width}px; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
+        style += "QSlider::groove:horizontal { border: 1px solid #e0e0e0; border-radius: 3px; background: #ffffff; }"
+        style += f"QSlider::sub-page:horizontal {{ background: {page_bg}; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
+        style += f"QSlider::add-page:horizontal {{ background: {page_bg}; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
+        style += f"QSlider::handle:horizontal {{ background: {handle_bg}; width: {slider_width}px; border-radius: 3px; padding-top:2px; padding-bottom:2px; }}"
         self.slider_timerange.setStyleSheet(style)
+
 
     def updateChart(self):
         self.label_stime.setText(f"{formatted_time(self.slider_timerange.sliderPosition())}")

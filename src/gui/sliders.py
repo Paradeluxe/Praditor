@@ -32,13 +32,16 @@ class MySliders(QWidget):
         self.eps_ratio_slider_offset = SingleSlider(0, 1, 300, scale=0.001, color="#2AD25E", default=15)
 
         layout = QGridLayout()
-        layout.setHorizontalSpacing(25)  # 增加水平间距，使onset和offset sliders之间距离更大
+        layout.setHorizontalSpacing(35)  # 增加水平间距，使onset和offset sliders之间距离更大
         layout.setVerticalSpacing(5)    # 保持垂直间距
         layout.setContentsMargins(0, 0, 0, 0)  # 调整左右边距，与AudioViewer保持一致
         
         # 设置列宽，确保onset和offset sliders尺寸一致
-        layout.setColumnStretch(1, 1)  # onset sliders列
-        layout.setColumnStretch(2, 1)  # offset sliders列
+        layout.setColumnStretch(0, 0)  # name labels列，不拉伸
+        layout.setColumnStretch(1, 1)  # onset sliders列，拉伸
+        layout.setColumnStretch(2, 1)  # offset sliders列，拉伸
+        layout.setColumnMinimumWidth(1, 200)  # 设置onset sliders列的最小宽度
+        layout.setColumnMinimumWidth(2, 200)  # 设置offset sliders列的最小宽度，与onset列保持一致
 
         # 创建名称标签并添加到第一列
         self.name_labels = {
@@ -55,7 +58,7 @@ class MySliders(QWidget):
 
         # 设置标签样式
         for label in self.name_labels.values():
-            label.setFixedWidth(100)  # 增加宽度，增大name label和slider之间的距离
+            label.setFixedWidth(80)  # 减小宽度，缩小name label和slider之间的距离
             label.setFixedHeight(25)
             label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             label.setStyleSheet("""

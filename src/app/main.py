@@ -64,9 +64,11 @@ class CustomTitleBar(QWidget):
         # 设置标题栏样式，确保完全覆盖默认菜单栏区域
         # 移除固定高度，改为随内容自适应
         self.setStyleSheet("""
-            QWidget {
+            CustomTitleBar {
                 background-color: #FFFFFF;
-                border: none;
+                border-width: 2px 2px 0px 2px;
+                border-style: solid;
+                border-color: #E9EDF1;
                 margin: 0px;
                 padding: 4px 0;
                 border-top-left-radius: 8px;
@@ -96,7 +98,7 @@ class CustomTitleBar(QWidget):
             QLabel {
                 background-color: #FFFFE1;
                 color: #000000;
-                padding: 8px 12px;
+                padding: 4px 6px;
                 border: 1px solid #D4D4D4;
                 border-radius: 3px;
                 font-size: 14px;
@@ -157,7 +159,7 @@ class CustomTitleBar(QWidget):
         # 添加标题标签，设置居左显示（Windows风格）
         self.title_label = QLabel("Praditor")
         self.title_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # 居左垂直居中
-        self.title_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #333333; padding: 5px 10px 5px 5px;")
+        self.title_label.setStyleSheet("font-size: 13px; border: none; font-weight: bold; color: #333333; padding: 5px 10px 5px 5px;")
         # 设置标题标签为可点击，鼠标指针为手形
         self.title_label.setCursor(QCursor(Qt.PointingHandCursor))
         # 将标题点击事件连接到file_menu_clicked信号
@@ -168,6 +170,7 @@ class CustomTitleBar(QWidget):
         # 添加伸缩空间，将按钮推到右侧
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        spacer.setStyleSheet("border: none;")
         layout.addWidget(spacer)
           
 
@@ -333,10 +336,7 @@ class CustomTitleBar(QWidget):
         self.update_button_style(self.minimize_btn, 'minimize', 'normal')
         self.update_button_style(self.maximize_btn, 'maximize', 'normal')
         
-        # 为窗口控制按钮添加提示框
-        self.minimize_tooltip = create_tooltip("Minimize window")
-        self.maximize_tooltip = create_tooltip("Maximize window")
-        self.close_tooltip = create_tooltip("Close window")
+        # 移除窗口控制按钮的提示框
         
         # 连接按钮信号
         self.trash_btn.clicked.connect(self.trash_signal.emit)
@@ -362,19 +362,10 @@ class CustomTitleBar(QWidget):
         # 关闭按钮
         def close_enter_event(event):
             self.update_button_style(self.close_btn, 'close', 'hover')
-            # 显示提示框
-            btn_pos = self.close_btn.mapToGlobal(QPoint(0, 0))
-            self.close_tooltip.adjustSize()
-            x = btn_pos.x() + self.close_btn.width()
-            y = btn_pos.y() + self.close_btn.height()
-            self.close_tooltip.move(x, y)
-            self.close_tooltip.show()
             event.accept()
         
         def close_leave_event(event):
             self.update_button_style(self.close_btn, 'close', 'normal')
-            # 隐藏提示框
-            self.close_tooltip.hide()
             event.accept()
         
         self.close_btn.enterEvent = close_enter_event
@@ -385,19 +376,10 @@ class CustomTitleBar(QWidget):
         # 最小化按钮
         def minimize_enter_event(event):
             self.update_button_style(self.minimize_btn, 'minimize', 'hover')
-            # 显示提示框
-            btn_pos = self.minimize_btn.mapToGlobal(QPoint(0, 0))
-            self.minimize_tooltip.adjustSize()
-            x = btn_pos.x() + self.minimize_btn.width()
-            y = btn_pos.y() + self.minimize_btn.height()
-            self.minimize_tooltip.move(x, y)
-            self.minimize_tooltip.show()
             event.accept()
         
         def minimize_leave_event(event):
             self.update_button_style(self.minimize_btn, 'minimize', 'normal')
-            # 隐藏提示框
-            self.minimize_tooltip.hide()
             event.accept()
         
         self.minimize_btn.enterEvent = minimize_enter_event
@@ -408,19 +390,10 @@ class CustomTitleBar(QWidget):
         # 最大化按钮
         def maximize_enter_event(event):
             self.update_button_style(self.maximize_btn, 'maximize', 'hover')
-            # 显示提示框
-            btn_pos = self.maximize_btn.mapToGlobal(QPoint(0, 0))
-            self.maximize_tooltip.adjustSize()
-            x = btn_pos.x() + self.maximize_btn.width()
-            y = btn_pos.y() + self.maximize_btn.height()
-            self.maximize_tooltip.move(x, y)
-            self.maximize_tooltip.show()
             event.accept()
         
         def maximize_leave_event(event):
             self.update_button_style(self.maximize_btn, 'maximize', 'normal')
-            # 隐藏提示框
-            self.maximize_tooltip.hide()
             event.accept()
         
         self.maximize_btn.enterEvent = maximize_enter_event
@@ -664,6 +637,9 @@ class MainWindow(QMainWindow):
         QToolBar {
             background-color:white;
             spacing: 0px;
+            border-width: 2px 2px 2px 0px;
+            border-style: solid;
+            border-color: #E9EDF1;
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
             margin: 0px;
@@ -674,7 +650,8 @@ class MainWindow(QMainWindow):
             width: 1px;
             margin: 8px;
         }
-        """)  # 使用对象名称设置样式
+        """)
+        # 使用对象名称设置样式
         
 
         self.addToolBar(Qt.BottomToolBarArea, toolbar)
@@ -718,7 +695,7 @@ class MainWindow(QMainWindow):
         self.save_btn = QPushButton("Save", self)
         self.save_btn.setIcon(QIcon(get_resource_path('resources/icons/save.svg')))
         self.save_btn.setStatusTip("Save params to the selected location")
-        self.save_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.save_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.save_btn.clicked.connect(self.saveParams)
         toolbar.addWidget(self.save_btn)
@@ -727,7 +704,7 @@ class MainWindow(QMainWindow):
         self.reset_svg_btn = QPushButton("Reset", self)
         self.reset_svg_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
         self.reset_svg_btn.setStatusTip("Reset to params that has been saved")
-        self.reset_svg_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.reset_svg_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.reset_svg_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.reset_svg_btn.clicked.connect(self.resetParams)
         toolbar.addWidget(self.reset_svg_btn)
@@ -737,7 +714,7 @@ class MainWindow(QMainWindow):
         self.backward_btn = QPushButton("Backward", self)
         self.backward_btn.setIcon(QIcon(get_resource_path('resources/icons/backward.svg')))
         self.backward_btn.setStatusTip("Load previous params")
-        self.backward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.backward_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.backward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.backward_btn.clicked.connect(self.loadPreviousParams)
         toolbar.addWidget(self.backward_btn)
@@ -746,7 +723,7 @@ class MainWindow(QMainWindow):
         self.forward_btn = QPushButton("Forward", self)
         self.forward_btn.setIcon(QIcon(get_resource_path('resources/icons/forward.svg')))
         self.forward_btn.setStatusTip("Load next params")
-        self.forward_btn.setStyleSheet("background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.forward_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
         self.forward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.forward_btn.clicked.connect(self.loadNextParams)
         toolbar.addWidget(self.forward_btn)
@@ -928,7 +905,7 @@ class MainWindow(QMainWindow):
         self.checkIfParamsExist()
         
         # 初始化时更新save和reset按钮状态
-        self.updateSaveResetButtonsState()
+        self.updateToolbarButtonsState()
 
 
 
@@ -1237,7 +1214,7 @@ class MainWindow(QMainWindow):
             self.file_btn.setChecked(False)
             
             # 更新save和reset按钮的可用性
-            self.updateSaveResetButtonsState()
+            self.updateToolbarButtonsState()
             self.showParams()
             # 检查参数匹配，更新下划线
             self.checkIfParamsExist()
@@ -1364,6 +1341,8 @@ class MainWindow(QMainWindow):
         # 更新当前索引为最后一个
         self.current_param_index = len(self.param_sets) - 1
         self.updateParamIndexLabel()
+        # 更新forward和backward按钮状态
+        self.updateToolbarButtonsState()
     
     def loadPreviousParams(self):
         """加载前一套参数"""
@@ -1389,12 +1368,19 @@ class MainWindow(QMainWindow):
             total_count = len(self.param_sets) if self.param_sets else 0
             self.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
     
-    def updateSaveResetButtonsState(self):
-        """根据模式按钮的选中状态更新save和reset按钮的可用性和样式
-        # 当三个模式按钮都未选中时，禁用save和reset按钮并将文字变为灰色
+    def updateToolbarButtonsState(self):
+        """根据模式按钮的选中状态和音频导入状态更新按钮的可用性和样式
+        - save和reset按钮：依赖模式按钮的选中状态
+        - forward和backward按钮：必须成功导入音频且有两套及以上的参数
         """
         # 检查是否有任何模式按钮被选中
         any_mode_selected = self.default_btn.isChecked() or self.folder_btn.isChecked() or self.file_btn.isChecked()
+        
+        # 检查音频是否已成功导入
+        audio_imported = hasattr(self, 'file_path') and self.file_path is not None and len(self.file_path) > 0
+        
+        # 检查是否有两套及以上的参数
+        has_multiple_params = len(self.param_sets) >= 2
         
         # 定义启用和禁用状态的样式
         enabled_style = "background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;"
@@ -1407,6 +1393,16 @@ class MainWindow(QMainWindow):
         # 更新reset按钮
         self.reset_svg_btn.setEnabled(any_mode_selected)
         self.reset_svg_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
+        
+        # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
+        backward_enabled = audio_imported and has_multiple_params
+        self.backward_btn.setEnabled(backward_enabled)
+        self.backward_btn.setStyleSheet(enabled_style if backward_enabled else disabled_style)
+        
+        # 更新forward按钮 - 必须音频导入成功且有两套及以上的参数
+        forward_enabled = audio_imported and has_multiple_params
+        self.forward_btn.setEnabled(forward_enabled)
+        self.forward_btn.setStyleSheet(enabled_style if forward_enabled else disabled_style)
     
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
@@ -1415,7 +1411,7 @@ class MainWindow(QMainWindow):
             if btn != clicked_btn:
                 btn.setChecked(False)
         # 更新save和reset按钮状态
-        self.updateSaveResetButtonsState()
+        self.updateToolbarButtonsState()
 
     def prevnext_audio(self, direction=None):
         """处理prev/next音频切换
@@ -1455,7 +1451,7 @@ class MainWindow(QMainWindow):
         self.file_btn.setChecked(False)
         
         # 更新save和reset按钮的可用性
-        self.updateSaveResetButtonsState()
+        self.updateToolbarButtonsState()
         self.showParams()
 
         # 检查参数匹配，更新下划线
@@ -1560,14 +1556,17 @@ class MainWindow(QMainWindow):
             shadow_color = QColor(0, 0, 0, opacity)  # 黑色阴影，透明度根据层数调整
             painter.fillPath(shadow_path, shadow_color)
         
-        # 填充主窗口背景
+        # 绘制主窗口背景
         main_rect = QRectF(self.rect())
-        path = QPainterPath()
-        path.addRoundedRect(main_rect, radius, radius)
-        painter.fillPath(path, background_color)
-        
-        # 调用父类的paintEvent确保其他部件正常绘制
-        super().paintEvent(event)
+        main_path = QPainterPath()
+        main_path.addRoundedRect(main_rect, radius, radius)
+        painter.fillPath(main_path, background_color)
+    
+    def mousePressEvent(self, event):
+        # 重写鼠标按下事件，当点击主窗口背景时，将焦点设置到主窗口
+        # 这样可以让QLineEdit失去焦点
+        self.setFocus(Qt.MouseFocusReason)
+        event.accept()
 
 
 

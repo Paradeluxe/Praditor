@@ -45,11 +45,10 @@ class SingleSlider(QWidget):
                 background-color: transparent;
                 color: black;
                 border: none;
-                padding-right: 5px;
             }
             QLineEdit:focus {
                 border: none;
-                background-color: transparent;
+                background-color: white;
             }
         """)
         self.value_edit.editingFinished.connect(self.edit_value_changed)
