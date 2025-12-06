@@ -70,7 +70,7 @@ class CustomTitleBar(QWidget):
                 border-style: solid;
                 border-color: #E9EDF1;
                 margin: 0px;
-                padding: 5px 0;
+                padding: 4px 0;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
             }
@@ -82,7 +82,7 @@ class CustomTitleBar(QWidget):
         
         # 创建布局，设置垂直居中对齐
         layout = QHBoxLayout(self)  # 直接将布局应用到当前部件
-        layout.setContentsMargins(8, 0, 8, 0)  # 左右各8px边距，上下无边距
+        layout.setContentsMargins(8, 1, 8, 1)  # 左右各8px边距，上下无边距
         layout.setSpacing(0)
         layout.setAlignment(Qt.AlignVCenter)  # 垂直居中对齐
 

@@ -65,7 +65,7 @@ class CustomTitleBar(QWidget):
         self.drag_position = QPoint()
         
         # 设置标题栏样式，确保完全覆盖默认菜单栏区域
-        # 移除固定高度，改为随内容自适应
+        # 设置最小高度以确保标题栏增高
         self.setStyleSheet("""
             CustomTitleBar {
                 background-color: #FFFFFF;
@@ -73,7 +73,8 @@ class CustomTitleBar(QWidget):
                 border-style: solid;
                 border-color: #E9EDF1;
                 margin: 0px;
-                padding: 5px 0;
+                padding: 12px 0;
+                min-height: 50px;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
             }
@@ -85,7 +86,7 @@ class CustomTitleBar(QWidget):
         
         # 创建布局，设置垂直居中对齐
         layout = QHBoxLayout(self)  # 直接将布局应用到当前部件
-        layout.setContentsMargins(8, 0, 8, 0)  # 左右各8px边距，上下无边距
+        layout.setContentsMargins(8, 8, 8, 8)  # 左右各8px边距，上下各8px边距
         layout.setSpacing(0)
         layout.setAlignment(Qt.AlignVCenter)  # 垂直居中对齐
 
