@@ -70,7 +70,7 @@ class CustomTitleBar(QWidget):
                 border-style: solid;
                 border-color: #E9EDF1;
                 margin: 0px;
-                padding: 4px 0;
+                padding: 5px 0;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
             }
@@ -645,7 +645,7 @@ class MainWindow(QMainWindow):
         QToolBar {
             background-color:white;
             spacing: 0px;
-            border-width: 2px 2px 2px 0px;
+            border-width: 0px 2px 2px 2px;
             border-style: solid;
             border-color: #E9EDF1;
             border-bottom-left-radius: 8px;

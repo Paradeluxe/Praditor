@@ -4,8 +4,8 @@ import numpy as np
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 from PySide6.QtCore import Qt, QMargins, Signal, Property
 from PySide6.QtGui import QPen, QColor
-from PySide6.QtWidgets import QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, \
-    QWidget
+from PySide6.QtWidgets import (QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, 
+    QWidget, QGridLayout)
 
 from src.utils.audio import ReadSound, get_frm_intervals_from_textgrid
 
@@ -92,6 +92,8 @@ class AudioViewer(QWidget):
         self.audio_etime = QLabel(f"{formatted_time(self.maximum)}")
         self.audio_etime.setAlignment(Qt.AlignCenter)
         self.audio_etime.setFixedWidth(75)
+        # 设置上面的label为灰色
+        self.audio_etime.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
         # --------------------------------------------
         # --------------------------------------------
 
@@ -101,12 +103,17 @@ class AudioViewer(QWidget):
         self.label_stime = QLabel(f"{formatted_time(0)}")
         self.label_stime.setAlignment(Qt.AlignCenter)
         self.label_stime.setFixedWidth(75)
+        # 设置下面的label为黑色，恢复原来的颜色
+        self.label_stime.setStyleSheet("color: black; font-weight: bold;")
+        
         self.label_etime = QLabel(f"{formatted_time(self.interval_ms)}")
         self.label_etime.setFixedWidth(75)
         self.label_etime.setAlignment(Qt.AlignCenter)
+        # 设置下面的label为黑色，恢复原来的颜色
+        self.label_etime.setStyleSheet("color: black; font-weight: bold;")
 
         self._chart = QChart()
-        self._chart.setBackgroundRoundness(8)
+        # self._chart.setBackgroundRoundness(8)
         # self._chart.setBorderColor(QColor('red'))
         self._chart.layout().setContentsMargins(0, 0, 0, 0)
         self._chart.setMargins(QMargins(0, 0, 0, 0))
@@ -125,6 +132,7 @@ class AudioViewer(QWidget):
         self.chart_view = QChartView(self._chart)
         # self.chart_view.setRenderHint(QPainter.LosslessImageRendering)
         # self.chart_view.setRenderHint(QPainter.TextAntialiasing)
+        self.chart_view.setStyleSheet("background: transparent; border: none;")
         
         # 为图表添加拖动功能
         self.chart_view.setMouseTracking(True)  # 启用鼠标跟踪
@@ -140,40 +148,56 @@ class AudioViewer(QWidget):
         # --------------------------------------------
 
         self.layout = QVBoxLayout()
-        layout = QHBoxLayout()
-        # 只添加结束时间label，删除开始时间label
-        layout.addWidget(self.slider_timerange)
-        layout.addWidget(self.audio_etime)
-        layout.setSpacing(0)
-
-        self.layout.addLayout(layout)
-
-        # 图表区域布局（只包含图表，不包含两侧时间标签）
-        chart_layout = QHBoxLayout()
-        chart_layout.addWidget(self.chart_view)
-        chart_layout.setSpacing(0)
-        self.layout.addLayout(chart_layout)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         
-        # 图表底部时间标签布局
-        time_label_layout = QHBoxLayout()
-        time_label_layout.addWidget(self.label_stime)  # 左下角
-        time_label_layout.addStretch()  # 中间拉伸空间
-        time_label_layout.addWidget(self.label_etime)  # 右下角
-        time_label_layout.setSpacing(0)
-        self.layout.addLayout(time_label_layout)
+        # 创建slider容器，使用QGridLayout实现label与slider重叠
+        slider_container = QWidget()
+        slider_layout = QGridLayout(slider_container)
+        slider_layout.setContentsMargins(0, 0, 0, 0)
+        slider_layout.setSpacing(0)
+        
+        # 添加slider到网格布局，占据整个宽度
+        slider_layout.addWidget(self.slider_timerange, 0, 0, 1, 3)
+        
+        self.layout.addWidget(slider_container)
 
-        self.setStyleSheet("""
-            QLabel {
-
-                color: black;
-                font-weight: bold;
-            }
-
-
-        """)
+        # 创建左上角的0:00.000标签
+        self.label_zero = QLabel(f"0:00.000")
+        self.label_zero.setFixedWidth(75)
+        self.label_zero.setAlignment(Qt.AlignCenter)
+        self.label_zero.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
+        
+        # 创建图表容器，使用QGridLayout实现图表和时间标签的重叠布局
+        chart_container = QWidget()
+        chart_container.setStyleSheet("background: transparent;")
+        chart_layout = QGridLayout(chart_container)
+        chart_layout.setContentsMargins(0, 15, 0, 20)  # 增加内部上方padding 15px，下方20px
+        chart_layout.setSpacing(0)
+        
+        # 添加图表到网格布局，占据整个宽度，高度设为1行
+        chart_layout.addWidget(self.chart_view, 0, 0, 1, 3)
+        
+        # 添加左上角的0:00.000标签
+        chart_layout.addWidget(self.label_zero, 0, 0, Qt.AlignLeft | Qt.AlignTop)
+        
+        # 添加右上角的总时长标签
+        chart_layout.addWidget(self.audio_etime, 0, 2, Qt.AlignRight | Qt.AlignTop)
+        
+        # 将时间标签添加到网格布局，与图表重叠，定位在下方padding区域
+        chart_layout.addWidget(self.label_stime, 0, 0, Qt.AlignLeft | Qt.AlignBottom)
+        chart_layout.addWidget(self.label_etime, 0, 2, Qt.AlignRight | Qt.AlignBottom)
+        
+        # 设置标签样式，确保它们清晰可见
+        self.label_stime.setStyleSheet("color: black; font-weight: bold; background: transparent;")
+        self.label_etime.setStyleSheet("color: black; font-weight: bold; background: transparent;")
+        self.label_zero.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
+        self.audio_etime.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
+        
+        # 将图表容器添加到主布局
+        self.layout.addWidget(chart_container)
+        
         self.setLayout(self.layout)
-        self.setContentsMargins(0, 0, 0, 10)
-
+        
         # 第二次设置初始值
         self.interval_ms = 100 * 128
         self.resolution = self.time_unit * 10  # 100 ms 的长度作为所有samplerate的分辨率
