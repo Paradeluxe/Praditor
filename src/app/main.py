@@ -480,8 +480,16 @@ class MainWindow(QMainWindow):
         
         # load window icon
         # self.setWindowIcon(QIcon(QPixmap(resource_path('icon.png'))))
-        self.param_sets = []
-        self.current_param_index = -1  # 初始化当前参数索引
+        # 将param_sets改为字典，分别存储默认模式和VAD模式的参数
+        self.param_sets = {
+            "default": [],  # 默认模式参数集
+            "vad": []      # VAD模式参数集
+        }
+        # 分别为两种模式维护当前索引
+        self.current_param_index = {
+            "default": -1,  # 默认模式当前索引
+            "vad": -1       # VAD模式当前索引
+        }
         self.audio_sink = None
         self.buffer = None
         self.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.ico')))
@@ -741,6 +749,18 @@ class MainWindow(QMainWindow):
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         toolbar.addWidget(spacer)
         
+        # 添加VAD切换按钮
+        self.vad_btn = QPushButton("VAD", self)
+        self.vad_btn.setCheckable(True)
+        self.vad_btn.setChecked(False)  # 初始状态：未选中
+        self.vad_btn.setStyleSheet(qss_button_small_black)
+        self.vad_btn.setFixedHeight(25)  # 固定高度，宽度自适应
+        self.vad_btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)  # 宽度自适应，高度固定
+        self.vad_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 连接按钮点击事件
+        self.vad_btn.clicked.connect(self.onVadButtonClicked)
+        toolbar.addWidget(self.vad_btn)
+        
         # 合并参数图标和索引标签为一个按钮
         self.params_btn = QPushButton(self)
         self.params_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
@@ -859,6 +879,12 @@ class MainWindow(QMainWindow):
         self.params_btn.enterEvent = params_enter
         self.params_btn.leaveEvent = params_leave
         
+        # 为VAD按钮添加提示框
+        self.vad_tooltip = create_toolbar_tooltip("Toggle VAD mode")
+        vad_enter, vad_leave = create_toolbar_hover_handlers(self.vad_btn, self.vad_tooltip)
+        self.vad_btn.enterEvent = vad_enter
+        self.vad_btn.leaveEvent = vad_leave
+        
         # ---------------------
         # TOOLBAR
 
@@ -914,6 +940,143 @@ class MainWindow(QMainWindow):
         
         # 初始化时更新save和reset按钮状态
         self.updateToolbarButtonsState()
+        
+    def onVadButtonClicked(self):
+        """处理VAD按钮点击事件"""
+        self.toggleVadMode(self.vad_btn.isChecked())
+    
+    def toggleVadMode(self, is_vad_enabled):
+        """切换VAD模式，调整UI布局"""
+        if is_vad_enabled:
+            # 设置Onset和Offset按钮为选中状态且不可取消选中
+            self.title_bar.onset_btn.setChecked(False)
+            self.title_bar.offset_btn.setChecked(False)
+            self.title_bar.onset_btn.setEnabled(False)
+            self.title_bar.offset_btn.setEnabled(False)
+            # 确保按钮可见
+            self.title_bar.onset_btn.setVisible(True)
+            self.title_bar.offset_btn.setVisible(True)
+            
+            # 隐藏所有Offset sliders
+            offset_sliders = [
+                self.MySliders.amp_slider_offset,
+                self.MySliders.cutoff0_slider_offset,
+                self.MySliders.cutoff1_slider_offset,
+                self.MySliders.numValid_slider_offset,
+                self.MySliders.win_size_slider_offset,
+                self.MySliders.ratio_slider_offset,
+                self.MySliders.penalty_slider_offset,
+                self.MySliders.ref_len_slider_offset,
+                self.MySliders.eps_ratio_slider_offset
+            ]
+            for slider in offset_sliders:
+                slider.setVisible(False)
+            
+            # 隐藏不需要的Onset sliders
+            onset_sliders_to_hide = [
+                self.MySliders.penalty_slider_onset,
+                self.MySliders.ref_len_slider_onset,
+                self.MySliders.win_size_slider_onset,
+                self.MySliders.ratio_slider_onset
+            ]
+            for slider in onset_sliders_to_hide:
+                slider.setVisible(False)
+            
+            # 隐藏对应的名称标签
+            labels_to_hide = [
+                self.MySliders.name_labels["Penalty"],
+                self.MySliders.name_labels["RefLen"],
+                self.MySliders.name_labels["KernelFrm%"],
+                self.MySliders.name_labels["KernelSize"]
+            ]
+            for label in labels_to_hide:
+                label.setVisible(False)
+            
+            # 将Onset滑块颜色改为灰色
+            gray_color = "#999999"
+            onset_sliders_to_keep = [
+                self.MySliders.amp_slider_onset,
+                self.MySliders.cutoff0_slider_onset,
+                self.MySliders.cutoff1_slider_onset,
+                self.MySliders.numValid_slider_onset,
+                self.MySliders.eps_ratio_slider_onset
+            ]
+            for slider in onset_sliders_to_keep:
+                slider.param_slider.setStyleSheet(qss_slider_with_color(gray_color))
+            
+            # 更新布局，让Onset sliders扩展到原来Offset sliders的位置
+            layout = self.MySliders.layout()
+            # 设置Onset sliders列占满所有空间
+            layout.setColumnStretch(1, 1)  # Onset列占满剩余空间
+            layout.setColumnStretch(2, 0)  # 移除Offset列的拉伸
+            layout.setColumnMinimumWidth(2, 0)  # 移除Offset列的最小宽度限制
+        else:
+            # 恢复Onset和Offset按钮的可用状态
+            self.title_bar.onset_btn.setEnabled(True)
+            self.title_bar.offset_btn.setEnabled(True)
+            # 确保按钮可见
+            self.title_bar.onset_btn.setVisible(True)
+            self.title_bar.offset_btn.setVisible(True)
+            
+            # 显示所有Offset sliders
+            offset_sliders = [
+                self.MySliders.amp_slider_offset,
+                self.MySliders.cutoff0_slider_offset,
+                self.MySliders.cutoff1_slider_offset,
+                self.MySliders.numValid_slider_offset,
+                self.MySliders.win_size_slider_offset,
+                self.MySliders.ratio_slider_offset,
+                self.MySliders.penalty_slider_offset,
+                self.MySliders.ref_len_slider_offset,
+                self.MySliders.eps_ratio_slider_offset
+            ]
+            for slider in offset_sliders:
+                slider.setVisible(True)
+            
+            # 显示所有Onset sliders
+            onset_sliders_to_show = [
+                self.MySliders.penalty_slider_onset,
+                self.MySliders.ref_len_slider_onset,
+                self.MySliders.win_size_slider_onset,
+                self.MySliders.ratio_slider_onset
+            ]
+            for slider in onset_sliders_to_show:
+                slider.setVisible(True)
+            
+            # 显示对应的名称标签
+            labels_to_show = [
+                self.MySliders.name_labels["Penalty"],
+                self.MySliders.name_labels["RefLen"],
+                self.MySliders.name_labels["KernelFrm%"],
+                self.MySliders.name_labels["KernelSize"]
+            ]
+            for label in labels_to_show:
+                label.setVisible(True)
+            
+            # 恢复Onset滑块颜色
+            onset_color = "#1991D3"
+            onset_sliders = [
+                self.MySliders.amp_slider_onset,
+                self.MySliders.cutoff0_slider_onset,
+                self.MySliders.cutoff1_slider_onset,
+                self.MySliders.numValid_slider_onset,
+                self.MySliders.win_size_slider_onset,
+                self.MySliders.ratio_slider_onset,
+                self.MySliders.penalty_slider_onset,
+                self.MySliders.ref_len_slider_onset,
+                self.MySliders.eps_ratio_slider_onset
+            ]
+            for slider in onset_sliders:
+                slider.param_slider.setStyleSheet(qss_slider_with_color(onset_color))
+            
+            # 恢复原始布局
+            layout = self.MySliders.layout()
+            layout.setColumnStretch(1, 1)  # 恢复Onset列拉伸因子
+            layout.setColumnStretch(2, 1)  # 恢复Offset列拉伸因子
+            layout.setColumnMinimumWidth(2, 200)  # 恢复Offset列最小宽度限制
+        
+        # 切换模式后更新参数索引标签，确保显示当前模式的参数
+        self.updateParamIndexLabel()
 
 
 
@@ -1037,19 +1200,23 @@ class MainWindow(QMainWindow):
         # 优先级：File > Folder > Default
         txt_file_path = None
         
+        # 检查是否处于VAD模式
+        is_vad_mode = self.vad_btn.isChecked()
+        file_suffix = "_vad" if is_vad_mode else ""
+        
         if self.file_btn.isChecked():
             # File模式：从file同名的txt文件读取
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+            txt_file_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
         elif self.folder_btn.isChecked():
             # Folder模式：从当前文件夹的同名txt文件读取
             folder_path = os.path.dirname(self.file_path)
             folder_name = os.path.basename(folder_path)
-            txt_file_path = os.path.join(folder_path, f"params.txt")
+            txt_file_path = os.path.join(folder_path, f"params{file_suffix}.txt")
         else:  # Default模式
             # 从应用程序所在目录读取
-            txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
+            txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"params{file_suffix}.txt")
             if not os.path.exists(txt_file_path):
-                txt_file_path = get_resource_path("src/app/params.txt")
+                txt_file_path = get_resource_path(f"src/app/params{file_suffix}.txt")
 
         try:
             with open(txt_file_path, 'r') as txt_file:
@@ -1077,16 +1244,23 @@ class MainWindow(QMainWindow):
         
         # 保存参数后检查是否与任何模式匹配，更新下划线
         self.checkIfParamsExist()
+        
+        # 更新工具栏按钮状态，确保Reset按钮在参数文件保存后显示为可用
+        self.updateToolbarButtonsState()
 
 
     def checkIfParamsExist(self):
         current_params = str(self.MySliders.getParams())
         current_params_dict = self.MySliders.getParams()
         
+        # 检查是否处于VAD模式
+        is_vad_mode = self.vad_btn.isChecked()
+        file_suffix = "_vad" if is_vad_mode else ""
+        
         # 检查Default模式
-        default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
+        default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"params{file_suffix}.txt")
         if not os.path.exists(default_params_path):
-            default_params_path = get_resource_path("src/app/params.txt")
+            default_params_path = get_resource_path(f"src/app/params{file_suffix}.txt")
         
         default_params_match = False
         if os.path.exists(default_params_path):
@@ -1107,7 +1281,7 @@ class MainWindow(QMainWindow):
         folder_params_match = False
         if self.file_path:
             folder_path = os.path.dirname(self.file_path)
-            folder_params_path = os.path.join(folder_path, "params.txt")
+            folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")
             
             if os.path.exists(folder_params_path):
                 folder_params_exists = True
@@ -1127,7 +1301,7 @@ class MainWindow(QMainWindow):
         file_params_exists = False
         file_params_match = False
         if self.file_path:
-            file_params_path = os.path.splitext(self.file_path)[0] + ".txt"
+            file_params_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
             
             if os.path.exists(file_params_path):
                 file_params_exists = True
@@ -1148,8 +1322,12 @@ class MainWindow(QMainWindow):
         if self.file_path is None:
             return
         
+        # 检查是否处于VAD模式
+        is_vad_mode = self.vad_btn.isChecked()
+        file_suffix = "_vad" if is_vad_mode else ""
+        
         # 默认使用文件同名参数
-        txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+        txt_file_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
         params_to_use = None
         
         # 检查文件同名参数是否存在
@@ -1159,16 +1337,16 @@ class MainWindow(QMainWindow):
         else:
             # 检查folder模式的params.txt是否存在
             folder_path = os.path.dirname(self.file_path)
-            folder_params_path = os.path.join(folder_path, "params.txt")
+            folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")
             
             if os.path.exists(folder_params_path):
                 with open(folder_params_path, "r") as txt_file:
                     params_to_use = txt_file.read()
             else:
                 # 最后使用默认的params.txt
-                default_params_path = os.path.join(os.getcwd(), "params.txt")
+                default_params_path = os.path.join(os.getcwd(), f"params{file_suffix}.txt")
                 if not os.path.exists(default_params_path):
-                    default_params_path = get_resource_path("src/app/params.txt")
+                    default_params_path = get_resource_path(f"src/app/params{file_suffix}.txt")
                     
                 with open(default_params_path, "r") as default_txt_file:
                     params_to_use = default_txt_file.read()
@@ -1180,11 +1358,12 @@ class MainWindow(QMainWindow):
 
 
     def lastParams(self):
-        print(len(self.param_sets))
-        if len(self.param_sets) == 2:
-
-            self.MySliders.resetParams(self.param_sets[-2])
-            self.param_sets.reverse()
+        # 获取当前模式（默认或VAD）
+        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        print(len(self.param_sets[current_mode]))
+        if len(self.param_sets[current_mode]) == 2:
+            self.MySliders.resetParams(self.param_sets[current_mode][-2])
+            self.param_sets[current_mode].reverse()
 
 
 
@@ -1232,7 +1411,9 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
 
             self.showXsetNum()
-            self.param_sets.append(self.MySliders.getParams())
+            # 获取当前模式（默认或VAD）
+            current_mode = "vad" if self.vad_btn.isChecked() else "default"
+            self.param_sets[current_mode].append(self.MySliders.getParams())
 
         else:
             print("Empty folder")
@@ -1335,50 +1516,75 @@ class MainWindow(QMainWindow):
     def update_current_param(self):
         current_params = self.MySliders.getParams()
         
+        # 获取当前模式（默认或VAD）
+        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        
         # 如果当前参数已经在列表中，移除它
-        if current_params in self.param_sets:
-            self.param_sets.remove(current_params)
+        if current_params in self.param_sets[current_mode]:
+            self.param_sets[current_mode].remove(current_params)
         
         # 添加到列表末尾
-        self.param_sets.append(current_params)
+        self.param_sets[current_mode].append(current_params)
         
         # 限制最多保存10套参数
-        if len(self.param_sets) > 10:
-            self.param_sets = self.param_sets[-10:]
+        if len(self.param_sets[current_mode]) > 10:
+            self.param_sets[current_mode] = self.param_sets[current_mode][-10:]
         
         # 更新当前索引为最后一个
-        self.current_param_index = len(self.param_sets) - 1
+        self.current_param_index[current_mode] = len(self.param_sets[current_mode]) - 1
         self.updateParamIndexLabel()
         # 更新forward和backward按钮状态
         self.updateToolbarButtonsState()
     
     def loadPreviousParams(self):
         """加载前一套参数"""
-        if self.param_sets and self.current_param_index > 0:
-            self.current_param_index -= 1
-            self.MySliders.resetParams(self.param_sets[self.current_param_index])
+        # 获取当前模式（默认或VAD）
+        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        if self.param_sets[current_mode] and self.current_param_index[current_mode] > 0:
+            self.current_param_index[current_mode] -= 1
+            self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
             self.updateParamIndexLabel()
-            print(f"Loaded previous params (index: {self.current_param_index})")
+            print(f"Loaded previous params (index: {self.current_param_index[current_mode]})")
     
     def loadNextParams(self):
         """加载后一套参数"""
-        if self.param_sets and self.current_param_index < len(self.param_sets) - 1:
-            self.current_param_index += 1
-            self.MySliders.resetParams(self.param_sets[self.current_param_index])
+        # 获取当前模式（默认或VAD）
+        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        if self.param_sets[current_mode] and self.current_param_index[current_mode] < len(self.param_sets[current_mode]) - 1:
+            self.current_param_index[current_mode] += 1
+            self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
             self.updateParamIndexLabel()
-            print(f"Loaded next params (index: {self.current_param_index})")
+            print(f"Loaded next params (index: {self.current_param_index[current_mode]})")
     
     def updateParamIndexLabel(self):
         """更新参数索引标签"""
         if hasattr(self, 'params_btn'):
-            # 当前索引从1开始显示，最多10套
-            display_index = self.current_param_index + 1 if self.param_sets else 0
-            total_count = len(self.param_sets) if self.param_sets else 0
+            # 获取当前模式（默认或VAD）
+            current_mode = "vad" if self.vad_btn.isChecked() else "default"
+            # 获取当前模式的参数集
+            param_set = self.param_sets[current_mode]
+            
+            if param_set:
+                # 确保当前索引有效
+                if self.current_param_index[current_mode] < 0:
+                    self.current_param_index[current_mode] = 0
+                if self.current_param_index[current_mode] >= len(param_set):
+                    self.current_param_index[current_mode] = len(param_set) - 1
+                
+                # 当前索引从1开始显示，最多10套
+                display_index = self.current_param_index[current_mode] + 1
+                total_count = len(param_set)
+            else:
+                display_index = 0
+                total_count = 0
+                
+            # 根据当前模式显示该模式的参数索引和总数
             self.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
     
     def updateToolbarButtonsState(self):
         """根据模式按钮的选中状态和音频导入状态更新按钮的可用性和样式
-        - save和reset按钮：依赖模式按钮的选中状态
+        - save按钮：依赖模式按钮的选中状态
+        - reset按钮：必须选中的模式存在对应的参数文件
         - forward和backward按钮：必须成功导入音频且有两套及以上的参数
         """
         # 检查是否有任何模式按钮被选中
@@ -1388,7 +1594,31 @@ class MainWindow(QMainWindow):
         audio_imported = hasattr(self, 'file_path') and self.file_path is not None and len(self.file_path) > 0
         
         # 检查是否有两套及以上的参数
-        has_multiple_params = len(self.param_sets) >= 2
+        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        has_multiple_params = len(self.param_sets[current_mode]) >= 2
+        
+        # 检查当前选中的模式是否存在对应的参数文件
+        reset_enabled = False
+        if any_mode_selected:
+            # 检查是否处于VAD模式
+            is_vad_mode = self.vad_btn.isChecked()
+            file_suffix = "_vad" if is_vad_mode else ""
+            
+            if self.default_btn.isChecked():
+                # Default模式：检查应用程序所在目录的params文件
+                default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"params{file_suffix}.txt")
+                if not os.path.exists(default_params_path):
+                    default_params_path = get_resource_path(f"src/app/params{file_suffix}.txt")
+                reset_enabled = os.path.exists(default_params_path)
+            elif self.folder_btn.isChecked() and audio_imported:
+                # Folder模式：检查当前文件夹的params文件
+                folder_path = os.path.dirname(self.file_path)
+                folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")
+                reset_enabled = os.path.exists(folder_params_path)
+            elif self.file_btn.isChecked() and audio_imported:
+                # File模式：检查文件同名的params文件
+                file_params_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
+                reset_enabled = os.path.exists(file_params_path)
         
         # 定义启用和禁用状态的样式
         enabled_style = "background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;"
@@ -1399,8 +1629,8 @@ class MainWindow(QMainWindow):
         self.save_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
         
         # 更新reset按钮
-        self.reset_svg_btn.setEnabled(any_mode_selected)
-        self.reset_svg_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
+        self.reset_svg_btn.setEnabled(reset_enabled)
+        self.reset_svg_btn.setStyleSheet(enabled_style if reset_enabled else disabled_style)
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
@@ -1479,29 +1709,42 @@ class MainWindow(QMainWindow):
             pass
     
     def saveParamsWithFolderName(self):
-        """保存参数到当前文件夹，文件名为params.txt"""
+        """保存参数到当前文件夹，文件名为params.txt或params_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
+            # 检查是否处于VAD模式
+            is_vad_mode = self.vad_btn.isChecked()
+            file_suffix = "_vad" if is_vad_mode else ""
+            
             folder_path = os.path.dirname(self.file_path)
-            txt_file_path = os.path.join(folder_path, "params.txt")
+            txt_file_path = os.path.join(folder_path, f"params{file_suffix}.txt")
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"Params saved to folder as params.txt: {txt_file_path}")
+            print(f"Params saved to folder as params{file_suffix}.txt: {txt_file_path}")
     
     def saveParamsToExeLocation(self):
-        """保存参数到exe所在位置"""
+        """保存参数到exe所在位置，文件名为params.txt或params_vad.txt（VAD模式下）"""
         # 获取当前脚本所在目录（相当于exe所在位置）
         exe_dir = os.path.dirname(os.path.abspath(__file__))
-        txt_file_path = os.path.join(exe_dir, "params.txt")
+        
+        # 检查是否处于VAD模式
+        is_vad_mode = self.vad_btn.isChecked()
+        file_suffix = "_vad" if is_vad_mode else ""
+        
+        txt_file_path = os.path.join(exe_dir, f"params{file_suffix}.txt")
         
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
         print(f"Params saved to exe location: {txt_file_path}")
     
     def saveParamsWithFileName(self):
-        """保存参数到file同名"""
+        """保存参数到file同名，文件名后缀为.txt或_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
-            txt_file_path = os.path.splitext(self.file_path)[0] + ".txt"
+            # 检查是否处于VAD模式
+            is_vad_mode = self.vad_btn.isChecked()
+            file_suffix = "_vad" if is_vad_mode else ""
+            
+            txt_file_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")

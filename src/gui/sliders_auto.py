@@ -49,6 +49,7 @@ class MySliders(QMainWindow):
             label.setFixedWidth(90)
             label.setFixedHeight(25)
             label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+            # 默认样式：黑色文字
             label.setStyleSheet("""
                 QLabel {
                     font-size: 13px;
@@ -57,6 +58,19 @@ class MySliders(QMainWindow):
                     color: #272727;
                 }
             """)
+        
+        # 将特定标签设置为灰色文字
+        gray_labels = ["EPS%", "HighPass", "LowPass"]
+        for label_name in gray_labels:
+            if label_name in self.name_labels:
+                self.name_labels[label_name].setStyleSheet("""
+                    QLabel {
+                        font-size: 13px;
+                        background-color: RGB(35, 35, 35);
+                        font-weight: bold;
+                        color: #888888;
+                    }
+                """)
 
         # 添加标签到第一列，滑块到第二列
         layout.addWidget(self.name_labels["Threshold"], 0, 0)
@@ -167,25 +181,49 @@ class MySliders(QMainWindow):
 
 
     def resetParams(self, params):
-        self.amp_slider_onset.param_slider.setValue(round(eval(params["onset"]["amp"]) / self.amp_slider_onset.scale))
-        self.cutoff0_slider_onset.param_slider.setValue(round(eval(params["onset"]["cutoff0"]) / self.cutoff0_slider_onset.scale))
-        self.cutoff1_slider_onset.param_slider.setValue(round(eval(params["onset"]["cutoff1"]) / self.cutoff1_slider_onset.scale))
-        self.numValid_slider_onset.param_slider.setValue(round(eval(params["onset"]["numValid"]) / self.numValid_slider_onset.scale))
-        # self.win_size_slider_onset.param_slider.setValue(round(eval(params["onset"]["win_size"]) / self.win_size_slider_onset.scale))
-        # self.ratio_slider_onset.param_slider.setValue(round(eval(params["onset"]["ratio"]) / self.ratio_slider_onset.scale))
-        # self.penalty_slider_onset.param_slider.setValue(round(eval(params["onset"]["penalty"]) / self.penalty_slider_onset.scale))
-        # self.ref_len_slider_onset.param_slider.setValue(round(eval(params["onset"]["ref_len"]) / self.ref_len_slider_onset.scale))
-        self.eps_ratio_slider_onset.param_slider.setValue(round(eval(params["onset"]["eps_ratio"]) / self.eps_ratio_slider_onset.scale))
+        # 重置Onset参数，只处理params字典中实际存在的键
+        onset_params = params.get("onset", {})
+        
+        if "amp" in onset_params:
+            self.amp_slider_onset.param_slider.setValue(round(eval(onset_params["amp"]) / self.amp_slider_onset.scale))
+        if "cutoff0" in onset_params:
+            self.cutoff0_slider_onset.param_slider.setValue(round(eval(onset_params["cutoff0"]) / self.cutoff0_slider_onset.scale))
+        if "cutoff1" in onset_params:
+            self.cutoff1_slider_onset.param_slider.setValue(round(eval(onset_params["cutoff1"]) / self.cutoff1_slider_onset.scale))
+        if "numValid" in onset_params:
+            self.numValid_slider_onset.param_slider.setValue(round(eval(onset_params["numValid"]) / self.numValid_slider_onset.scale))
+        # if "win_size" in onset_params:
+        #     self.win_size_slider_onset.param_slider.setValue(round(eval(onset_params["win_size"]) / self.win_size_slider_onset.scale))
+        # if "ratio" in onset_params:
+        #     self.ratio_slider_onset.param_slider.setValue(round(eval(onset_params["ratio"]) / self.ratio_slider_onset.scale))
+        # if "penalty" in onset_params:
+        #     self.penalty_slider_onset.param_slider.setValue(round(eval(onset_params["penalty"]) / self.penalty_slider_onset.scale))
+        # if "ref_len" in onset_params:
+        #     self.ref_len_slider_onset.param_slider.setValue(round(eval(onset_params["ref_len"]) / self.ref_len_slider_onset.scale))
+        if "eps_ratio" in onset_params:
+            self.eps_ratio_slider_onset.param_slider.setValue(round(eval(onset_params["eps_ratio"]) / self.eps_ratio_slider_onset.scale))
 
-        # self.amp_slider_offset.param_slider.setValue(round(eval(params["offset"]["amp"]) / self.amp_slider_offset.scale))
-        # self.cutoff0_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff0"]) / self.cutoff0_slider_offset.scale))
-        # self.cutoff1_slider_offset.param_slider.setValue(round(eval(params["offset"]["cutoff1"]) / self.cutoff1_slider_offset.scale))
-        # self.numValid_slider_offset.param_slider.setValue(round(eval(params["offset"]["numValid"]) / self.numValid_slider_offset.scale))
-        # # self.win_size_slider_offset.param_slider.setValue(round(eval(params["offset"]["win_size"]) / self.win_size_slider_offset.scale))
-        # # self.ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["ratio"]) / self.ratio_slider_offset.scale))
-        # # self.penalty_slider_offset.param_slider.setValue(round(eval(params["offset"]["penalty"]) / self.penalty_slider_offset.scale))
-        # # self.ref_len_slider_offset.param_slider.setValue(round(eval(params["offset"]["ref_len"]) / self.ref_len_slider_offset.scale))
-        # self.eps_ratio_slider_offset.param_slider.setValue(round(eval(params["offset"]["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
+        # 重置Offset参数，只处理params字典中实际存在的键
+        offset_params = params.get("offset", {})
+        
+        # if "amp" in offset_params:
+        #     self.amp_slider_offset.param_slider.setValue(round(eval(offset_params["amp"]) / self.amp_slider_offset.scale))
+        # if "cutoff0" in offset_params:
+        #     self.cutoff0_slider_offset.param_slider.setValue(round(eval(offset_params["cutoff0"]) / self.cutoff0_slider_offset.scale))
+        # if "cutoff1" in offset_params:
+        #     self.cutoff1_slider_offset.param_slider.setValue(round(eval(offset_params["cutoff1"]) / self.cutoff1_slider_offset.scale))
+        # if "numValid" in offset_params:
+        #     self.numValid_slider_offset.param_slider.setValue(round(eval(offset_params["numValid"]) / self.numValid_slider_offset.scale))
+        # # if "win_size" in offset_params:
+        # #     self.win_size_slider_offset.param_slider.setValue(round(eval(offset_params["win_size"]) / self.win_size_slider_offset.scale))
+        # # if "ratio" in offset_params:
+        # #     self.ratio_slider_offset.param_slider.setValue(round(eval(offset_params["ratio"]) / self.ratio_slider_offset.scale))
+        # # if "penalty" in offset_params:
+        # #     self.penalty_slider_offset.param_slider.setValue(round(eval(offset_params["penalty"]) / self.penalty_slider_offset.scale))
+        # # if "ref_len" in offset_params:
+        # #     self.ref_len_slider_offset.param_slider.setValue(round(eval(offset_params["ref_len"]) / self.ref_len_slider_offset.scale))
+        # if "eps_ratio" in offset_params:
+        #     self.eps_ratio_slider_offset.param_slider.setValue(round(eval(offset_params["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
 
         
         

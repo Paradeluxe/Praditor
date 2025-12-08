@@ -144,4 +144,37 @@ qss_save_location_button = """
         } 
 """
 
+qss_button_small_black = """
+        QPushButton {
+            background: white; 
+            color: #000000;
+            font-weight: bold;
+            border: 2px solid #000000;
+            border-radius: 5px;
+            margin: 0px;
+            padding: 4px 8px; /* 减小内边距以适应较小宽度 */
+            font-size: 13px;
+        }
+
+        QPushButton:pressed {
+            background: #666666;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #000000;
+            border-radius: 5px;
+            margin: 0px;
+            padding: 4px 8px;
+        }
+        
+        QPushButton:checked {
+            background-color: #000000; 
+            color: white; 
+            border: 2px solid #000000;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 0px;
+            padding: 4px 8px;
+        }
+"""
+
 
