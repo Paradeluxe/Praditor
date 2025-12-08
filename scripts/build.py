@@ -26,7 +26,6 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # 入口文件路径
 MAIN_ENTRY_FILE = os.path.join(ROOT_DIR, 'src', 'app', 'main.py')
-AUTO_ENTRY_FILE = os.path.join(ROOT_DIR, 'src', 'app', 'auto_main.py')
 # 默认入口文件
 ENTRY_FILE = MAIN_ENTRY_FILE
 
@@ -47,7 +46,6 @@ parser = argparse.ArgumentParser(description='Build Praditor with PyInstaller')
 parser.add_argument('--onefile', action='store_true', help='Build as a single executable file')
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
 parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
-parser.add_argument('--vad', action='store_true', help='Build the auto-VAD version instead of the main version')
 parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
 parser.add_argument('--console', action='store_true', help='Build with console output instead of windowed mode')
 args = parser.parse_args()
@@ -120,13 +118,8 @@ else:
         print(f"Auto-incrementing version from GitHub latest {latest_version} to {APP_VERSION}")
 
 
-# 根据参数选择入口文件
-if args.vad:
-    ENTRY_FILE = AUTO_ENTRY_FILE
-    APP_NAME = f'Praditor_VAD_{APP_VERSION}'
-else:
-    ENTRY_FILE = MAIN_ENTRY_FILE
-    APP_NAME = f'Praditor_{APP_VERSION}'
+# 设置应用名称
+APP_NAME = f'Praditor_{APP_VERSION}'
 
 
 
