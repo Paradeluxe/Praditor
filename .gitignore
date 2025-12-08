@@ -24,3 +24,5 @@
 **/__pycache__
 
 .trae
+
+release*.md

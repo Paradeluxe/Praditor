@@ -1360,17 +1360,11 @@ class MainWindow(QMainWindow):
     def lastParams(self):
         # 获取当前模式（默认或VAD）
         current_mode = "vad" if self.vad_btn.isChecked() else "default"
-        print(len(self.param_sets[current_mode]))
+
         if len(self.param_sets[current_mode]) == 2:
             self.MySliders.resetParams(self.param_sets[current_mode][-2])
             self.param_sets[current_mode].reverse()
 
-
-
-    # def showParamInstruction(self):
-    #     # QMessageBox.information(None, "标题", "这是一个信息消息框。")
-    #     self.popup = Example()
-    #     self.popup.show()
 
     def openFileDialog(self):
 
@@ -1413,7 +1407,7 @@ class MainWindow(QMainWindow):
             self.showXsetNum()
             # 获取当前模式（默认或VAD）
             current_mode = "vad" if self.vad_btn.isChecked() else "default"
-            self.param_sets[current_mode].append(self.MySliders.getParams())
+            # self.param_sets[current_mode].append(self.MySliders.getParams())
 
         else:
             print("Empty folder")
@@ -1558,6 +1552,7 @@ class MainWindow(QMainWindow):
     
     def updateParamIndexLabel(self):
         """更新参数索引标签"""
+        print(self.param_sets)
         if hasattr(self, 'params_btn'):
             # 获取当前模式（默认或VAD）
             current_mode = "vad" if self.vad_btn.isChecked() else "default"
