@@ -45,7 +45,7 @@ RESOURCES = [
 parser = argparse.ArgumentParser(description='Build Praditor with PyInstaller')
 parser.add_argument('--onefile', nargs='?', const=True, default=True, type=bool, help='Build as a single executable file')
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
-parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
+parser.add_argument('--clean', nargs='?', const=True, default=True, type=bool, help='Clean previous builds before building')
 parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
 parser.add_argument('--new', action='store_true', help='Increment the latest version number to create a new version')
 parser.add_argument('--console', action='store_true', help='Build with console output instead of windowed mode')
