@@ -43,12 +43,13 @@ RESOURCES = [
 
 # 命令行参数解析
 parser = argparse.ArgumentParser(description='Build Praditor with PyInstaller')
-parser.add_argument('--onefile', nargs='?', const=True, default=True, type=bool, help='Build as a single executable file')
+parser.add_argument('--onefile', action='store_true', help='Build as a single executable file')
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
-parser.add_argument('--clean', nargs='?', const=True, default=True, type=bool, help='Clean previous builds before building')
+parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
 parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
 parser.add_argument('--new', action='store_true', help='Increment the latest version number to create a new version')
 parser.add_argument('--console', action='store_true', help='Build with console output instead of windowed mode')
+parser.add_argument('--windowed', action='store_true', help='Build in windowed mode (no console) instead of console mode')
 args = parser.parse_args()
 
 def get_latest_github_version():
@@ -177,7 +178,7 @@ def build():
     ]
     
     # 窗口模式或控制台模式
-    if not args.console:
+    if args.windowed or not args.console:
         cmd.append('--windowed')  # 无控制台窗口
     
     # 单文件模式
