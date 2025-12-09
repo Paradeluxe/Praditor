@@ -110,6 +110,11 @@ qss_save_location_button = """
             text-decoration: none;
         } 
         
+        /* 禁用状态 */
+        QPushButton:disabled {
+            color: #CCCCCC;
+        } 
+        
         /* 未选中但文件存在 */
         QPushButton[file_exists="true"] {
             text-decoration: underline;
@@ -156,6 +161,13 @@ qss_button_small_black = """
             font-size: 13px;
         }
 
+        /* 禁用状态 */
+        QPushButton:disabled {
+            background: #F0F0F0;
+            color: #CCCCCC;
+            border-color: #CCCCCC;
+        }
+
         QPushButton:pressed {
             background: #666666;
             color: white;
@@ -174,6 +186,12 @@ qss_button_small_black = """
             border-radius: 5px;
             margin: 0px;
             padding: 4px 8px;
+        }
+        
+        QPushButton:checked:disabled {
+            background: #F0F0F0;
+            color: #CCCCCC;
+            border-color: #CCCCCC;
         }
 """
 

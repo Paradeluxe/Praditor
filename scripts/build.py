@@ -47,6 +47,7 @@ parser.add_argument('--onefile', action='store_true', help='Build as a single ex
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
 parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
 parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
+parser.add_argument('--new', action='store_true', help='Increment the latest version number to create a new version')
 parser.add_argument('--console', action='store_true', help='Build with console output instead of windowed mode')
 args = parser.parse_args()
 
@@ -111,11 +112,21 @@ if args.version:
     else:
         APP_VERSION = args.version
 else:
-    # 从GitHub获取最新版本号并自动递增
+    # 从GitHub获取最新版本号
     latest_version = get_latest_github_version()
     if latest_version:
-        APP_VERSION = increment_version(latest_version)
-        print(f"Auto-incrementing version from GitHub latest {latest_version} to {APP_VERSION}")
+        if args.new:
+            # 如果提供了--new参数，则递增版本号
+            APP_VERSION = increment_version(latest_version)
+            print(f"Auto-incrementing version from GitHub latest {latest_version} to {APP_VERSION}")
+        else:
+            # 默认使用最新版本号
+            APP_VERSION = latest_version
+            print(f"Using latest GitHub version: {APP_VERSION}")
+    else:
+        # 如果无法获取GitHub版本号，使用默认版本
+        APP_VERSION = "v1.0.0"
+        print(f"Could not get GitHub version, using default: {APP_VERSION}")
 
 
 # 设置应用名称

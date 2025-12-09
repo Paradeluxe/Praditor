@@ -7,7 +7,7 @@ import webbrowser
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from PySide6.QtCore import Qt, QUrl, Signal, QPoint, QRectF
-from PySide6.QtGui import QAction, QIcon, QCursor, QPainterPath, QRegion, QPainter, QColor
+from PySide6.QtGui import QAction, QIcon, QCursor, QPainterPath, QPainter, QColor
 from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
 from PySide6.QtWidgets import (
@@ -15,12 +15,11 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
     QHBoxLayout,
-    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox, QLabel, QComboBox
+    QFileDialog, QWidget, QToolBar, QPushButton, QSizePolicy, QMessageBox, QLabel
 )
 
 from src.gui.styles import *
 from src.core.detection import runPraditorWithTimeRange, create_textgrid_with_time_point
-# from core_light import runPraditorWithTimeRange, create_textgrid_with_time_point
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid
@@ -711,7 +710,20 @@ class MainWindow(QMainWindow):
         self.save_btn = QPushButton("Save", self)
         self.save_btn.setIcon(QIcon(get_resource_path('resources/icons/save.svg')))
         self.save_btn.setStatusTip("Save params to the selected location")
-        self.save_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.save_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent; 
+                border: none; 
+                color: #333333; 
+                font-size: 13px; 
+                text-align: center; 
+                padding: 8px 12px; 
+                margin: 0;
+            }
+            QPushButton:disabled {
+                color: #CCCCCC;
+            }
+        """)
         self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.save_btn.clicked.connect(self.saveParams)
         toolbar.addWidget(self.save_btn)
@@ -720,7 +732,20 @@ class MainWindow(QMainWindow):
         self.reset_svg_btn = QPushButton("Reset", self)
         self.reset_svg_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
         self.reset_svg_btn.setStatusTip("Reset to params that has been saved")
-        self.reset_svg_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.reset_svg_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent; 
+                border: none; 
+                color: #333333; 
+                font-size: 13px; 
+                text-align: center; 
+                padding: 8px 12px; 
+                margin: 0;
+            }
+            QPushButton:disabled {
+                color: #CCCCCC;
+            }
+        """)
         self.reset_svg_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.reset_svg_btn.clicked.connect(self.resetParams)
         toolbar.addWidget(self.reset_svg_btn)
@@ -730,7 +755,20 @@ class MainWindow(QMainWindow):
         self.backward_btn = QPushButton("Backward", self)
         self.backward_btn.setIcon(QIcon(get_resource_path('resources/icons/backward.svg')))
         self.backward_btn.setStatusTip("Load previous params")
-        self.backward_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.backward_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent; 
+                border: none; 
+                color: #333333; 
+                font-size: 13px; 
+                text-align: center; 
+                padding: 8px 12px; 
+                margin: 0;
+            }
+            QPushButton:disabled {
+                color: #CCCCCC;
+            }
+        """)
         self.backward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.backward_btn.clicked.connect(self.loadPreviousParams)
         toolbar.addWidget(self.backward_btn)
@@ -739,7 +777,20 @@ class MainWindow(QMainWindow):
         self.forward_btn = QPushButton("Forward", self)
         self.forward_btn.setIcon(QIcon(get_resource_path('resources/icons/forward.svg')))
         self.forward_btn.setStatusTip("Load next params")
-        self.forward_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 13px; text-align: center; padding: 8px 12px; margin: 0;")
+        self.forward_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent; 
+                border: none; 
+                color: #333333; 
+                font-size: 13px; 
+                text-align: center; 
+                padding: 8px 12px; 
+                margin: 0;
+            }
+            QPushButton:disabled {
+                color: #CCCCCC;
+            }
+        """)
         self.forward_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.forward_btn.clicked.connect(self.loadNextParams)
         toolbar.addWidget(self.forward_btn)
@@ -774,6 +825,9 @@ class MainWindow(QMainWindow):
                 font-size: 12px;
                 text-align: left;
                 padding: 0px 10px;
+            }
+            QPushButton:disabled {
+                color: #CCCCCC;
             }
         """)
         self.params_btn.setCursor(QCursor(Qt.ArrowCursor))  # 鼠标指针为箭头，不是手形
@@ -1405,9 +1459,6 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
 
             self.showXsetNum()
-            # 获取当前模式（默认或VAD）
-            current_mode = "vad" if self.vad_btn.isChecked() else "default"
-            # self.param_sets[current_mode].append(self.MySliders.getParams())
 
         else:
             print("Empty folder")
@@ -1430,9 +1481,7 @@ class MainWindow(QMainWindow):
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
 
     def runPraditorOnAudio(self):
-        # 检查采样率
-        # print(self.AudioViewer.audio_samplerate)
-        # print(self.MySliders.cutoff1_slider_onset.value_label.text())
+
         if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
             float(self.MySliders.cutoff1_slider_offset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2:
 
@@ -1503,10 +1552,6 @@ class MainWindow(QMainWindow):
             self.run_offset.setText(f"Offset: {len(_test_tg_dict_tp['offset'])} ?")
 
 
-
-        # self.update_current_param()
-
-
     def update_current_param(self):
         current_params = self.MySliders.getParams()
         
@@ -1530,6 +1575,7 @@ class MainWindow(QMainWindow):
         # 更新forward和backward按钮状态
         self.updateToolbarButtonsState()
     
+
     def loadPreviousParams(self):
         """加载前一套参数"""
         # 获取当前模式（默认或VAD）
@@ -1540,6 +1586,7 @@ class MainWindow(QMainWindow):
             self.updateParamIndexLabel()
             print(f"Loaded previous params (index: {self.current_param_index[current_mode]})")
     
+
     def loadNextParams(self):
         """加载后一套参数"""
         # 获取当前模式（默认或VAD）
@@ -1550,9 +1597,10 @@ class MainWindow(QMainWindow):
             self.updateParamIndexLabel()
             print(f"Loaded next params (index: {self.current_param_index[current_mode]})")
     
+
     def updateParamIndexLabel(self):
         """更新参数索引标签"""
-        print(self.param_sets)
+        # print(self.param_sets)
         if hasattr(self, 'params_btn'):
             # 获取当前模式（默认或VAD）
             current_mode = "vad" if self.vad_btn.isChecked() else "default"
@@ -1576,6 +1624,7 @@ class MainWindow(QMainWindow):
             # 根据当前模式显示该模式的参数索引和总数
             self.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
     
+
     def updateToolbarButtonsState(self):
         """根据模式按钮的选中状态和音频导入状态更新按钮的可用性和样式
         - save按钮：依赖模式按钮的选中状态
@@ -1615,28 +1664,25 @@ class MainWindow(QMainWindow):
                 file_params_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
                 reset_enabled = os.path.exists(file_params_path)
         
-        # 定义启用和禁用状态的样式
-        enabled_style = "background-color: white; border: none; color: #333333; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;"
-        disabled_style = "background-color: white; border: none; color: #CCCCCC; font-size: 13px; text-align: center; padding: 0; margin: 0 10px;"
-        
         # 更新save按钮
         self.save_btn.setEnabled(any_mode_selected)
-        self.save_btn.setStyleSheet(enabled_style if any_mode_selected else disabled_style)
+        self.save_btn.setIcon(QIcon(get_resource_path(f'resources/icons/save{"_gray" if not any_mode_selected else ""}.svg')))
         
         # 更新reset按钮
         self.reset_svg_btn.setEnabled(reset_enabled)
-        self.reset_svg_btn.setStyleSheet(enabled_style if reset_enabled else disabled_style)
+        self.reset_svg_btn.setIcon(QIcon(get_resource_path(f'resources/icons/reset{"_gray" if not reset_enabled else ""}.svg')))
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
         self.backward_btn.setEnabled(backward_enabled)
-        self.backward_btn.setStyleSheet(enabled_style if backward_enabled else disabled_style)
+        self.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
         
         # 更新forward按钮 - 必须音频导入成功且有两套及以上的参数
         forward_enabled = audio_imported and has_multiple_params
         self.forward_btn.setEnabled(forward_enabled)
-        self.forward_btn.setStyleSheet(enabled_style if forward_enabled else disabled_style)
+        self.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
     
+
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
         # 取消其他两个按钮的选中状态
@@ -1645,6 +1691,7 @@ class MainWindow(QMainWindow):
                 btn.setChecked(False)
         # 更新save和reset按钮状态
         self.updateToolbarButtonsState()
+
 
     def prevnext_audio(self, direction=None):
         """处理prev/next音频切换
@@ -1703,6 +1750,7 @@ class MainWindow(QMainWindow):
         except AttributeError:
             pass
     
+
     def saveParamsWithFolderName(self):
         """保存参数到当前文件夹，文件名为params.txt或params_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
