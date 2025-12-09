@@ -1,0 +1,152 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 30.10426303854875
+tiers? <exists>
+size = 2
+item []:
+	item [1]:
+		class = "TextTier"
+		name = "onset"
+		xmin = 0.0
+		xmax = 30.10426303854875
+		points: size = 21
+			points [1]:
+				time = 0.5656235827664399
+				mark = "onset"
+			points [2]:
+				time = 1.096294784580499
+				mark = "onset"
+			points [3]:
+				time = 1.4519727891156462
+				mark = "onset"
+			points [4]:
+				time = 2.5238095238095237
+				mark = "onset"
+			points [5]:
+				time = 6.217097505668934
+				mark = "onset"
+			points [6]:
+				time = 9.17578231292517
+				mark = "onset"
+			points [7]:
+				time = 10.755238095238095
+				mark = "onset"
+			points [8]:
+				time = 11.348344671201813
+				mark = "onset"
+			points [9]:
+				time = 12.972698412698414
+				mark = "onset"
+			points [10]:
+				time = 14.914920634920636
+				mark = "onset"
+			points [11]:
+				time = 16.554149659863945
+				mark = "onset"
+			points [12]:
+				time = 17.871156462585034
+				mark = "onset"
+			points [13]:
+				time = 19.13572335600907
+				mark = "onset"
+			points [14]:
+				time = 19.800226757369614
+				mark = "onset"
+			points [15]:
+				time = 21.051519274376417
+				mark = "onset"
+			points [16]:
+				time = 22.915328798185943
+				mark = "onset"
+			points [17]:
+				time = 25.421360544217688
+				mark = "onset"
+			points [18]:
+				time = 26.259909297052154
+				mark = "onset"
+			points [19]:
+				time = 28.24907029478458
+				mark = "onset"
+			points [20]:
+				time = 28.625895691609976
+				mark = "onset"
+			points [21]:
+				time = 29.201179138321997
+				mark = "onset"
+	item [2]:
+		class = "TextTier"
+		name = "offset"
+		xmin = 0.0
+		xmax = 30.10426303854875
+		points: size = 23
+			points [1]:
+				time = 0.9458503401360544
+				mark = "offset"
+			points [2]:
+				time = 1.3765986394557823
+				mark = "offset"
+			points [3]:
+				time = 1.9747392290249433
+				mark = "offset"
+			points [4]:
+				time = 3.104671201814059
+				mark = "offset"
+			points [5]:
+				time = 5.579818594104308
+				mark = "offset"
+			points [6]:
+				time = 7.5521995464852605
+				mark = "offset"
+			points [7]:
+				time = 8.477732426303854
+				mark = "offset"
+			points [8]:
+				time = 10.64607709750567
+				mark = "offset"
+			points [9]:
+				time = 11.022993197278911
+				mark = "offset"
+			points [10]:
+				time = 11.85732426303855
+				mark = "offset"
+			points [11]:
+				time = 14.583356009070295
+				mark = "offset"
+			points [12]:
+				time = 14.83904761904762
+				mark = "offset"
+			points [13]:
+				time = 15.472426303854876
+				mark = "offset"
+			points [14]:
+				time = 17.79297052154195
+				mark = "offset"
+			points [15]:
+				time = 18.88
+				mark = "offset"
+			points [16]:
+				time = 20.49172789115646
+				mark = "offset"
+			points [17]:
+				time = 21.101315192743765
+				mark = "offset"
+			points [18]:
+				time = 21.76301133786848
+				mark = "offset"
+			points [19]:
+				time = 24.422086167800455
+				mark = "offset"
+			points [20]:
+				time = 25.885532879818594
+				mark = "offset"
+			points [21]:
+				time = 28.081496598639454
+				mark = "offset"
+			points [22]:
+				time = 28.48780045351474
+				mark = "offset"
+			points [23]:
+				time = 29.625804988662132
+				mark = "offset"

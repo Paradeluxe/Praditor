@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.gui.styles import *
-from src.core.detection import runPraditorWithTimeRange, create_textgrid_with_time_point
+from src.core.detection import runPraditorWithTimeRange, vadPraditorWithTimeRange, create_textgrid_with_time_point
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid
@@ -1504,25 +1504,83 @@ class MainWindow(QMainWindow):
 
 
 
+        # 检测当前模式，选择合适的检测函数
+        is_vad_mode = self.vad_btn.isChecked()
+        detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
+
+        onsets = []
+        offsets = []
+
         if not self.run_onset.isChecked():
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             except KeyError:
                 pass
-            self.AudioViewer.tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+            onsets = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
         else:
-            self.AudioViewer.tg_dict_tp["onset"] = []
+            pass  # onsets = []
 
         if not self.run_offset.isChecked():
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
             except KeyError:
                 pass
-            self.AudioViewer.tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+            offsets = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
         else:
-            self.AudioViewer.tg_dict_tp["offset"] = []
+            pass  # offsets = []
 
-        create_textgrid_with_time_point(self.file_path, self.AudioViewer.tg_dict_tp["onset"], self.AudioViewer.tg_dict_tp["offset"])
+
+
+        if is_vad_mode:
+            ###########################
+            # 如果头尾是从有声直接开始/结束，则为其赋值为0/音频长度
+            ###########################
+            # onsets = sorted(onsets)
+            # offsets = sorted(offsets)
+
+            if onsets[0] >= offsets[0]:
+                onsets = [0.0] + onsets
+
+            if offsets[-1] <= onsets[-1]:
+                offsets.append(self.AudioViewer.audio_obj.duration_seconds)
+
+            # print(onsets)
+            # print(offsets)
+            #--------------------------#
+
+
+
+            ##########################
+            # Select the one offset that is closest to onset and earlier than onset
+            ##########################
+
+            new_onsets = []
+            new_offsets = []
+            for i, onset in enumerate(onsets):
+                # print(onset)
+                if i == 0:
+                    new_offsets.append(offsets[-1])
+                    new_onsets.append(onset)
+                else:
+                    try:
+                        new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
+                        new_onsets.append(onset)
+
+                    except ValueError:
+                        pass
+
+
+            onsets = sorted(new_onsets)
+            offsets = sorted(new_offsets)
+            #--------------------------#
+
+        self.AudioViewer.tg_dict_tp["onset"] = onsets
+        self.AudioViewer.tg_dict_tp["offset"] = offsets
+
+
+
+        create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
+        
         self.readXset()
         self.showXsetNum()
         self.update_current_param()
@@ -1539,14 +1597,18 @@ class MainWindow(QMainWindow):
             popup_window.exec()
 
 
+        # 检测当前模式，选择合适的检测函数
+        is_vad_mode = self.vad_btn.isChecked()
+        detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
+        
         _test_tg_dict_tp = {"onset": [], "offset": []}
         if not self.run_onset.isChecked():
-            _test_tg_dict_tp["onset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+            _test_tg_dict_tp["onset"] = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
         else:
             _test_tg_dict_tp["onset"] = []
 
         if not self.run_offset.isChecked():
-            _test_tg_dict_tp["offset"] = runPraditorWithTimeRange(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+            _test_tg_dict_tp["offset"] = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
         else:
             _test_tg_dict_tp["offset"] = []
         
