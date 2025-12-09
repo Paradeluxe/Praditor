@@ -1131,6 +1131,17 @@ class MainWindow(QMainWindow):
         
         # 切换模式后更新参数索引标签，确保显示当前模式的参数
         self.updateParamIndexLabel()
+        
+        # 按照File→Folder→Default优先级加载参数
+        self.showParams()
+        
+        # 检查参数文件是否存在，更新按钮状态
+        self.checkIfParamsExist()
+
+        # 切换模式后，不选中任何按钮
+        self.default_btn.setChecked(False)
+        self.folder_btn.setChecked(False)
+        self.file_btn.setChecked(False)
 
 
 
@@ -1305,7 +1316,7 @@ class MainWindow(QMainWindow):
 
     def checkIfParamsExist(self):
         current_params = str(self.MySliders.getParams())
-        current_params_dict = self.MySliders.getParams()
+        # current_params_dict = self.MySliders.getParams()
         
         # 检查是否处于VAD模式
         is_vad_mode = self.vad_btn.isChecked()
