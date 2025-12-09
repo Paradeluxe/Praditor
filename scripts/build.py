@@ -43,7 +43,7 @@ RESOURCES = [
 
 # 命令行参数解析
 parser = argparse.ArgumentParser(description='Build Praditor with PyInstaller')
-parser.add_argument('--onefile', action='store_true', help='Build as a single executable file')
+parser.add_argument('--onefile', nargs='?', const=True, default=True, type=bool, help='Build as a single executable file')
 parser.add_argument('--debug', action='store_true', help='Build in debug mode')
 parser.add_argument('--clean', action='store_true', help='Clean previous builds before building')
 parser.add_argument('--version', type=str, help='Specify the application version (e.g., 1.3.1 or 1.3.4b)')
