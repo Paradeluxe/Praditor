@@ -300,6 +300,8 @@ def vadPraditor(params, audio_obj, which_set):
         for item in params[xset]:
             params[xset][item] = eval(params[xset][item])
 
+    params["offset"] = params["onset"]
+
     params = params[which_set]  # 选择是onset还是offset
 
     # 固定某些值

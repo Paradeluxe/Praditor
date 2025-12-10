@@ -1501,6 +1501,7 @@ class MainWindow(QMainWindow):
         # 检测当前模式，选择合适的检测函数
         is_vad_mode = self.vad_btn.isChecked()
         detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
+        
         if is_vad_mode:
             if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
 

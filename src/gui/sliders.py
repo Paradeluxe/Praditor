@@ -155,36 +155,54 @@ class MySliders(QWidget):
     
 
     def getParams(self):
+
         params = {
-            "onset": {
-                "amp": self.amp_slider_onset.value_edit.text(),
-                "cutoff0": self.cutoff0_slider_onset.value_edit.text(),
-                "cutoff1": self.cutoff1_slider_onset.value_edit.text(),
-                "numValid": self.numValid_slider_onset.value_edit.text(),
-                "win_size": self.win_size_slider_onset.value_edit.text(),
-                "ratio": self.ratio_slider_onset.value_edit.text(),
-                "penalty": self.penalty_slider_onset.value_edit.text(),
-                "ref_len": self.ref_len_slider_onset.value_edit.text(),
-                "eps_ratio": self.eps_ratio_slider_onset.value_edit.text()
-
-            },
-
-            "offset": {
-                "amp": self.amp_slider_offset.value_edit.text(),
-                "cutoff0": self.cutoff0_slider_offset.value_edit.text(),
-                "cutoff1": self.cutoff1_slider_offset.value_edit.text(),
-                "numValid": self.numValid_slider_offset.value_edit.text(),
-                "win_size": self.win_size_slider_offset.value_edit.text(),
-                "ratio": self.ratio_slider_offset.value_edit.text(),
-                "penalty": self.penalty_slider_offset.value_edit.text(),
-                "ref_len": self.ref_len_slider_offset.value_edit.text(),
-                "eps_ratio": self.eps_ratio_slider_offset.value_edit.text()
-
-            }
-
+            "onset": {},
+            "offset": {}
         }
+        
+        # 检查Onset滑块可见性并添加参数
+        if self.amp_slider_onset.isVisible():
+            params["onset"]["amp"] = self.amp_slider_onset.value_edit.text()
+        if self.cutoff0_slider_onset.isVisible():
+            params["onset"]["cutoff0"] = self.cutoff0_slider_onset.value_edit.text()
+        if self.cutoff1_slider_onset.isVisible():
+            params["onset"]["cutoff1"] = self.cutoff1_slider_onset.value_edit.text()
+        if self.numValid_slider_onset.isVisible():
+            params["onset"]["numValid"] = self.numValid_slider_onset.value_edit.text()
+        if self.win_size_slider_onset.isVisible():
+            params["onset"]["win_size"] = self.win_size_slider_onset.value_edit.text()
+        if self.ratio_slider_onset.isVisible():
+            params["onset"]["ratio"] = self.ratio_slider_onset.value_edit.text()
+        if self.penalty_slider_onset.isVisible():
+            params["onset"]["penalty"] = self.penalty_slider_onset.value_edit.text()
+        if self.ref_len_slider_onset.isVisible():
+            params["onset"]["ref_len"] = self.ref_len_slider_onset.value_edit.text()
+        if self.eps_ratio_slider_onset.isVisible():
+            params["onset"]["eps_ratio"] = self.eps_ratio_slider_onset.value_edit.text()
+        
+        # 检查Offset滑块可见性并添加参数
+        if self.amp_slider_offset.isVisible():
+            params["offset"]["amp"] = self.amp_slider_offset.value_edit.text()
+        if self.cutoff0_slider_offset.isVisible():
+            params["offset"]["cutoff0"] = self.cutoff0_slider_offset.value_edit.text()
+        if self.cutoff1_slider_offset.isVisible():
+            params["offset"]["cutoff1"] = self.cutoff1_slider_offset.value_edit.text()
+        if self.numValid_slider_offset.isVisible():
+            params["offset"]["numValid"] = self.numValid_slider_offset.value_edit.text()
+        if self.win_size_slider_offset.isVisible():
+            params["offset"]["win_size"] = self.win_size_slider_offset.value_edit.text()
+        if self.ratio_slider_offset.isVisible():
+            params["offset"]["ratio"] = self.ratio_slider_offset.value_edit.text()
+        if self.penalty_slider_offset.isVisible():
+            params["offset"]["penalty"] = self.penalty_slider_offset.value_edit.text()
+        if self.ref_len_slider_offset.isVisible():
+            params["offset"]["ref_len"] = self.ref_len_slider_offset.value_edit.text()
+        if self.eps_ratio_slider_offset.isVisible():
+            params["offset"]["eps_ratio"] = self.eps_ratio_slider_offset.value_edit.text()
 
         # print(params)
+        
         return params
 
 
