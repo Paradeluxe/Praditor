@@ -1477,7 +1477,7 @@ class MainWindow(QMainWindow):
             print("Empty folder")
 
 
-    def showXsetNum(self, is_test: bool):
+    def showXsetNum(self, is_test: bool=False):
 
         if not self.AudioViewer.tg_dict_tp['onset']:
             self.run_onset.setText("Onset")
@@ -1607,6 +1607,7 @@ class MainWindow(QMainWindow):
             create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
             
             self.readXset()
+            self.showXsetNum(is_test=is_test)
             self.update_current_param()
 
 
