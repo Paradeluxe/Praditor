@@ -25,12 +25,11 @@ from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid
 from src.utils.resources import get_resource_path
 
+
 plat = os.name.lower()
 
 if plat == 'nt':  # Windows
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
-
-
 elif plat == 'posix':  # Unix-like systems (Linux, macOS)
     pass
 else:
@@ -566,8 +565,8 @@ class MainWindow(QMainWindow):
         self.title_bar.maximize_signal.connect(self.toggleMaximize)
         self.title_bar.trash_signal.connect(self.clearXset)
         self.title_bar.read_signal.connect(self.readXset)
-        self.title_bar.run_signal.connect(self.runPraditorOnAudio)
-        self.title_bar.test_signal.connect(self.testPraditorOnAudio)
+        self.title_bar.run_signal.connect(lambda: self.execPraditor(is_test=False))
+        self.title_bar.test_signal.connect(lambda: self.execPraditor(is_test=True))
         self.title_bar.onset_signal.connect(self.turnOnset)
         self.title_bar.offset_signal.connect(self.turnOffset)
         # 连接前后音频按钮信号
@@ -1469,45 +1468,63 @@ class MainWindow(QMainWindow):
             base_name = os.path.basename(self.file_path)
             self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
 
-            self.showXsetNum()
+            self.showXsetNum(is_test=False)
 
         else:
             print("Empty folder")
 
 
-    def showXsetNum(self):
+    def showXsetNum(self, is_test: bool):
 
         if not self.AudioViewer.tg_dict_tp['onset']:
             self.run_onset.setText("Onset")
         else:
-            self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])}")
+            if is_test:
+                self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])} ?")
+            else:
+                self.run_onset.setText(f"Onset: {len(self.AudioViewer.tg_dict_tp['onset'])}")
 
         if not self.AudioViewer.tg_dict_tp['offset']:
             self.run_offset.setText("Offset")
         else:
-            self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
+            if is_test:
+                self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])} ?")
+            else:
+                self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
 
-    def runPraditorOnAudio(self):
 
-        if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2:
-
-            popup_window = QMessageBox()
-            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-            popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
-            popup_window.exec()
-
-
-
+    def execPraditor(self, is_test: bool):
         # 检测当前模式，选择合适的检测函数
         is_vad_mode = self.vad_btn.isChecked()
         detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
+        if is_vad_mode:
+            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
 
+                popup_window = QMessageBox()
+                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
+                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
+                popup_window.exec()
+
+                return
+
+        else: # default mode
+            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2 or \
+                float(self.MySliders.cutoff1_slider_offset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
+
+                popup_window = QMessageBox()
+                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
+                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
+                popup_window.exec()
+
+                return
+
+        
         onsets = []
         offsets = []
 
@@ -1548,8 +1565,6 @@ class MainWindow(QMainWindow):
             # print(offsets)
             #--------------------------#
 
-
-
             ##########################
             # Select the one offset that is closest to onset and earlier than onset
             ##########################
@@ -1574,32 +1589,53 @@ class MainWindow(QMainWindow):
             offsets = sorted(new_offsets)
             #--------------------------#
 
-        self.AudioViewer.tg_dict_tp["onset"] = onsets
-        self.AudioViewer.tg_dict_tp["offset"] = offsets
 
 
 
-        create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
-        
-        self.readXset()
-        self.showXsetNum()
-        self.update_current_param()
+        if is_test:
+            self.showXsetNum(is_test=is_test)
+
+
+        else:  # default mode
+            self.AudioViewer.tg_dict_tp["onset"] = onsets
+            self.AudioViewer.tg_dict_tp["offset"] = offsets
+
+            create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
+            
+            self.readXset()
+            self.update_current_param()
+
 
 
     def testPraditorOnAudio(self):
-        if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2 or \
-            float(self.MySliders.cutoff1_slider_offset.value_edit.text()) >= float(self.AudioViewer.audio_samplerate)/2:
-
-            popup_window = QMessageBox()
-            # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-            popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-            popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
-            popup_window.exec()
-
 
         # 检测当前模式，选择合适的检测函数
         is_vad_mode = self.vad_btn.isChecked()
         detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
+
+        if is_vad_mode:
+            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
+
+                popup_window = QMessageBox()
+                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
+                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
+                popup_window.exec()
+
+                return
+
+        else: # default mode
+            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2 or \
+                float(self.MySliders.cutoff1_slider_offset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
+
+                popup_window = QMessageBox()
+                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
+                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
+                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
+                popup_window.exec()
+
+                return
+        
         
         _test_tg_dict_tp = {"onset": [], "offset": []}
         if not self.run_onset.isChecked():
