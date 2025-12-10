@@ -22,7 +22,7 @@ from src.gui.styles import *
 from src.core.detection import runPraditorWithTimeRange, vadPraditorWithTimeRange, create_textgrid_with_time_point
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
-from src.utils.audio import isAudioFile, get_frm_points_from_textgrid
+from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
 
@@ -1166,7 +1166,10 @@ class MainWindow(QMainWindow):
 
 
     def readXset(self):
-        self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
+        if self.vad_btn.isChecked():
+            self.AudioViewer.tg_dict_tp = get_frm_intervals_from_textgrid(self.file_path)
+        else:
+            self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
 
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
