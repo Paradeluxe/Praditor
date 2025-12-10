@@ -45,7 +45,7 @@ A DBSCAN-Based Automation for Speech Onset Detection
 # Features
 Praditor is a **speech onset detector** that helps you find out boundaries between silence and sound **automatically**.
 
-**Now Praditor supports VAD (Voice Activity Detection)! Check out the latest version**.
+**Now Praditor supports VAD (Voice Activity Detection)! Check out [the latest version](https://github.com/Paradeluxe/Praditor/releases/latest).**
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
