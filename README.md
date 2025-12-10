@@ -45,15 +45,15 @@ A DBSCAN-Based Automation for Speech Onset Detection
 # Features
 Praditor is a **speech onset detector** that helps you find out boundaries between silence and sound **automatically**.
 
-**Now Praditor supports VAD (Voice Activity Detection)! Check out the lastest [version 2.0.0](https://github.com/Paradeluxe/Praditor/releases/tag/v2.0.0)**.
+**Now Praditor supports VAD (Voice Activity Detection)! Check out the latest version**.
 
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
 Praditor works for both **single-onset** and **multi-onset** audio files **without any language limitation**. 
-It generates output as PointTiers in .TextGrid format. 
+It generates output in .TextGrid format with different tier types based on the selected mode. 
 
- - Onset/Offset Detection
- - Silence Detection
+ - **Onset/Offset Detection** (Default Mode)
+ - **Voice Activity Detection** (VAD Mode)
 
 Praditor also allows users to adjust parameters in the Dashboard to get a better performance.
 
@@ -85,26 +85,28 @@ Praditor also allows users to adjust parameters in the Dashboard to get a better
 
 Although I have prepared various buttons in this GUI, you do not have to use them all.
 
-The simplest and easiest procedure is (1) import audio files, (2) hit the `extract` button,
-(3) [optional] you are not happy about the results, fine-tune the parameters and hit the `extract` button again. 
+The simplest and easiest procedure is (1) import audio files, (2) hit the `▶︎` button,
+(3) [optional] you are not happy about the results, fine-tune the parameters and hit the `▶︎` button again. 
 **Until you are happy about the results, repeat step (2) and (3).**
 
 ## General
 
-`File` -> `Read files...` -> Import your target audio file (**Recommend**: >= 44.1 kHz; **Accept**: >= 8 kHz)
+`Praditor` -> Import your target audio file (**Recommend**: >= 44.1 kHz; **Accept**: >= 8 kHz)
 
-`Run` Run algorithm and extract onsets. Wait for a while until the results come out. Onsets are in blue, offsets are in green.
+`VAD` Toggle between Onset/Offset Detection mode and Voice Activity Detection mode.
+
+`▶︎` Run algorithm and extract onsets/offsets (in default mode) or speech segments (in VAD mode). Wait for a while until the results come out. Onsets are in blue, offsets are in green.
 
 `Test` Test how many onsets/offsets may be found using the presented parameters. This function does not affect .TextGrid.
-> If the number meets the expectation, hit `Run` to get the final annotation.
+> If the number meets the expectation, hit `▶︎` to get the final annotation.
 
 <kbd>F5</kbd> to play the audio signal that is currently presented in the window, and <kbd>Any Key</kbd> to stop playing.
 
-`Next`/`Prev` Move to the next/previous audio file
+`←`/`→` Move to the next/previous audio file
 
 ## .TextGrid related
 
-`Clear` If you want to temporarily clear the annotations, this does not delete/change the .TextGrid file. It's safe.
+`🗑️` If you want to temporarily clear the annotations, this does not delete/change the .TextGrid file. It's safe.
 
 `Show` If you want the cleared annotations back. _Praditor_ will go back to the .TextGrid and present whatever is in it.
 
@@ -115,13 +117,35 @@ The simplest and easiest procedure is (1) import audio files, (2) hit the `extra
 
 ## Parameters 
 
-`Current/Default` Display default parameters or parameters for the current file
+### Save Modes
 
-`Save` Save the displayed parameters as Current/Default
+Display and save parameters with three priority modes:
+- **File**: Parameters saved with the same name as the audio file (highest priority)
+- **Folder**: Parameters saved in the current folder as `params.txt` or `params_vad.txt`
+- **Default**: Parameters saved in the application directory (lowest priority)
 
-`Reset` Reset the displayed parameters to the last time you saved it
+### Buttons
 
-`Last` Go back to the last set parameters you have run
+`Save` Save the displayed parameters according to the selected mode:
+- Follows priority order: File > Folder > Default
+- Saves with `.txt` extension (normal mode) or `_vad.txt` (VAD mode)
+
+`Reset` Reset the displayed parameters to the saved values from the current mode:
+- Loads parameters following the same priority order
+- Applies the loaded parameters to the UI
+
+`Backward/Forward` Navigate through parameter history:
+- Maintains a history of up to 10 parameter sets for each mode
+- `Backward`: Go to the previous parameter set
+- `Forward`: Go to the next parameter set
+- Shows current position as "current/total" in the UI
+
+### VAD Mode
+
+When VAD (Voice Activity Detection) mode is enabled:
+- Parameters are stored separately with `_vad.txt` suffix
+- Maintains independent parameter history for VAD mode
+- All save/reset/history functions work independently for normal and VAD modes
 
 
 ## Audio signal

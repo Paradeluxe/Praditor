@@ -43,14 +43,17 @@ Praditor
 # 特点
 作为**语音起始检测器**， Praditor可以帮助你自动地找到所有的**有声**和**无声**的边界。
 
+**现在 Praditor 支持 VAD（语音活动检测）功能！**
+
 ![audio2textgrid.png](instructions/audio2textgrid.png)
 
 Praditor可以处理**单起始点**和**多起始点**音频文件，无论你的音频文件是什么语言。
+它会根据所选模式生成不同类型的.TextGrid层级。
 
- - 起始点/结束点检测
- - 有声/无声检测
+ - **起始点/结束点检测**：检测声音事件的开始和结束点，生成用于起始点和结束点的PointTier
+ - **语音活动检测（VAD模式）**：检测音频中的语音段，生成带有"sound"区间的IntervalTier
 
-Praditor计算得出的起始点会以.TextGrid的PointTier呈现，并允许用户调整参数以获得更好的结果。
+Praditor允许用户在仪表板中调整参数以获得更好的性能。
 
 
 # 视频教程 (bilibili)
@@ -89,8 +92,11 @@ Praditor是一个帮助**语音研究**方向的科研人节省时间的项目�
 
 ![gui.png](instructions/gui.png)
 
-**对于起始点/终止点...**
-- `Run` 应用 Praditor 算法于当前音频
+**模式切换**
+- `VAD` 在起始点/终止点检测模式和语音活动检测模式之间切换
+
+**主要功能**
+- `Run` 应用 Praditor 算法于当前音频，在默认模式下提取起始点/终止点，在VAD模式下提取语音段
 - `Prev`/`Next` 上一个/下一个音频
 - `Read` 从当前音频的.TextGrid结果文件里读取时间戳
 - `Clear` 清除已显示的时间戳
