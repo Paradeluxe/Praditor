@@ -1,6 +1,7 @@
 import gc
 import math
 import os
+import csv
 
 import numpy as np
 from sklearn.cluster import DBSCAN
@@ -632,6 +633,63 @@ def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[]
     tg.write(tg_filename)  # 将TextGrid对象写入文件
 
     print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
+    
+    # 生成CSV文件
+    textgrid_to_csv(tg_filename)
+
+
+def textgrid_to_csv(textgrid_file_path):
+    """将TextGrid文件转换为CSV文件"""
+    # 获取TextGrid文件的目录和文件名（不包括扩展名）
+    tg_dir = os.path.dirname(os.path.abspath(textgrid_file_path))
+    tg_filename = os.path.splitext(os.path.basename(textgrid_file_path))[0]
+    
+    # 构建CSV文件名
+    csv_filename = os.path.join(tg_dir, tg_filename + ".csv")
+    
+    # 获取原始音频文件名（移除_vad后缀，如果有）
+    original_filename = tg_filename.replace("_vad", "")
+    
+    # 读取TextGrid文件
+    tg = TextGrid(textgrid_file_path)
+    tg.read(textgrid_file_path)
+    
+    # 根据TextGrid类型（点或区间）进行不同处理
+    if tg.tiers[0].__class__.__name__ == "PointTier":
+        # 点模式：onset和offset作为两列
+        data = {"onset": [], "offset": []}
+        
+        # 提取每个tier的数据
+        for tier in tg.tiers:
+            data[tier.name] = [p.time for p in tier]
+        
+        # 确定最大长度，用于对齐数据
+        max_len = max(len(data["onset"]), len(data["offset"]))
+        
+        # 写入CSV文件
+        with open(csv_filename, "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            # 写入表头
+            writer.writerow(["filename", "onset", "offset"])
+            # 写入数据
+            for i in range(max_len):
+                onset = data["onset"][i] if i < len(data["onset"]) else ""
+                offset = data["offset"][i] if i < len(data["offset"]) else ""
+                writer.writerow([original_filename, onset, offset])
+    
+    elif tg.tiers[0].__class__.__name__ == "IntervalTier":
+        # 区间模式：minTime, maxTime, mark作为列
+        with open(csv_filename, "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            # 写入表头
+            writer.writerow(["filename", "minTime", "maxTime", "mark"])
+            # 写入数据，只保存mark为"sound"的区间
+            for interval in tg.tiers[0]:
+                if interval.mark == "sound":
+                    writer.writerow([original_filename, interval.minTime, interval.maxTime, interval.mark])
+    
+    print(f"{tg_filename}\t|\t{get_current_time()}\t|\tCSV created at: {csv_filename}")
+    return csv_filename
 
 
 
