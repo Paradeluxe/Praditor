@@ -10,7 +10,6 @@ from textgrid import TextGrid, PointTier, Point, IntervalTier, Interval
 from src.utils.audio import bandpass_filter, get_current_time, ReadSound
 
 
-
 def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     if etime == -1:
         ans_tps = runPraditor(params, audio_obj, which_set)
@@ -21,18 +20,38 @@ def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     return ans_tps
 
 
-def runPraditor(params, audio_obj, which_set):
+def detectPraditor(params, audio_obj, which_set, mode="general"):
+    """
+    合并后的检测函数
+    
+    Args:
+        params: 检测参数
+        audio_obj: 音频对象
+        which_set: "onset"或"offset"
+        mode: "general"（通用模式）或"vad"（VAD模式）
+    """
     # 导入数据，并且遵循一定之格式
     for xset in params:
         for item in params[xset]:
             params[xset][item] = eval(params[xset][item])
 
+    # VAD模式特殊处理：强制将offset参数设为与onset相同
+    if mode == "vad":
+        params["offset"] = params["onset"]
+
     params = params[which_set]  # 选择是onset还是offset
-    # print(params)
+
+    # VAD模式固定参数
+    if mode == "vad":
+        params.update({
+            "ratio": 0.9,
+            "win_size": 50,
+            "ref_len": 250,
+            "penalty": 10
+        })
+
     _answer_frames = []
-
     _audio_obj = audio_obj
-
     _audio_samplerate = audio_obj.frame_rate
 
     _audio_arr_filtered = bandpass_filter(
@@ -46,55 +65,37 @@ def runPraditor(params, audio_obj, which_set):
     if which_set == "offset":
         _audio_arr_filtered = np.flip(_audio_arr_filtered)
 
-    # Audio已经准备好
-    # 接下来就是第一步：DBSCAN聚类找噪声片段
-
-
     # 1.1. 降采样
     # 把一秒钟的音频分成n=40份
-
     _dsFactor = _audio_obj.frame_rate // 40
-    # _audio_arr_ds = _audio_arr_filtered
 
-    # 用取余容易得到[:-0]，返回一个空list
-    # 用整除解决这个问题
-    if len(_audio_arr_filtered) % _dsFactor == 0:
-        _audio_arr_ds = _audio_arr_filtered[:]
-    else:
-        _audio_arr_ds = _audio_arr_filtered[:-(len(_audio_arr_filtered) % _dsFactor)]
+    # 统一降采样处理：确保音频长度能被降采样因子整除
+    if len(_audio_arr_filtered) % _dsFactor != 0:
+        _audio_arr_filtered = _audio_arr_filtered[:-(len(_audio_arr_filtered) % _dsFactor)]
 
-    # max_frm_num = len(_audio_arr_filtered)
-
-    _audio_arr_ds = _audio_arr_ds.reshape((len(_audio_arr_ds) // _dsFactor, _dsFactor))
+    _audio_arr_ds = _audio_arr_filtered.reshape((len(_audio_arr_filtered) // _dsFactor, _dsFactor))
     _audio_arr_ds = np.max(_audio_arr_ds, axis=1)  # 用max方法降采样
-
-    # print(_audio_arr_ds[10:1000])
 
     _points_array = np.array([
         [_audio_arr_ds[i] for i in range(len(_audio_arr_ds) - 1)],
         [_audio_arr_ds[i + 1] for i in range(len(_audio_arr_ds) - 1)]
     ]).T
 
-
-
     _eps = params["eps_ratio"] * float(np.max(np.sort(_audio_arr_ds)[:int(.8 * len(_audio_arr_ds))]))  # 找到合适的radius，防止异常值
+    
+    # 通用模式打印调试信息
+    if mode == "general":
+        print(_eps)
 
     del _audio_arr_ds
     gc.collect()
 
-    _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
+    _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate)
     try:
         _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
-        # print(_cluster.labels_)
-
-        # _cluster = DBSCAN_(eps=_eps, min_samples=_min_samples).fit(_points_array)
-        # print(_cluster.labels_)
     except MemoryError:
         print("not enough memory")
         return []
-
-
-
 
     # To look for the label with which the coordinate is closet to the zero point
     # xy值加起来最小值 -> 最接近零点
@@ -103,92 +104,61 @@ def runPraditor(params, audio_obj, which_set):
         if np.min(np.sum(_points_array[_cluster.labels_ == i], axis=1)) < np.min(np.sum(_points_array[_cluster.labels_ == noise_label], axis=1)):
             noise_label = i
     _points_confirmed = _points_array[_cluster.labels_ == noise_label]
-    # print(_labels, noise_label)
 
     # 把最小cluster以下的所有点都囊括进来
     _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
-    # print(_points_confirmed)
 
     _labels = _cluster.labels_
-
     for i in _points_compensation:
         _labels[int(i)] = noise_label
 
-    _labels = [noise_label] * 3 + [i for i in _labels] + [noise_label] * 3  # 这句干啥用的？？？
-    _indices_confirmed = [i-3 for i in range(len(_labels)) if _labels[i] == noise_label]  # or labels[i] == -1]
-
-    # print(_indices_confirmed)
-
+    _labels = [noise_label] * 3 + [i for i in _labels] + [noise_label] * 3
+    _indices_confirmed = [i-3 for i in range(len(_labels)) if _labels[i] == noise_label]
 
     # gather sampled area | target area
-
     _indices_completed = []
     for i in _indices_confirmed:
         for j in range(3):  # 原来是4，改成了3，只加上012
             if (i + j) not in _indices_completed:
                 _indices_completed.append(i + j)
 
-    # print(_indices_completed)
-
     _onsets = []
     _offsets = []
-    for i in range(min(_indices_completed), max(_indices_completed) + 2):  # +2取不到 +1必定不存在
+    for i in range(min(_indices_completed), max(_indices_completed) + 2):
         if i in _indices_completed and (i - 1) not in _indices_completed:
             _onsets.append(i)
         elif i not in _indices_completed and (i - 1) in _indices_completed:
             _offsets.append(i - 1)
 
-    # print(f" > Silence/Noise Onsets: {onsets}")  # 打印所有无声范围的onset
-    # print(f" > Silence/Noise Offsets: {offsets}")  # 打印所有无声范围的offset
-
-    # onset和offset的数量一定一样(? not really)
-    # 把它俩成对组合后，筛除掉其中长度不够的（noise too short）
-
-
+    # 筛除掉长度不够的噪声片段
     while True:
         _bad_onoffsets = []
         for i in range(len(_offsets)-1):
-            if (_onsets[i+1] - _offsets[i]) * _dsFactor /_audio_samplerate < .1:
+            if (_onsets[i+1] - _offsets[i]) * _dsFactor / _audio_samplerate < .1:
                 _bad_onoffsets.append(_onsets[i+1])
                 _bad_onoffsets.append(_offsets[i])
         if len(_bad_onoffsets) == 0:
             break
-
         _onsets = [i for i in _onsets if i not in _bad_onoffsets]
         _offsets = [i for i in _offsets if i not in _bad_onoffsets]
     _onoffsets = [(_onsets[i], _offsets[i]) for i in range(len(_onsets))]
 
-    # print(_onoffsets)
-
-    # now offset means sound offset (not silence offset)
-    # onset means sound onset (not silence onset)
-    # with ProcessPoolExecutor(max_workers=threads) as executor:
-    #     results = list(executor.map(process_items_with_params, *parameters, chunksize=threads))
-    # print(np.cuda.get_device_id())
-    # np.cuda.device = 1
-    # print("---↘")
     for i, (__offset, __onset) in enumerate(_onoffsets):
         print("-")
 
-        # -------------------------------------------------
-        # 强制跳过条件 Skip Condition
-
+        # 强制跳过条件
         if __onset <= 0 - 3:
             continue
-
         if __offset >= len(_cluster.labels_) + 3:
             continue
 
-        # -----------------------------------------------
-
         __offset = 0 if __offset <= 0 else __offset
-        # print(__offset * _dsFactor+1, __onset * _dsFactor, __offset * _dsFactor, __onset * _dsFactor-1)
+        
         try:
             __candidate_y1_area = abs(np.array(
                 _audio_arr_filtered[__offset * _dsFactor+1:__onset * _dsFactor] -
                 _audio_arr_filtered[__offset * _dsFactor:__onset * _dsFactor-1]
             ))
-
         except ValueError:
             continue  # hit the bottom with no more frames
 
@@ -209,12 +179,7 @@ def runPraditor(params, audio_obj, which_set):
                 _audio_arr_filtered[__sample_endpoint:__sample_startpoint - 1]
             ))
 
-
         __candidate_y1_area = np.sort(__candidate_y1_area)[:int(len(__candidate_y1_area) * params["ratio"])]
-
-
-
-
         __y1_threshold = float(np.sum(__candidate_y1_area) / (__sample_startpoint - __sample_endpoint) * params["amp"])
         __ref_midpoint = int(__offset*_dsFactor + (__onset-__offset) * _dsFactor * 0.8)  # 3/4偏移量
 
@@ -225,25 +190,16 @@ def runPraditor(params, audio_obj, which_set):
 
         if __ref_midpoint < __sample_startpoint:
             __ref_midpoint = __sample_startpoint
-        # print(np.argmin(candidate_y1_area), ref_midpoint)
-
-        # ----------------- Processing onset area --------------
-        # print(f"\r{audio_file}\t|\t{get_current_time()}\t|\tProcessing >> onset {onset} + offset {offset}", end="")
-
-
-        # print(y1_threshold)
 
         __countValidPiece = 0
         __countBadPiece = 0
         __countDSTime = -1
 
-        _final_answer = None
         while __ref_midpoint + __countDSTime < __ref_midpoint_next:
             __countDSTime += 1
 
             __left_boundary = __ref_midpoint + __countDSTime - params["win_size"]
             __right_boundary = __ref_midpoint + __countDSTime
-
 
             try:
                 __raw_value = abs(_audio_arr_filtered[__left_boundary:__right_boundary] - _audio_arr_filtered[__left_boundary-1:__right_boundary-1])
@@ -255,7 +211,6 @@ def runPraditor(params, audio_obj, which_set):
             __y1_value = sum(__raw_value)/len(__raw_value)
 
             if __y1_value > __y1_threshold:
-
                 __countValidPiece += 1
             else:
                 __countBadPiece += 1
@@ -263,7 +218,6 @@ def runPraditor(params, audio_obj, which_set):
             if __countValidPiece - __countBadPiece * params["penalty"]  <= 0:
                 __countValidPiece = 0
                 __countBadPiece = 0
-
             elif __countValidPiece - __countBadPiece >= params["numValid"]:
                 _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
 
@@ -274,12 +228,12 @@ def runPraditor(params, audio_obj, which_set):
     return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
 
 
+def runPraditor(params, audio_obj, which_set):
+    """
+    通用模式检测函数（向后兼容）
+    """
+    return detectPraditor(params, audio_obj, which_set, mode="general")
 
-
-
-
-
-# VAD 模式
 
 def vadPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
     if etime == -1:
@@ -295,263 +249,10 @@ def vadPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
 
 
 def vadPraditor(params, audio_obj, which_set):
-    # 导入数据，并且遵循一定之格式
-    for xset in params:
-        for item in params[xset]:
-            params[xset][item] = eval(params[xset][item])
-
-    params["offset"] = params["onset"]
-
-    params = params[which_set]  # 选择是onset还是offset
-
-    # 固定某些值
-    params["ratio"] = 0.9
-    params["win_size"] = 50
-    params["ref_len"] = params["win_size"] * 5
-    params["penalty"] = 10
-
-
-    # print(params)
-    _answer_frames = []
-
-    _audio_obj = audio_obj
-
-    _audio_samplerate = audio_obj.frame_rate
-
-    _audio_arr_filtered = bandpass_filter(
-        np.array(audio_obj.get_array_of_samples()),
-        lowcut=params["cutoff0"],
-        highcut=params["cutoff1"],
-        fs=_audio_obj.frame_rate
-    )
-
-
-
-    # Audio已经准备好
-    # 接下来就是第一步：DBSCAN聚类找噪声片段
-
-
-    # 1.1. 降采样
-    # 把一秒钟的音频分成n=40份
-
-    _dsFactor = _audio_obj.frame_rate // 40
-    # _audio_arr_ds = _audio_arr_filtered
-
-    # 用取余容易得到[:-0]，返回一个空list
-    # 用整除解决这个问题
-    if len(_audio_arr_filtered) % _dsFactor != 0:
-        _audio_arr_filtered = _audio_arr_filtered[:-(len(_audio_arr_filtered) % _dsFactor)]
-    
-    # warning or auto change?
-    if which_set == "offset":
-        _audio_arr_filtered = np.flip(_audio_arr_filtered)
-
-    # max_frm_num = len(_audio_arr_filtered)
-    _audio_arr_ds = _audio_arr_filtered.reshape((len(_audio_arr_filtered) // _dsFactor, _dsFactor))
-    _audio_arr_ds = np.max(_audio_arr_ds, axis=1)  # 用max方法降采样
-
-    # print(_audio_arr_ds[10:1000])
-
-    _points_array = np.array([
-        [_audio_arr_ds[i] for i in range(len(_audio_arr_ds) - 1)],
-        [_audio_arr_ds[i + 1] for i in range(len(_audio_arr_ds) - 1)]
-    ]).T
-
-
-
-
-    _eps = params["eps_ratio"] * float(np.max(np.sort(_audio_arr_ds)[:int(.8 * len(_audio_arr_ds))]))  # 找到合适的radius，防止异常值
-
-
-    del _audio_arr_ds
-    gc.collect()
-
-    _min_samples = math.ceil(0.3/_dsFactor * _audio_obj.frame_rate) #math.ceil(2 / (target_audio_samplerate/44100) / (interval*2/4281))
-    try:
-        _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
-        # print(_cluster.labels_)
-
-        # _cluster = DBSCAN_(eps=_eps, min_samples=_min_samples).fit(_points_array)
-        # print(_cluster.labels_)
-    except MemoryError:
-        print("not enough memory")
-        return []
-
-
-
-
-    # To look for the label with which the coordinate is closet to the zero point
-    # xy值加起来最小值 -> 最接近零点
-    noise_label = 0
-    for i in range(0, len(set(_cluster.labels_))-1):
-        if np.min(np.sum(_points_array[_cluster.labels_ == i], axis=1)) < np.min(np.sum(_points_array[_cluster.labels_ == noise_label], axis=1)):
-            noise_label = i
-    _points_confirmed = _points_array[_cluster.labels_ == noise_label]
-    # print(_labels, noise_label)
-
-    # 把最小cluster以下的所有点都囊括进来
-    _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
-    # print(_points_confirmed)
-
-    _labels = _cluster.labels_
-
-    for i in _points_compensation:
-        _labels[int(i)] = noise_label
-
-    _labels = [noise_label] * 3 + [i for i in _labels] + [noise_label] * 3  # 这句干啥用的？？？
-    _indices_confirmed = [i-3 for i in range(len(_labels)) if _labels[i] == noise_label]  # or labels[i] == -1]
-
-    # print(_indices_confirmed)
-
-
-    # gather sampled area | target area
-
-    _indices_completed = []
-    for i in _indices_confirmed:
-        for j in range(3):  # 原来是4，改成了3，只加上012
-            if (i + j) not in _indices_completed:
-                _indices_completed.append(i + j)
-
-    # print(_indices_completed)
-
-    _onsets = []
-    _offsets = []
-    for i in range(min(_indices_completed), max(_indices_completed) + 2):  # +2取不到 +1必定不存在
-        if i in _indices_completed and (i - 1) not in _indices_completed:
-            _onsets.append(i)
-        elif i not in _indices_completed and (i - 1) in _indices_completed:
-            _offsets.append(i - 1)
-
-    # print(f" > Silence/Noise Onsets: {onsets}")  # 打印所有无声范围的onset
-    # print(f" > Silence/Noise Offsets: {offsets}")  # 打印所有无声范围的offset
-
-    # onset和offset的数量一定一样(? not really)
-    # 把它俩成对组合后，筛除掉其中长度不够的（noise too short）
-
-
-    while True:
-        _bad_onoffsets = []
-        for i in range(len(_offsets)-1):
-            if (_onsets[i+1] - _offsets[i]) * _dsFactor /_audio_samplerate < .1:
-                _bad_onoffsets.append(_onsets[i+1])
-                _bad_onoffsets.append(_offsets[i])
-        if len(_bad_onoffsets) == 0:
-            break
-
-        _onsets = [i for i in _onsets if i not in _bad_onoffsets]
-        _offsets = [i for i in _offsets if i not in _bad_onoffsets]
-    _onoffsets = [(_onsets[i], _offsets[i]) for i in range(len(_onsets))]
-
-
-    for i, (__offset, __onset) in enumerate(_onoffsets):
-        print("-")
-
-        # -------------------------------------------------
-        # 强制跳过条件 Skip Condition
-
-        if __onset <= 0 - 3:
-            continue
-
-        if __offset >= len(_cluster.labels_) + 3:
-            continue
-
-        # -----------------------------------------------
-
-        __offset = 0 if __offset <= 0 else __offset
-        # print(__offset * _dsFactor+1, __onset * _dsFactor, __offset * _dsFactor, __onset * _dsFactor-1)
-        try:
-            __candidate_y1_area = abs(np.array(
-                _audio_arr_filtered[__offset * _dsFactor+1:__onset * _dsFactor] -
-                _audio_arr_filtered[__offset * _dsFactor:__onset * _dsFactor-1]
-            ))
-
-        except ValueError:
-            continue  # hit the bottom with no more frames
-
-        __sample_startpoint = int(np.argmin(__candidate_y1_area) + __offset * _dsFactor)
-        __sample_endpoint = __sample_startpoint - params["ref_len"]
-        if __sample_endpoint < 0:
-            __sample_endpoint = 0
-
-        try:
-            __candidate_y1_area = abs(np.array(
-                _audio_arr_filtered[__sample_endpoint+1:__sample_startpoint] -
-                _audio_arr_filtered[__sample_endpoint:__sample_startpoint - 1]
-            ))
-        except ValueError:
-            __sample_startpoint = __sample_endpoint + params["ref_len"]
-            __candidate_y1_area = abs(np.array(
-                _audio_arr_filtered[__sample_endpoint+1:__sample_startpoint] -
-                _audio_arr_filtered[__sample_endpoint:__sample_startpoint - 1]
-            ))
-
-
-        __candidate_y1_area = np.sort(__candidate_y1_area)[:int(len(__candidate_y1_area) * params["ratio"])]
-
-
-        __y1_threshold = float(np.sum(__candidate_y1_area) / (__sample_startpoint - __sample_endpoint) * params["amp"])
-        __ref_midpoint = int(__offset*_dsFactor + (__onset-__offset) * _dsFactor * 0.8)  # 3/4偏移量
-
-        if i < len(_onoffsets) - 1:
-            __ref_midpoint_next = int(_onoffsets[i+1][0]*_dsFactor + (_onoffsets[i+1][1]-_onoffsets[i+1][0]) * _dsFactor * 0.8)
-        else:
-            __ref_midpoint_next = len(_audio_arr_filtered)  # 设置为音频最后一帧的位置
-
-
-        if __ref_midpoint < __sample_startpoint:
-            __ref_midpoint = __sample_startpoint
-        # print(np.argmin(candidate_y1_area), ref_midpoint)
-
-        # ----------------- Processing onset area --------------
-        # print(f"\r{audio_file}\t|\t{get_current_time()}\t|\tProcessing >> onset {onset} + offset {offset}", end="")
-
-
-        # print(y1_threshold)
-
-        __countValidPiece = 0
-        __countBadPiece = 0
-        __countDSTime = -1
-
-        _final_answer = None
-        while __ref_midpoint + __countDSTime < __ref_midpoint_next:  # 遍历从midpoint到next midpoint之间的每一帧
-            __countDSTime += 1
-
-            __left_boundary = __ref_midpoint + __countDSTime - params["win_size"]
-            __right_boundary = __ref_midpoint + __countDSTime
-
-
-            try:
-                __raw_value = abs(_audio_arr_filtered[__left_boundary:__right_boundary] - _audio_arr_filtered[__left_boundary-1:__right_boundary-1])
-            except ValueError:
-                break
-            __raw_value.sort()
-            __raw_value = __raw_value[:int(len(__raw_value) * params["ratio"])]
-
-            __y1_value = sum(__raw_value)/len(__raw_value)
-
-            if __y1_value > __y1_threshold:
-
-                __countValidPiece += 1
-            else:
-                __countBadPiece += 1 #params["penalty"]
-
-            if __countValidPiece - __countBadPiece * params["penalty"]  <= 0:
-                __countValidPiece = 0
-                __countBadPiece = 0
-
-            elif __countValidPiece - __countBadPiece >= params["numValid"]:
-                _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
-
-                if which_set == "offset":
-                    _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
-                _answer_frames.append(_final_answer)
-                break
-        
-
-
-    return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
-
-
+    """
+    VAD模式检测函数（向后兼容）
+    """
+    return detectPraditor(params, audio_obj, which_set, mode="vad")
 
 
 def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[], offsets=[]):
@@ -682,8 +383,3 @@ def textgrid_to_csv(textgrid_file_path):
     
     print(f"{tg_filename}\t|\t{get_current_time()}\t|\tCSV created at: {csv_filename}")
     return csv_filename
-
-
-
-
-
