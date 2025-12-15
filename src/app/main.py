@@ -46,6 +46,7 @@ class CustomTitleBar(QWidget):
     file_menu_clicked = Signal()
     help_menu_clicked = Signal()
     run_signal = Signal()
+    run_all_signal = Signal()
     test_signal = Signal()
     trash_signal = Signal()
     read_signal = Signal()
@@ -288,6 +289,19 @@ class CustomTitleBar(QWidget):
         self.run_btn.leaveEvent = hide_run_tooltip
         layout.addWidget(self.run_btn)
         
+        # 添加run-all按钮
+        self.run_all_btn = QPushButton()
+        self.run_all_btn.setIcon(QIcon(get_resource_path('resources/icons/run-all.svg')))
+        self.run_all_btn.setFixedSize(32, 32)
+        self.run_all_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.run_all_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为run_all_btn添加提示框
+        self.run_all_tooltip = create_tooltip("Run Praditor on all audio files")
+        show_run_all_tooltip, hide_run_all_tooltip = create_hover_handlers(self.run_all_btn, self.run_all_tooltip)
+        self.run_all_btn.enterEvent = show_run_all_tooltip
+        self.run_all_btn.leaveEvent = hide_run_all_tooltip
+        layout.addWidget(self.run_all_btn)
+        
         # 添加测试按钮
         self.test_btn = QPushButton()
         self.test_btn.setIcon(QIcon(get_resource_path('resources/icons/test.svg')))
@@ -348,6 +362,7 @@ class CustomTitleBar(QWidget):
         self.trash_btn.clicked.connect(self.trash_signal.emit)
         self.read_btn.clicked.connect(self.read_signal.emit)
         self.run_btn.clicked.connect(self.run_signal.emit)
+        self.run_all_btn.clicked.connect(self.run_all_signal.emit)
         self.test_btn.clicked.connect(self.test_signal.emit)
         self.prev_audio_btn.clicked.connect(self.prev_audio_signal.emit)
         self.next_audio_btn.clicked.connect(self.next_audio_signal.emit)
@@ -566,6 +581,7 @@ class MainWindow(QMainWindow):
         self.title_bar.trash_signal.connect(self.clearXset)
         self.title_bar.read_signal.connect(self.readXset)
         self.title_bar.run_signal.connect(lambda: self.execPraditor(is_test=False))
+        # self.title_bar.run_all_signal.connect(lambda: self.execPraditor(is_test=False))
         self.title_bar.test_signal.connect(lambda: self.execPraditor(is_test=True))
         self.title_bar.onset_signal.connect(self.turnOnset)
         self.title_bar.offset_signal.connect(self.turnOffset)
