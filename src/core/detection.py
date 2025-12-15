@@ -78,7 +78,6 @@ def runPraditor(params, audio_obj, which_set):
 
 
     _eps = params["eps_ratio"] * float(np.max(np.sort(_audio_arr_ds)[:int(.8 * len(_audio_arr_ds))]))  # 找到合适的radius，防止异常值
-    print(_eps)
 
     del _audio_arr_ds
     gc.collect()
@@ -238,7 +237,7 @@ def runPraditor(params, audio_obj, which_set):
         __countBadPiece = 0
         __countDSTime = -1
 
-
+        _final_answer = None
         while __ref_midpoint + __countDSTime < __ref_midpoint_next:
             __countDSTime += 1
 
@@ -259,9 +258,9 @@ def runPraditor(params, audio_obj, which_set):
 
                 __countValidPiece += 1
             else:
-                __countBadPiece += params["penalty"]
+                __countBadPiece += 1
 
-            if __countValidPiece - __countBadPiece  <= 0:
+            if __countValidPiece - __countBadPiece * params["penalty"]  <= 0:
                 __countValidPiece = 0
                 __countBadPiece = 0
 
@@ -269,7 +268,7 @@ def runPraditor(params, audio_obj, which_set):
                 _final_answer = __ref_midpoint + __countDSTime - __countValidPiece - __countBadPiece
 
                 if which_set == "offset":
-                    _final_answer = len(_audio_arr_filtered) - _final_answer
+                    _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
                 _answer_frames.append(_final_answer)
                 break
     return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
@@ -498,11 +497,6 @@ def vadPraditor(params, audio_obj, which_set):
         else:
             __ref_midpoint_next = len(_audio_arr_filtered)  # 设置为音频最后一帧的位置
 
-        if i > 0:
-            __ref_midpoint_prev = int(_onoffsets[i-1][0]*_dsFactor + (_onoffsets[i-1][1]-_onoffsets[i-1][0]) * _dsFactor * 0.8)
-        else:
-            __ref_midpoint_prev = 0  # 设置为音频第一帧的位置
-
 
         if __ref_midpoint < __sample_startpoint:
             __ref_midpoint = __sample_startpoint
@@ -554,10 +548,8 @@ def vadPraditor(params, audio_obj, which_set):
                 break
         
 
-    if which_set == "offset":
-        _answer_frames.reverse()
 
-    return [frm/_audio_samplerate for frm in _answer_frames]
+    return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
 
 
 
