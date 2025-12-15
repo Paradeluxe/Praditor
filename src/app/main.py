@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.gui.styles import *
-from src.core.detection import runPraditorWithTimeRange, vadPraditorWithTimeRange, create_textgrid_with_time_point
+from src.core.detection import detectPraditor, create_textgrid_with_time_point
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
@@ -1501,9 +1501,8 @@ class MainWindow(QMainWindow):
 
 
     def execPraditor(self, is_test: bool):
-        # 检测当前模式，选择合适的检测函数
+        # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
-        detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
         
         if is_vad_mode:
             if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
@@ -1537,7 +1536,7 @@ class MainWindow(QMainWindow):
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             except KeyError:
                 pass
-            onsets = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+            onsets = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
         else:
             pass  # onsets = []
 
@@ -1546,7 +1545,7 @@ class MainWindow(QMainWindow):
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
             except KeyError:
                 pass
-            offsets = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+            offsets = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
         else:
             pass  # offsets = []
 
@@ -1614,9 +1613,8 @@ class MainWindow(QMainWindow):
 
     def testPraditorOnAudio(self):
 
-        # 检测当前模式，选择合适的检测函数
+        # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
-        detection_func = vadPraditorWithTimeRange if is_vad_mode else runPraditorWithTimeRange
 
         if is_vad_mode:
             if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
@@ -1644,12 +1642,12 @@ class MainWindow(QMainWindow):
         
         _test_tg_dict_tp = {"onset": [], "offset": []}
         if not self.run_onset.isChecked():
-            _test_tg_dict_tp["onset"] = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset")
+            _test_tg_dict_tp["onset"] = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
         else:
             _test_tg_dict_tp["onset"] = []
 
         if not self.run_offset.isChecked():
-            _test_tg_dict_tp["offset"] = detection_func(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset")
+            _test_tg_dict_tp["offset"] = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
         else:
             _test_tg_dict_tp["offset"] = []
         

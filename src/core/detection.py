@@ -10,17 +10,7 @@ from textgrid import TextGrid, PointTier, Point, IntervalTier, Interval
 from src.utils.audio import bandpass_filter, get_current_time, ReadSound
 
 
-def runPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
-    if etime == -1:
-        ans_tps = runPraditor(params, audio_obj, which_set)
-
-    else:
-        ans_tps = runPraditor(params, audio_obj[stime*1000:etime*1000], which_set)
-        ans_tps = [tp + stime for tp in ans_tps if 5 < tp <ans_tps[-1] - 5]
-    return ans_tps
-
-
-def detectPraditor(params, audio_obj, which_set, mode="general"):
+def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=-1):
     """
     合并后的检测函数
     
@@ -29,6 +19,8 @@ def detectPraditor(params, audio_obj, which_set, mode="general"):
         audio_obj: 音频对象
         which_set: "onset"或"offset"
         mode: "general"（通用模式）或"vad"（VAD模式）
+        stime: 开始时间（毫秒），默认0
+        etime: 结束时间（毫秒），默认-1表示整个音频
     """
     # 导入数据，并且遵循一定之格式
     for xset in params:
@@ -50,6 +42,10 @@ def detectPraditor(params, audio_obj, which_set, mode="general"):
             "penalty": 10
         })
 
+    # 处理时间范围
+    if etime != -1:
+        audio_obj = audio_obj[stime*1000:etime*1000]
+    
     _answer_frames = []
     _audio_obj = audio_obj
     _audio_samplerate = audio_obj.frame_rate
@@ -225,34 +221,19 @@ def detectPraditor(params, audio_obj, which_set, mode="general"):
                     _final_answer = len(_audio_arr_filtered) - (_final_answer +  len(_audio_arr_filtered) % _dsFactor)
                 _answer_frames.append(_final_answer)
                 break
-    return [frm/_audio_samplerate for frm in list(set(_answer_frames))]
-
-
-def runPraditor(params, audio_obj, which_set):
-    """
-    通用模式检测函数（向后兼容）
-    """
-    return detectPraditor(params, audio_obj, which_set, mode="general")
-
-
-def vadPraditorWithTimeRange(params, audio_obj, which_set, stime=0, etime=-1):
-    if etime == -1:
-        ans_tps = vadPraditor(params, audio_obj, which_set)
-
-    else:
-        ans_tps = vadPraditor(params, audio_obj[stime*1000:etime*1000], which_set)
-        ans_tps = [tp + stime for tp in ans_tps if 5 < tp <ans_tps[-1] - 5]
     
-    ans_tps = sorted(ans_tps)
-
-    return ans_tps
-
-
-def vadPraditor(params, audio_obj, which_set):
-    """
-    VAD模式检测函数（向后兼容）
-    """
-    return detectPraditor(params, audio_obj, which_set, mode="vad")
+    # 处理时间范围偏移
+    _answer = [frm/_audio_samplerate for frm in list(set(_answer_frames))]
+    
+    # VAD模式下排序结果
+    if mode == "vad":
+        _answer = sorted(_answer)
+    
+    # 添加时间偏移
+    if etime != -1:
+        _answer = [tp + stime for tp in _answer if 5 < tp < (_answer[-1] - 5) if _answer]
+    
+    return _answer
 
 
 def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[], offsets=[]):
