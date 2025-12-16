@@ -3,10 +3,21 @@ import os
 import sys
 import webbrowser
 
+plat = os.name.lower()
+
+if plat == 'nt':  # Windows
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
+elif plat == 'posix':  # Unix-like systems (Linux, macOS)
+    pass
+else:
+    pass
+
+
+
 # 将项目根目录添加到Python路径
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from PySide6.QtCore import Qt, QUrl, Signal, QPoint, QRectF
+from PySide6.QtCore import Qt, QUrl, Signal, QPoint, QRectF, QRunnable, QThreadPool, QObject, QThread, QTimer
 from PySide6.QtGui import QAction, QIcon, QCursor, QPainterPath, QPainter, QColor
 from PySide6.QtMultimedia import QAudioOutput, QAudio, \
     QMediaPlayer
@@ -26,14 +37,22 @@ from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_i
 from src.utils.resources import get_resource_path
 
 
-plat = os.name.lower()
+# 异步检测任务类
+class DetectPraditorThread(QThread):
+    finished = Signal(str, list)  # 参数：which_set, results
+    
+    def __init__(self, params, audio_obj, which_set, mode):
+        super().__init__()
+        self.params = params
+        self.audio_obj = audio_obj
+        self.which_set = which_set
+        self.mode = mode
+    
+    def run(self):
+        results = detectPraditor(self.params, self.audio_obj, self.which_set, self.mode)
+        self.finished.emit(self.which_set, results)
 
-if plat == 'nt':  # Windows
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'Praditor') # arbitrary string
-elif plat == 'posix':  # Unix-like systems (Linux, macOS)
-    pass
-else:
-    pass
+
 
 
 class CustomTitleBar(QWidget):
@@ -54,6 +73,7 @@ class CustomTitleBar(QWidget):
     offset_signal = Signal()
     prev_audio_signal = Signal()
     next_audio_signal = Signal()
+    stop_signal = Signal()
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -302,6 +322,19 @@ class CustomTitleBar(QWidget):
         self.run_all_btn.leaveEvent = hide_run_all_tooltip
         layout.addWidget(self.run_all_btn)
         
+        # 添加停止按钮
+        self.stop_btn = QPushButton()
+        self.stop_btn.setIcon(QIcon(get_resource_path('resources/icons/stop.svg')))
+        self.stop_btn.setFixedSize(32, 32)
+        self.stop_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
+        self.stop_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        # 为stop_btn添加提示框
+        self.stop_tooltip = create_tooltip("Stop Praditor detection")
+        show_stop_tooltip, hide_stop_tooltip = create_hover_handlers(self.stop_btn, self.stop_tooltip)
+        self.stop_btn.enterEvent = show_stop_tooltip
+        self.stop_btn.leaveEvent = hide_stop_tooltip
+        layout.addWidget(self.stop_btn)
+        
         # 添加测试按钮
         self.test_btn = QPushButton()
         self.test_btn.setIcon(QIcon(get_resource_path('resources/icons/test.svg')))
@@ -363,6 +396,7 @@ class CustomTitleBar(QWidget):
         self.read_btn.clicked.connect(self.read_signal.emit)
         self.run_btn.clicked.connect(self.run_signal.emit)
         self.run_all_btn.clicked.connect(self.run_all_signal.emit)
+        self.stop_btn.clicked.connect(self.stop_signal.emit)
         self.test_btn.clicked.connect(self.test_signal.emit)
         self.prev_audio_btn.clicked.connect(self.prev_audio_signal.emit)
         self.next_audio_btn.clicked.connect(self.next_audio_signal.emit)
@@ -479,6 +513,7 @@ class CustomTitleBar(QWidget):
 
 
 class MainWindow(QMainWindow):
+    run_current_done = Signal()
 
     def __init__(self):
         super().__init__()
@@ -511,7 +546,17 @@ class MainWindow(QMainWindow):
         self.which_one = 0
         self.setWindowTitle("Praditor")
         self.setMinimumSize(1000, 750)
-
+        
+        # 初始化线程池
+        self.thread_pool = QThreadPool.globalInstance()
+        self.detection_results = {"onset": [], "offset": []}
+        self.detection_count = 0
+        self.total_detections = 0
+        self.current_runnables = []
+        
+        # run-all模式状态跟踪
+        self.is_running_all = False
+        self.run_all_current_index = 0
 
 
         # 初始化媒体播放器和音频输出
@@ -581,8 +626,9 @@ class MainWindow(QMainWindow):
         self.title_bar.trash_signal.connect(self.clearXset)
         self.title_bar.read_signal.connect(self.readXset)
         self.title_bar.run_signal.connect(lambda: self.execPraditor(is_test=False))
-        # self.title_bar.run_all_signal.connect(lambda: self.execPraditor(is_test=False))
+        self.title_bar.run_all_signal.connect(self.runAllAudioFiles)
         self.title_bar.test_signal.connect(lambda: self.execPraditor(is_test=True))
+        self.title_bar.stop_signal.connect(self.stopDetection)
         self.title_bar.onset_signal.connect(self.turnOnset)
         self.title_bar.offset_signal.connect(self.turnOffset)
         # 连接前后音频按钮信号
@@ -612,8 +658,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         layout = QVBoxLayout()  # 创建一个垂直布局
         central_widget.setLayout(layout)
-        # file_menu.addSeparator()
-        # file_menu.addAction(button_action2)
+
         # ---------------------------------------------------
         self.AudioViewer = AudioViewer()
         self.AudioViewer.setMinimumHeight(200)
@@ -1514,6 +1559,160 @@ class MainWindow(QMainWindow):
     def browseInstruction(self):
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
+    
+    def stopDetection(self):
+        """停止当前正在运行的检测任务"""
+        # 终止所有当前运行的线程
+        for thread in self.current_runnables.copy():
+            try:
+                if thread.isRunning():
+                    thread.terminate()
+                    thread.wait()  # 等待线程终止
+            except RuntimeError:
+                # 忽略已删除的C++对象
+                pass
+        # 清空列表
+        self.current_runnables.clear()
+        # 清空检测结果
+        self.detection_results = {"onset": [], "offset": []}
+        self.detection_count = 0
+        self.total_detections = 0
+    
+    def on_detect_finished(self, which_set, results):
+        """检测任务完成后的处理"""
+        self.detection_results[which_set] = results
+        self.detection_count += 1
+        
+        # 检查是否所有检测任务都已完成
+        if self.detection_count == self.total_detections:
+            # 处理检测结果
+            self.process_detection_results()
+            # 清空当前运行的runnables列表
+            self.current_runnables.clear()
+    
+    def runAllAudioFiles(self):
+        """Run Praditor on all audio files sequentially, displaying one audio after current detection finishes"""
+        if not hasattr(self, 'file_paths') or len(self.file_paths) == 0:
+            return
+        
+        # 设置run-all标志和起始索引
+        self.is_running_all = True
+        self.run_all_current_index = 0  # 从第一个音频开始
+        
+        # 显示第一个音频
+        self.which_one = self.run_all_current_index
+        self.file_path = self.file_paths[self.which_one]
+        dir_name = os.path.basename(os.path.dirname(self.file_path))
+        base_name = os.path.basename(self.file_path)
+        self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
+        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
+        self.showXsetNum(is_test=False)
+        
+        # 启动检测
+        self.execPraditor(is_test=False)
+
+    
+    def on_run_current_finished(self):
+        """已废弃：不再使用定时器，改为在process_detection_results中处理音频切换"""
+        pass
+
+
+    
+    def process_detection_results(self):
+        # 处理所有检测结果
+        onsets = self.detection_results["onset"]
+        offsets = self.detection_results["offset"]
+        is_vad_mode = self.current_detection_params["is_vad_mode"]
+        is_test = self.current_detection_params["is_test"]
+        
+        if is_vad_mode:
+            ###########################
+            # 如果头尾是从有声直接开始/结束，则为其赋值为0/音频长度
+            ###########################
+            if onsets and offsets:  # 确保列表非空
+                if onsets[0] >= offsets[0]:
+                    onsets = [0.0] + onsets
+    
+                if offsets[-1] <= onsets[-1]:
+                    offsets.append(self.AudioViewer.audio_obj.duration_seconds)
+    
+                ##########################
+                # Select the one offset that is closest to onset and earlier than onset
+                ##########################
+    
+                new_onsets = []
+                new_offsets = []
+                for i, onset in enumerate(onsets):
+                    if i == 0:
+                        new_offsets.append(offsets[-1])
+                        new_onsets.append(onset)
+                    else:
+                        try:
+                            new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
+                            new_onsets.append(onset)
+                        except ValueError:
+                            pass
+    
+                onsets = sorted(new_onsets)
+                offsets = sorted(new_offsets)
+    
+        if is_test:
+            # 测试模式：直接显示结果，不保存
+            self.AudioViewer.tg_dict_tp["onset"] = onsets
+            self.AudioViewer.tg_dict_tp["offset"] = offsets
+            self.showXsetNum(is_test=is_test)
+        else:  # default mode
+            # 保存结果
+            self.AudioViewer.tg_dict_tp["onset"] = onsets
+            self.AudioViewer.tg_dict_tp["offset"] = offsets
+    
+            create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
+            
+            self.readXset()
+            self.showXsetNum(is_test=is_test)
+            self.update_current_param()
+        
+        # 检查是否处于run-all模式
+        if self.is_running_all:
+            # 递增当前索引
+            self.run_all_current_index += 1
+            
+            # 检查是否还有更多文件要处理
+            if self.run_all_current_index < len(self.file_paths):
+                # 更新当前索引到which_one
+                self.which_one = self.run_all_current_index
+                # 更新当前文件路径
+                self.file_path = self.file_paths[self.which_one]
+                # 更新窗口标题
+                dir_name = os.path.basename(os.path.dirname(self.file_path))
+                base_name = os.path.basename(self.file_path)
+                self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
+                # 读取新的音频文件
+                self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path)
+                # 显示当前音频的xset数量
+                self.showXsetNum(is_test=False)
+                # 启动下一个音频的检测
+                self.execPraditor(is_test=False)
+            else:
+                # 所有文件处理完成，退出run-all模式
+                self.is_running_all = False
+                # 发射run完成信号
+                self.run_current_done.emit()
+        else:
+            # 单个文件处理完成
+            # 发射run完成信号
+            self.run_current_done.emit()
+        
+
+
+    def on_detect_finished(self, which_set, results):
+        # 处理检测结果
+        self.detection_results[which_set] = results
+        self.detection_count += 1
+        
+        # 检查是否所有检测任务都已完成
+        if self.detection_count == self.total_detections:
+            self.process_detection_results()
 
 
     def execPraditor(self, is_test: bool):
@@ -1543,143 +1742,65 @@ class MainWindow(QMainWindow):
 
                 return
 
+        # 重置检测结果
+        self.detection_results = {"onset": [], "offset": []}
+        self.detection_count = 0
+        self.total_detections = 0
         
-        onsets = []
-        offsets = []
-
+        # 保存当前检测参数，供后续处理使用
+        self.current_detection_params = {
+            "is_vad_mode": is_vad_mode,
+            "is_test": is_test
+        }
+        
+        # 获取检测参数
+        params = self.MySliders.getParams()
+        
+        # 提交检测任务到线程池
         if not self.run_onset.isChecked():
+            # 执行onset检测
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             except KeyError:
                 pass
-            onsets = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
-        else:
-            pass  # onsets = []
-
+            
+            # 创建params副本，避免共享同一字典导致的问题
+            onset_params = {}
+            for xset in params:
+                onset_params[xset] = params[xset].copy()
+            
+            # 创建并启动异步线程
+            onset_thread = DetectPraditorThread(onset_params, self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
+            onset_thread.finished.connect(self.on_detect_finished)
+            onset_thread.finished.connect(onset_thread.deleteLater)
+            onset_thread.start()
+            self.total_detections += 1
+            self.current_runnables.append(onset_thread)
+        
         if not self.run_offset.isChecked():
+            # 执行offset检测
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
             except KeyError:
                 pass
-            offsets = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
-        else:
-            pass  # offsets = []
-
-
-
-        if is_vad_mode:
-            ###########################
-            # 如果头尾是从有声直接开始/结束，则为其赋值为0/音频长度
-            ###########################
-            # onsets = sorted(onsets)
-            # offsets = sorted(offsets)
-
-            if onsets[0] >= offsets[0]:
-                onsets = [0.0] + onsets
-
-            if offsets[-1] <= onsets[-1]:
-                offsets.append(self.AudioViewer.audio_obj.duration_seconds)
-
-            # print(onsets)
-            # print(offsets)
-            #--------------------------#
-
-            ##########################
-            # Select the one offset that is closest to onset and earlier than onset
-            ##########################
-
-            new_onsets = []
-            new_offsets = []
-            for i, onset in enumerate(onsets):
-                # print(onset)
-                if i == 0:
-                    new_offsets.append(offsets[-1])
-                    new_onsets.append(onset)
-                else:
-                    try:
-                        new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
-                        new_onsets.append(onset)
-
-                    except ValueError:
-                        pass
-
-
-            onsets = sorted(new_onsets)
-            offsets = sorted(new_offsets)
-            #--------------------------#
-
-
-
-
-        if is_test:
-            self.showXsetNum(is_test=is_test)
-
-
-        else:  # default mode
-            self.AudioViewer.tg_dict_tp["onset"] = onsets
-            self.AudioViewer.tg_dict_tp["offset"] = offsets
-
-            create_textgrid_with_time_point(audio_file_path=self.file_path, is_vad_mode=is_vad_mode, onsets=self.AudioViewer.tg_dict_tp["onset"], offsets=self.AudioViewer.tg_dict_tp["offset"])
             
-            self.readXset()
-            self.showXsetNum(is_test=is_test)
-            self.update_current_param()
-
-
-
-    def testPraditorOnAudio(self):
-
-        # 检测当前模式，直接使用detectPraditor函数
-        is_vad_mode = self.vad_btn.isChecked()
-
-        if is_vad_mode:
-            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
-
-                popup_window = QMessageBox()
-                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
-                popup_window.exec()
-
-                return
-
-        else: # default mode
-            if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2 or \
-                float(self.MySliders.cutoff1_slider_offset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
-
-                popup_window = QMessageBox()
-                # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
-                popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-                popup_window.setText(f"LowPass exceeds the Nyquist frequency boundary {float(self.AudioViewer.audio_samplerate)/2:.0f}")
-                popup_window.exec()
-
-                return
+            # 创建params副本，避免共享同一字典导致的问题
+            offset_params = {}
+            for xset in params:
+                offset_params[xset] = params[xset].copy()
+            
+            # 创建并启动异步线程
+            offset_thread = DetectPraditorThread(offset_params, self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
+            offset_thread.finished.connect(self.on_detect_finished)
+            offset_thread.finished.connect(offset_thread.deleteLater)
+            offset_thread.start()
+            self.total_detections += 1
+            self.current_runnables.append(offset_thread)
         
-        
-        _test_tg_dict_tp = {"onset": [], "offset": []}
-        if not self.run_onset.isChecked():
-            _test_tg_dict_tp["onset"] = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
-        else:
-            _test_tg_dict_tp["onset"] = []
-
-        if not self.run_offset.isChecked():
-            _test_tg_dict_tp["offset"] = detectPraditor(self.MySliders.getParams(), self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
-        else:
-            _test_tg_dict_tp["offset"] = []
-        
-
-
-        if not _test_tg_dict_tp['onset']:
-            self.run_onset.setText("Onset")
-        else:
-            self.run_onset.setText(f"Onset: {len(_test_tg_dict_tp['onset'])} ?")
-
-        if not _test_tg_dict_tp['offset']:
-            self.run_offset.setText("Offset")
-        else:
-            self.run_offset.setText(f"Offset: {len(_test_tg_dict_tp['offset'])} ?")
-
-
+        # 如果没有需要执行的检测任务，直接处理结果
+        if self.total_detections == 0:
+            self.process_detection_results()
+    
     def update_current_param(self):
         current_params = self.MySliders.getParams()
         
@@ -1865,8 +1986,6 @@ class MainWindow(QMainWindow):
         # 检查参数匹配，更新下划线
         self.checkIfParamsExist()
         self.showXsetNum()
-        # self.update_current_param()
-        # self.statusBar().showMessage("1", 0)
 
 
     def stopSound(self):
