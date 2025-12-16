@@ -7,7 +7,7 @@ from PySide6.QtGui import QPen, QColor
 from PySide6.QtWidgets import (QApplication, QSlider, QVBoxLayout, QLabel, QHBoxLayout, 
     QWidget, QGridLayout)
 
-from src.utils.audio import ReadSound, get_frm_points_from_textgrid
+from src.utils.audio import ReadSound, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 
 
 def formatted_time(ms):
@@ -304,15 +304,12 @@ class AudioViewer(QWidget):
         # print("-----", self.interval_ms, self.resolution)
 
 
-    def readAudio(self, fpath):
+    def readAudio(self, fpath, is_vad_mode=False):
         # print(fpath)
-        # self.tg_dict_tp = {"onset": [], "offset": []}
         if self.fpath != fpath:
             self.fpath = fpath
             # self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
             self.audio_obj = ReadSound(self.fpath)
-
-            self.tg_dict_tp = {"Onset": {}, "Offset": {}}
 
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio
@@ -329,9 +326,12 @@ class AudioViewer(QWidget):
         self.updateSlider()
         self.updateChart()
 
-        if not self.tg_dict_tp:
-            pass
+        # 根据模式选择不同的函数读取结果
+        if is_vad_mode:
+            # VAD模式：读取_vad.TextGrid文件
+            self.tg_dict_tp = get_frm_intervals_from_textgrid(self.fpath)
         else:
+            # 默认模式：读取.TextGrid文件
             self.tg_dict_tp = get_frm_points_from_textgrid(self.fpath)
 
         self.updateXset(self.tg_dict_tp)
