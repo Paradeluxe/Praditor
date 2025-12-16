@@ -572,14 +572,9 @@ class MainWindow(QMainWindow):
         self.player.setAudioOutput(self.audio_output)
 
 
-        # icon = QIcon()
-        # icon.addPixmap(QPixmap(resource_path("icon.png")), QIcon.Normal, QIcon.On)
-        # self.setWindowIcon(icon)
-
-
         # MENU
         # --------------------------------------
-        # self.menuBar().setFixedHeight(35)
+
 
         file_menu = self.menuBar().addMenu("&File")
         button_action = QAction("&Read file...", self)
