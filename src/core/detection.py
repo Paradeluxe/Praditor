@@ -155,7 +155,8 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
         _onsets = [i for i in _onsets if i not in _bad_onoffsets]
         _offsets = [i for i in _offsets if i not in _bad_onoffsets]
     _onoffsets = [(_onsets[i], _offsets[i]) for i in range(len(_onsets))]
-    print(which_set)
+
+
     for i, (__offset, __onset) in enumerate(_onoffsets):
         print(f"{(i+1)/len(_onoffsets)*100:.1f}%", end="\r")
         print(which_set)

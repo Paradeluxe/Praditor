@@ -55,7 +55,7 @@ class DetectPraditorThread(QThread):
         # 设置全局停止标志
         from src.core import detection
         detection.stop_flag = True
-        print(f"If stop_flag: {stop_flag}")
+        print(f"If stop_flag: {detection.stop_flag}")
         
 
         # 如果线程正在运行，尝试优雅终止
@@ -73,18 +73,18 @@ class DetectPraditorThread(QThread):
         try:
             from src.core import detection
             self._stop_flag = detection.stop_flag
-            # # 重置全局停止标志
-            # from src.core import detection
+
+
             # detection.stop_flag = False
             if self.params["onset"] and not detection.stop_flag:
-                onset_results = detectPraditor(self.params, self.audio_obj, "onset", self.mode)
+                onset_results = detection.detectPraditor(self.params, self.audio_obj, "onset", self.mode)
             else:
                 onset_results = []
 
 
             from src.core import detection
             if self.params["offset"] and not detection.stop_flag:
-                offset_results = detectPraditor(self.params, self.audio_obj, "offset", self.mode)
+                offset_results = detection.detectPraditor(self.params, self.audio_obj, "offset", self.mode)
             else:
                 offset_results = []
 
