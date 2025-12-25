@@ -39,24 +39,62 @@ from src.utils.resources import get_resource_path
 
 # 异步检测任务类
 class DetectPraditorThread(QThread):
-    finished = Signal(str, list)  # 参数：which_set, results
+    finished = Signal(list, list)  # 参数：onset_results, offset_results
     
-    def __init__(self, params, audio_obj, which_set, mode):
+    def __init__(self, params, audio_obj, mode):
         super().__init__()
         self.params = params
         self.audio_obj = audio_obj
-        self.which_set = which_set
         self.mode = mode
+        self._stop_flag = False
         self.setTerminationEnabled(True)  # 启用线程终止
     
-    def run(self):
-        try:
-            results = detectPraditor(self.params, self.audio_obj, self.which_set, self.mode)
-            self.finished.emit(self.which_set, results)
-        except Exception as e:
-            print(f"Thread error: {e}")
-            self.finished.emit(self.which_set, [])
+    def stop(self):
+        """安全停止线程"""
+        self._stop_flag = True
+        # 设置全局停止标志
+        from src.core import detection
+        detection.stop_flag = True
+        print(f"If stop_flag: {stop_flag}")
+        
 
+        # 如果线程正在运行，尝试优雅终止
+        if self.isRunning():
+            self.terminate()
+            # 限制等待时间，避免无限阻塞
+            if not self.wait(1000):  # 1秒超时
+                self.terminate()
+                print(f"Thread {self.which_set} termination timed out")
+
+        
+    
+    def run(self):
+        print(self.params)
+        try:
+            from src.core import detection
+            self._stop_flag = detection.stop_flag
+            # # 重置全局停止标志
+            # from src.core import detection
+            # detection.stop_flag = False
+            if self.params["onset"] and not detection.stop_flag:
+                onset_results = detectPraditor(self.params, self.audio_obj, "onset", self.mode)
+            else:
+                onset_results = []
+
+
+            from src.core import detection
+            if self.params["offset"] and not detection.stop_flag:
+                offset_results = detectPraditor(self.params, self.audio_obj, "offset", self.mode)
+            else:
+                offset_results = []
+
+
+            if not self._stop_flag:
+                self.finished.emit(onset_results, offset_results)
+        except Exception as e:
+            if not self._stop_flag:
+                print(f"Thread error: {e}")
+                self.finished.emit([], [])
 
 
 
@@ -307,6 +345,7 @@ class CustomTitleBar(QWidget):
         self.run_btn.setFixedSize(32, 32)
         self.run_btn.setStyleSheet("background-color: transparent; border: none; color: #333333; font-size: 16px; text-align: center;")
         self.run_btn.setCursor(QCursor(Qt.PointingHandCursor))
+
         # 为run_btn添加提示框
         self.run_tooltip = create_tooltip("Run Praditor on audio")
         show_run_tooltip, hide_run_tooltip = create_hover_handlers(self.run_btn, self.run_tooltip)
@@ -1236,12 +1275,14 @@ class MainWindow(QMainWindow):
             self.AudioViewer.tg_dict_tp = get_frm_intervals_from_textgrid(self.file_path)
         else:
             self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
-
+        
+        print(self.AudioViewer.tg_dict_tp)
+        
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
             popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-            popup_window.setText(f"This audio file has no .TextGrid attached.")
+            popup_window.setText(f"No X-set found in {self.file_path}")
             popup_window.exec()
             return
 
@@ -1574,25 +1615,33 @@ class MainWindow(QMainWindow):
     
     def stopDetection(self):
         """停止当前正在运行的检测任务"""
+
+        # 设置全局停止标志
+        from src.core import detection
+        detection.stop_flag = True
+
         # 终止所有当前运行的线程
         for thread in self.current_runnables.copy():
             try:
-                if thread.isRunning():
-                    thread.terminate()
-                    thread.wait()  # 等待线程终止
+                thread.stop()  # 使用安全停止方法
             except RuntimeError:
                 # 忽略已删除的C++对象
                 pass
         # 清空列表
         self.current_runnables.clear()
+
+            
         # 清空检测结果
         self.detection_results = {"onset": [], "offset": []}
         self.detection_count = 0
         self.total_detections = 0
     
-    def on_detect_finished(self, which_set, results):
+
+    
+    def on_detect_finished(self, onset_results, offset_results):
         """检测任务完成后的处理"""
-        self.detection_results[which_set] = results
+        self.detection_results["onset"] = onset_results
+        self.detection_results["offset"] = offset_results
         self.detection_count += 1
         
         # 检查是否所有检测任务都已完成
@@ -1713,9 +1762,7 @@ class MainWindow(QMainWindow):
                 if self.current_runnables:
                     for thread in self.current_runnables.copy():
                         try:
-                            if thread.isRunning():
-                                thread.terminate()
-                                thread.wait()  # 等待线程终止
+                            thread.stop()  # 使用安全停止方法
                         except RuntimeError:
                             # 忽略已删除的C++对象
                             pass
@@ -1732,6 +1779,10 @@ class MainWindow(QMainWindow):
 
 
     def execPraditor(self, is_test: bool):
+
+        from src.core import detection
+        detection.stop_flag = False
+
         # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
         
@@ -1771,57 +1822,33 @@ class MainWindow(QMainWindow):
         
         # 获取检测参数
         params = self.MySliders.getParams()
-        
-        # 提交检测任务到线程池
-        if not self.run_onset.isChecked():
-            # 执行onset检测
+
+        if self.run_onset.isChecked():
+            params["onset"] = {}
+        else:
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["onset"])
             except KeyError:
                 pass
-            
-            # 创建params副本，避免共享同一字典导致的问题
-            onset_params = {}
-            for xset in params:
-                onset_params[xset] = params[xset].copy()
-            
-            # 创建并启动异步线程
-            onset_thread = DetectPraditorThread(onset_params, self.AudioViewer.audio_obj, "onset", mode="vad" if is_vad_mode else "general")
-            
-            # 连接信号，使用lambda函数捕获当前线程对象
-            # 确保清理在检测完成前执行，顺序：清理 -> 检测完成 -> 删除线程
-            onset_thread.finished.connect(lambda thread=onset_thread: self.current_runnables.remove(thread) if thread in self.current_runnables else None)
-            onset_thread.finished.connect(self.on_detect_finished)
-            onset_thread.finished.connect(onset_thread.deleteLater)
-            
-            onset_thread.start()
-            self.total_detections += 1
-            self.current_runnables.append(onset_thread)
         
-        if not self.run_offset.isChecked():
-            # 执行offset检测
+        if self.run_offset.isChecked():
+            params["offset"] = {}
+        else:
             try:
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
             except KeyError:
                 pass
-            
-            # 创建params副本，避免共享同一字典导致的问题
-            offset_params = {}
-            for xset in params:
-                offset_params[xset] = params[xset].copy()
-            
-            # 创建并启动异步线程
-            offset_thread = DetectPraditorThread(offset_params, self.AudioViewer.audio_obj, "offset", mode="vad" if is_vad_mode else "general")
-            
-            # 连接信号，使用lambda函数捕获当前线程对象
-            # 确保清理在检测完成前执行，顺序：清理 -> 检测完成 -> 删除线程
-            offset_thread.finished.connect(lambda thread=offset_thread: self.current_runnables.remove(thread) if thread in self.current_runnables else None)
-            offset_thread.finished.connect(self.on_detect_finished)
-            offset_thread.finished.connect(offset_thread.deleteLater)
-            
-            offset_thread.start()
-            self.total_detections += 1
-            self.current_runnables.append(offset_thread)
+        print("-----------", detection.stop_flag)
+        xset_thread = DetectPraditorThread(params, self.AudioViewer.audio_obj, mode="vad" if is_vad_mode else "general")
+
+        xset_thread.finished.connect(lambda thread=xset_thread: self.current_runnables.remove(thread) if thread in self.current_runnables else None)
+        xset_thread.finished.connect(self.on_detect_finished)
+        xset_thread.finished.connect(xset_thread.deleteLater)
+
+        xset_thread.start()
+        self.total_detections += 1
+        self.current_runnables.append(xset_thread)
+
         
         # 如果没有需要执行的检测任务，直接处理结果
         if self.total_detections == 0:

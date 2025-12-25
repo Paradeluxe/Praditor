@@ -142,8 +142,8 @@ def get_frm_points_from_textgrid(audio_file_path):
     dict_tg_time = {"onset":[], "offset": []}
     if not os.path.exists(tg_file_path):
         return dict_tg_time
-
-    tg = TextGrid(tg_file_path)
+    print("hahah")
+    tg = TextGrid()
     tg.read(tg_file_path)
     for tier in tg.tiers:
         dict_tg_time[tier.name] = [p.time for p in tier]
