@@ -54,8 +54,6 @@ class DetectPraditorThread(QThread):
         # 设置全局停止标志
         from src.core import detection
         detection.stop_flag = True
-        print(f"If stop_flag: {detection.stop_flag}")
-        
 
         # 如果线程正在运行，尝试优雅终止
         if self.isRunning():
@@ -68,27 +66,19 @@ class DetectPraditorThread(QThread):
         
     
     def run(self):
-        # print(self.params)
         from src.core import detection
         try:
-            
-
-
 
             onset_results, offset_results = [], []
 
-            # print(onset_results, offset_results)
-            # if not detection.stop_flag:
             if self.params["onset"]:
                 onset_results = detectPraditor(self.params, self.audio_obj, "onset", self.mode)
-                print("onsets", onset_results)
             else:
                 onset_results = []
 
 
             if self.params["offset"]:
                 offset_results = detectPraditor(self.params, self.audio_obj, "offset", self.mode)
-                print("offset", offset_results)
             else:
                 offset_results = []
 
@@ -1282,8 +1272,6 @@ class MainWindow(QMainWindow):
         else:
             self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
         
-        print(self.AudioViewer.tg_dict_tp)
-        
         if not self.AudioViewer.tg_dict_tp or self.AudioViewer.tg_dict_tp == {"onset": [], "offset": []}:
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
@@ -1855,7 +1843,7 @@ class MainWindow(QMainWindow):
                 self.AudioViewer.removeXset(xsets=self.AudioViewer.tg_dict_tp["offset"])
             except KeyError:
                 pass
-        print("-----------", stop_flag)
+
         xset_thread = DetectPraditorThread(params, self.AudioViewer.audio_obj, mode="vad" if is_vad_mode else "general")
 
         xset_thread.finished.connect(lambda thread=xset_thread: self.current_runnables.remove(thread) if thread in self.current_runnables else None)
@@ -1903,7 +1891,7 @@ class MainWindow(QMainWindow):
             self.current_param_index[current_mode] -= 1
             self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
             self.updateParamIndexLabel()
-            print(f"Loaded previous params (index: {self.current_param_index[current_mode]})")
+            # print(f"Loaded previous params (index: {self.current_param_index[current_mode]})")
     
 
     def loadNextParams(self):
@@ -1914,7 +1902,7 @@ class MainWindow(QMainWindow):
             self.current_param_index[current_mode] += 1
             self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
             self.updateParamIndexLabel()
-            print(f"Loaded next params (index: {self.current_param_index[current_mode]})")
+            # print(f"Loaded next params (index: {self.current_param_index[current_mode]})")
     
 
     def updateParamIndexLabel(self):

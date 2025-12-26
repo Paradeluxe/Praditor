@@ -27,8 +27,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
         etime: 结束时间（毫秒），默认-1表示整个音频
     """
     global stop_flag
-    # 检查是否需要停止
-    print(f"If stop_flag: {stop_flag}")
+
     if stop_flag:
         return []
 
@@ -157,7 +156,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
     for i, (__offset, __onset) in enumerate(_onoffsets):
         print(f"{(i+1)/len(_onoffsets)*100:.1f}%", end="\r")
-        print(which_set)
+        print()
 
         # 检查是否需要停止
         if stop_flag:
@@ -247,7 +246,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     
     # 处理时间范围偏移
     _answer = [frm/_audio_samplerate for frm in list(set(_answer_frames))]
-    print(_answer)
+    # print(_answer)
     
     # VAD模式下排序结果
     if mode == "vad":
@@ -257,7 +256,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     if etime != -1:
         _answer = [tp + stime for tp in _answer if 5 < tp < (_answer[-1] - 5) if _answer]
     
-    print(_answer)
+    # print(_answer)
     return _answer
 
 
