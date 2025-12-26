@@ -11,7 +11,7 @@ from src.utils.audio import bandpass_filter, get_current_time, ReadSound
 
 
 global stop_flag  # 全局停止变量
-stop_flag = True
+stop_flag = False
 
 
 def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=-1):
@@ -30,18 +30,17 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     # 检查是否需要停止
     print(f"If stop_flag: {stop_flag}")
     if stop_flag:
-        stop_flag = False  # 重置标志
         return []
 
     # 导入数据，并且遵循一定之格式
     for xset in params:
         for item in params[xset]:
-            print(1)
+            # print(1)
             try:
                 params[xset][item] = eval(params[xset][item])
             except Exception:
                 pass
-            print(2)
+            # print(2)
 
     # VAD模式特殊处理：强制将offset参数设为与onset相同
     if mode == "vad":
@@ -63,7 +62,6 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
         audio_obj = audio_obj[stime*1000:etime*1000]    
     # 检查是否需要停止
     if stop_flag:
-        stop_flag = False  # 重置标志
         return []
     
     _answer_frames = []
@@ -163,8 +161,6 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
         # 检查是否需要停止
         if stop_flag:
-            stop_flag = False  # 重置标志
-            
             return []
 
         # 强制跳过条件
@@ -261,8 +257,6 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     if etime != -1:
         _answer = [tp + stime for tp in _answer if 5 < tp < (_answer[-1] - 5) if _answer]
     
-    # 重置全局停止标志
-    stop_flag = False
     print(_answer)
     return _answer
 
