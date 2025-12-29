@@ -1630,6 +1630,9 @@ class MainWindow(QMainWindow):
         self.detection_count = 0
         self.total_detections = 0
 
+        # 启用所有按钮
+        self.setButtonsEnabled(True)
+
         # detection.stop_flag = False
     
 
@@ -1652,6 +1655,9 @@ class MainWindow(QMainWindow):
         """Run Praditor on all audio files sequentially, displaying one audio after current detection finishes"""
         if not hasattr(self, 'file_paths') or len(self.file_paths) == 0:
             return
+        
+        # 禁用除最小化、最大化、关闭、停止以外的所有按钮
+        self.setButtonsEnabled(False)
         
         # 设置run-all标志和起始索引
         self.is_running_all = True
@@ -1774,10 +1780,16 @@ class MainWindow(QMainWindow):
                     # 清空列表
                     self.current_runnables.clear()
                 
+                # 启用所有按钮
+                self.setButtonsEnabled(True)
+                
                 # 发射run完成信号
                 self.run_current_done.emit()
         else:
             # 单个文件处理完成
+            # 启用所有按钮
+            self.setButtonsEnabled(True)
+            
             # 发射run完成信号
             self.run_current_done.emit()
         
@@ -1787,6 +1799,9 @@ class MainWindow(QMainWindow):
 
         from src.core import detection
         detection.stop_flag = False
+
+        # 禁用除最小化、最大化、关闭、停止以外的所有按钮
+        self.setButtonsEnabled(False)
 
         # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
@@ -1989,6 +2004,51 @@ class MainWindow(QMainWindow):
         self.forward_btn.setEnabled(forward_enabled)
         self.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
     
+    def setButtonsEnabled(self, enabled: bool):
+        """设置按钮的启用状态
+        Args:
+            enabled: True表示启用，False表示禁用
+            禁用除了最小化、最大化、关闭、停止以外的所有按键
+        """
+        # 标题栏按钮（除了最小化、最大化、关闭、停止）
+        titlebar_buttons_to_toggle = [
+            self.title_bar.trash_btn,
+            self.title_bar.read_btn,
+            self.title_bar.run_btn,
+            self.title_bar.run_all_btn,
+            self.title_bar.test_btn,
+            self.title_bar.prev_audio_btn,
+            self.title_bar.next_audio_btn,
+        ]
+        
+        # 主窗口按钮
+        main_buttons_to_toggle = [
+            self.vad_btn,
+            self.run_onset,
+            self.run_offset,
+            self.default_btn,
+            self.folder_btn,
+            self.file_btn,
+            self.save_btn,
+            self.reset_svg_btn,
+            self.backward_btn,
+            self.forward_btn,
+            self.params_btn,
+        ]
+        
+        # 处理标题栏按钮
+        for btn in titlebar_buttons_to_toggle:
+            btn.setEnabled(enabled)
+        
+        # 处理主窗口按钮
+        for btn in main_buttons_to_toggle:
+            btn.setEnabled(enabled)
+        
+        # 确保最小化、最大化、关闭、停止按钮始终可用
+        self.title_bar.minimize_btn.setEnabled(True)
+        self.title_bar.maximize_btn.setEnabled(True)
+        self.title_bar.close_btn.setEnabled(True)
+        self.title_bar.stop_btn.setEnabled(True)
 
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
