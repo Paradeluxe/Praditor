@@ -550,6 +550,23 @@ class CustomTitleBar(QWidget):
         """更新最大化按钮状态"""
         # macOS风格下，最大化按钮样式不变，只改变功能
         pass
+    
+    def _setButtonEnabled(self, button, icon_name, enabled):
+        """设置按钮是否可用，并自动切换图标
+        
+        Args:
+            button (QPushButton): 要设置的按钮
+            icon_name (str): 图标名称（不带.svg后缀）
+            enabled (bool): 是否可用
+        """
+        # 设置按钮可用性
+        button.setEnabled(enabled)
+        
+        # 根据状态切换图标
+        if enabled:
+            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}.svg')))
+        else:
+            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}_gray.svg')))
 
 
 class MainWindow(QMainWindow):
@@ -2010,16 +2027,16 @@ class MainWindow(QMainWindow):
             enabled: True表示启用，False表示禁用
             禁用除了最小化、最大化、关闭、停止以外的所有按键
         """
-        # 标题栏按钮（除了最小化、最大化、关闭、停止）
-        titlebar_buttons_to_toggle = [
-            self.title_bar.trash_btn,
-            self.title_bar.read_btn,
-            self.title_bar.run_btn,
-            self.title_bar.run_all_btn,
-            self.title_bar.test_btn,
-            self.title_bar.prev_audio_btn,
-            self.title_bar.next_audio_btn,
-        ]
+        # 标题栏按钮映射：按钮 -> 图标名称
+        titlebar_buttons_map = {
+            self.title_bar.trash_btn: 'trash',
+            self.title_bar.read_btn: 'read',
+            self.title_bar.run_btn: 'play',
+            self.title_bar.run_all_btn: 'run-all',
+            self.title_bar.test_btn: 'test',
+            self.title_bar.prev_audio_btn: 'prev_audio',
+            self.title_bar.next_audio_btn: 'next_audio',
+        }
         
         # 主窗口按钮
         main_buttons_to_toggle = [
@@ -2036,9 +2053,11 @@ class MainWindow(QMainWindow):
             self.params_btn,
         ]
         
-        # 处理标题栏按钮
-        for btn in titlebar_buttons_to_toggle:
+        # 处理标题栏按钮，同时更新图标
+        for btn, icon_name in titlebar_buttons_map.items():
             btn.setEnabled(enabled)
+            # 更新图标
+            btn.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}{"_gray" if not enabled else ""}.svg')))
         
         # 处理主窗口按钮
         for btn in main_buttons_to_toggle:
