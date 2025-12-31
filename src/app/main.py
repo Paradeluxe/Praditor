@@ -614,6 +614,8 @@ class MainWindow(QMainWindow):
         # run-all模式状态跟踪
         self.is_running_all = False
         self.run_all_current_index = 0
+        # 存储按钮原始状态
+        self._button_original_states = {}
 
 
         # 初始化媒体播放器和音频输出
@@ -1646,6 +1648,9 @@ class MainWindow(QMainWindow):
         self.detection_results = {"onset": [], "offset": []}
         self.detection_count = 0
         self.total_detections = 0
+        
+        # 退出run-all模式
+        self.is_running_all = False
 
         # 启用所有按钮
         self.setButtonsEnabled(True)
@@ -1692,6 +1697,9 @@ class MainWindow(QMainWindow):
         # 启动检测
         self.execPraditor(is_test=False)
 
+        self.updateToolbarButtonsState()
+
+
 
     
     def on_run_signal(self):
@@ -1699,12 +1707,18 @@ class MainWindow(QMainWindow):
         from src.core import detection
         detection.stop_flag = False
         self.execPraditor(is_test=False)
+
+        self.updateToolbarButtonsState()
+
     
     def on_test_signal(self):
         """处理test_signal信号，在执行检测前设置stop_flag = False"""
         from src.core import detection
         detection.stop_flag = False
         self.execPraditor(is_test=True)
+
+        self.updateToolbarButtonsState()
+
     
     def process_detection_results(self):
         # 处理所有检测结果
@@ -1817,8 +1831,10 @@ class MainWindow(QMainWindow):
         from src.core import detection
         detection.stop_flag = False
 
-        # 禁用除最小化、最大化、关闭、停止以外的所有按钮
-        self.setButtonsEnabled(False)
+        # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
+        if not self.is_running_all:
+            # 禁用除最小化、最大化、关闭、停止以外的所有按钮
+            self.setButtonsEnabled(False)
 
         # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
@@ -2013,18 +2029,37 @@ class MainWindow(QMainWindow):
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
+        print(f"backward_enabled: {backward_enabled}")
         self.backward_btn.setEnabled(backward_enabled)
         self.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
+
         
         # 更新forward按钮 - 必须音频导入成功且有两套及以上的参数
         forward_enabled = audio_imported and has_multiple_params
         self.forward_btn.setEnabled(forward_enabled)
         self.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
     
+    def _setButtonEnabled(self, button, icon_name, enabled):
+        """设置按钮是否可用，并自动切换图标
+        
+        Args:
+            button (QPushButton): 要设置的按钮
+            icon_name (str): 图标名称（不带.svg后缀）
+            enabled (bool): 是否可用
+        """
+        # 设置按钮可用性
+        button.setEnabled(enabled)
+        
+        # 根据状态切换图标
+        if enabled:
+            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}.svg')))
+        else:
+            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}_gray.svg')))
+    
     def setButtonsEnabled(self, enabled: bool):
         """设置按钮的启用状态
         Args:
-            enabled: True表示启用，False表示禁用
+            enabled: True表示恢复原始状态，False表示禁用
             禁用除了最小化、最大化、关闭、停止以外的所有按键
         """
         # 标题栏按钮映射：按钮 -> 图标名称
@@ -2053,21 +2088,40 @@ class MainWindow(QMainWindow):
             self.params_btn,
         ]
         
-        # 处理标题栏按钮，同时更新图标
-        for btn, icon_name in titlebar_buttons_map.items():
-            btn.setEnabled(enabled)
-            # 更新图标
-            btn.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}{"_gray" if not enabled else ""}.svg')))
+        all_buttons_to_toggle = list(titlebar_buttons_map.keys()) + main_buttons_to_toggle
         
-        # 处理主窗口按钮
-        for btn in main_buttons_to_toggle:
-            btn.setEnabled(enabled)
+        if not enabled:
+            # 禁用前，保存所有需要切换的按钮的原始状态
+            self._button_original_states.clear()
+            for btn in all_buttons_to_toggle:
+                self._button_original_states[btn] = btn.isEnabled()
+            
+            # 处理标题栏按钮，同时更新图标
+            for btn, icon_name in titlebar_buttons_map.items():
+                self._setButtonEnabled(btn, icon_name, False)
+            
+            # 处理主窗口按钮
+            for btn in main_buttons_to_toggle:
+                btn.setEnabled(False)
+        else:
+            # 恢复时，还原所有按钮的原始状态
+            for btn, icon_name in titlebar_buttons_map.items():
+                original_state = self._button_original_states.get(btn, True)
+                self._setButtonEnabled(btn, icon_name, original_state)
+            
+            for btn in main_buttons_to_toggle:
+                original_state = self._button_original_states.get(btn, True)
+                btn.setEnabled(original_state)
         
         # 确保最小化、最大化、关闭、停止按钮始终可用
         self.title_bar.minimize_btn.setEnabled(True)
         self.title_bar.maximize_btn.setEnabled(True)
         self.title_bar.close_btn.setEnabled(True)
         self.title_bar.stop_btn.setEnabled(True)
+
+
+        self.updateToolbarButtonsState()
+
 
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
