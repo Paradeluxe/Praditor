@@ -971,7 +971,7 @@ class MainWindow(QMainWindow):
         """)
         self.print_label.setToolTip("显示最近的print输出")
         # 固定output label的长度
-        self.print_label.setFixedWidth(150)  # 固定宽度为300px
+        self.print_label.setFixedWidth(280)  # 固定宽度为300px
         self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.print_label.setTextFormat(Qt.PlainText)
         toolbar.addWidget(self.print_label)
@@ -2377,8 +2377,8 @@ window = MainWindow()
 
 # 加载图标文件
 # icon = QIcon('icon.png')  # 替换为你的图标文件路径
-print(get_resource_path('resources/icons/icon.ico'))
-print(os.path.exists(get_resource_path("resources/icons/icon.ico")))
+# print(get_resource_path('resources/icons/icon.ico'))
+# print(os.path.exists(get_resource_path("resources/icons/icon.ico")))
 # 设置窗口图标
 # window.setWindowIcon(QIcon(resource_path('icon.ico')))
 window.show()
