@@ -2,6 +2,7 @@ import ctypes
 import os
 import sys
 import webbrowser
+import io
 
 plat = os.name.lower()
 
@@ -36,6 +37,30 @@ from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
+# 自定义输出流类，用于捕获print语句
+class ConsoleOutput(io.StringIO):
+    def __init__(self, callback):
+        super().__init__()
+        self.callback = callback
+        self.buffer = ""
+    
+    def write(self, text):
+        self.buffer += text
+        # 当遇到换行符时，发送完整行
+        if '\n' in self.buffer:
+            lines = self.buffer.split('\n')
+            # 发送所有完整行
+            for line in lines[:-1]:
+                if line.strip():
+                    self.callback(line.strip())
+            # 保留最后一个不完整行
+            self.buffer = lines[-1]
+    
+    def flush(self):
+        # 确保所有缓冲内容都被发送
+        if self.buffer.strip():
+            self.callback(self.buffer.strip())
+            self.buffer = ""
 
 # 异步检测任务类
 class DetectPraditorThread(QThread):
@@ -926,6 +951,27 @@ class MainWindow(QMainWindow):
         self.vad_btn.clicked.connect(self.onVadButtonClicked)
         toolbar.addWidget(self.vad_btn)
         
+        # 添加print输出显示label
+        self.print_label = QLabel(self)
+        self.print_label.setText("Print output: ")
+        self.print_label.setStyleSheet("""
+            QLabel {
+                color: #333333;
+                font-size: 12px;
+                border: 1px solid #E9EDF1;
+                border-radius: 4px;
+                padding: 4px 8px;
+                background-color: #F8F9FA;
+                max-width: 300px;
+            }
+        """)
+        self.print_label.setToolTip("显示最近的print输出")
+        # 设置文本截断方式
+        self.print_label.setMaximumWidth(300)
+        self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.print_label.setTextFormat(Qt.PlainText)
+        toolbar.addWidget(self.print_label)
+        
         # 合并参数图标和索引标签为一个按钮
         self.params_btn = QPushButton(self)
         self.params_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
@@ -1052,6 +1098,21 @@ class MainWindow(QMainWindow):
         vad_enter, vad_leave = create_toolbar_hover_handlers(self.vad_btn, self.vad_tooltip)
         self.vad_btn.enterEvent = vad_enter
         self.vad_btn.leaveEvent = vad_leave
+        
+        # 初始化输出流，将print语句重定向到GUI
+        def update_print_label(text):
+            # 更新print_label的文本，仅显示最后一行
+            self.print_label.setText(f"{text}")
+        
+        # 创建输出流实例
+        self.console_output = ConsoleOutput(update_print_label)
+        # 保存原始stdout
+        self.original_stdout = sys.stdout
+        # 重定向stdout到自定义输出流
+        sys.stdout = self.console_output
+        
+        # 测试print输出功能
+        # print("Praditor started successfully!")
         
         # ---------------------
         # TOOLBAR
@@ -2029,7 +2090,7 @@ class MainWindow(QMainWindow):
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
-        print(f"backward_enabled: {backward_enabled}")
+        # print(f"backward_enabled: {backward_enabled}")
         self.backward_btn.setEnabled(backward_enabled)
         self.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
 
