@@ -130,8 +130,19 @@ else:
         print(f"Could not get GitHub version, using default: {APP_VERSION}")
 
 
+# 检测当前操作系统
+def get_os_suffix():
+    """获取操作系统后缀"""
+    if sys.platform.startswith('win'):
+        return '_win'
+    elif sys.platform.startswith('darwin'):
+        return '_mac'
+    else:
+        return ''
+
 # 设置应用名称
-APP_NAME = f'Praditor_{APP_VERSION}'
+OS_SUFFIX = get_os_suffix()
+APP_NAME = f'Praditor_{APP_VERSION}{OS_SUFFIX}'
 
 
 
