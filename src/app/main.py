@@ -86,7 +86,7 @@ class DetectPraditorThread(QThread):
             # 限制等待时间，避免无限阻塞
             if not self.wait(1000):  # 1秒超时
                 self.terminate()
-                print(f"Thread termination timed out")
+                print(f"[System] Termination timed out")
 
         
     
@@ -114,7 +114,7 @@ class DetectPraditorThread(QThread):
             
         except Exception as e:
             if not detection.stop_flag:
-                print(f"Thread error: {e}")
+                print(f"[System] Error: {e}")
                 self.finished.emit([], [])
 
 
@@ -951,6 +951,11 @@ class MainWindow(QMainWindow):
         self.vad_btn.clicked.connect(self.onVadButtonClicked)
         toolbar.addWidget(self.vad_btn)
         
+        # 添加spacer增加VAD按钮和output label之间的距离
+        vad_output_spacer = QWidget()
+        vad_output_spacer.setFixedWidth(15)  # 设置固定宽度为15px
+        toolbar.addWidget(vad_output_spacer)
+        
         # 添加print输出显示label
         self.print_label = QLabel(self)
         self.print_label.setText("Print output: ")
@@ -962,12 +967,11 @@ class MainWindow(QMainWindow):
                 border-radius: 4px;
                 padding: 4px 8px;
                 background-color: #F8F9FA;
-                max-width: 300px;
             }
         """)
         self.print_label.setToolTip("显示最近的print输出")
-        # 设置文本截断方式
-        self.print_label.setMaximumWidth(300)
+        # 固定output label的长度
+        self.print_label.setFixedWidth(150)  # 固定宽度为300px
         self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.print_label.setTextFormat(Qt.PlainText)
         toolbar.addWidget(self.print_label)
@@ -1112,7 +1116,7 @@ class MainWindow(QMainWindow):
         sys.stdout = self.console_output
         
         # 测试print输出功能
-        # print("Praditor started successfully!")
+        print("[System] Praditor started successfully!")
         
         # ---------------------
         # TOOLBAR
@@ -1338,11 +1342,11 @@ class MainWindow(QMainWindow):
     def playSound(self):
         if self.player.playbackState() == QMediaPlayer.PlayingState:
             self.player.stop()  # 如果正在播放则暂停
-            print("stop")
+            print("[Player] Stop")
         else:
             self.player.setSource(QUrl.fromLocalFile(self.file_path))
             self.player.play()    # 开始/恢复播放
-            print("play")
+            print("[Player] Playing...")
 
 
 
@@ -1469,12 +1473,12 @@ class MainWindow(QMainWindow):
         try:
             with open(txt_file_path, 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
-            print(f"Params TXT file read from: {txt_file_path}")
+            print(f"[Params] TXT file read from: {txt_file_path}")
 
         except FileNotFoundError:
             # 切换到Default模式
             self.default_btn.setChecked(True)
-            print("Go back to Default mode")
+            print("[Params] Go back to Default mode")
             self.showParams()
 
 
@@ -1629,7 +1633,7 @@ class MainWindow(QMainWindow):
 
             self.which_one = self.file_paths.index(file_name)
             self.file_path = self.file_paths[self.which_one]
-            print(f"Selected file: {self.file_path}")
+            print(f"[File] Selected file: {self.file_path}")
             self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
             
             # 启用所有模式按钮
@@ -1655,7 +1659,7 @@ class MainWindow(QMainWindow):
             self.showXsetNum(is_test=False)
 
         else:
-            print("Empty folder")
+            print("[File] Empty folder")
 
 
     def showXsetNum(self, is_test=False):
@@ -2245,7 +2249,7 @@ class MainWindow(QMainWindow):
             if self.audio_sink.state() == QAudio.State.ActiveState:
                 self.audio_sink.stop()
                 self.buffer.close()
-                print("Audio stopped")
+                print("[Player] Audio stopped")
         except AttributeError:
             pass
     
@@ -2262,7 +2266,7 @@ class MainWindow(QMainWindow):
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"Params saved to folder as params{file_suffix}.txt: {txt_file_path}")
+            print(f"[Params] Saved to folder as params{file_suffix}.txt: {txt_file_path}")
     
     def saveParamsToExeLocation(self):
         """保存参数到exe所在位置，文件名为params.txt或params_vad.txt（VAD模式下）"""
@@ -2277,7 +2281,7 @@ class MainWindow(QMainWindow):
         
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
-        print(f"Params saved to exe location: {txt_file_path}")
+        print(f"[Params] Saved to exe location: {txt_file_path}")
     
     def saveParamsWithFileName(self):
         """保存参数到file同名，文件名后缀为.txt或_vad.txt（VAD模式下）"""
@@ -2290,7 +2294,7 @@ class MainWindow(QMainWindow):
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"Params saved with file name: {txt_file_path}")
+            print(f"[Params] Saved with file name: {txt_file_path}")
     
     def toggleMaximize(self):
         # 切换窗口最大化/还原状态

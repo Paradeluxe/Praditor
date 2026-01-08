@@ -104,7 +104,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     try:
         _cluster = DBSCAN(eps=_eps, min_samples=_min_samples, metric="manhattan").fit(_points_array)
     except MemoryError:
-        print("not enough memory")
+        print("[SOT] Not enough memory")
         return []
 
     # To look for the label with which the coordinate is closet to the zero point
@@ -155,8 +155,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
 
     for i, (__offset, __onset) in enumerate(_onoffsets):
-        print(f"{(i+1)/len(_onoffsets)*100:.1f}%", end="\r")
-        print()
+        print(f"[SOT] {(i+1)/len(_onoffsets)*100:.1f}%")
 
         # 检查是否需要停止
         if stop_flag:
@@ -330,7 +329,8 @@ def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[]
 
     tg.write(tg_filename)  # 将TextGrid对象写入文件
 
-    print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
+    # print(f"{audio_filename}\t|\t{get_current_time()}\t|\tTextGrid created at: {tg_filename}")
+    print(f"[SOT] TextGrid created at: {tg_filename}")
     
     # 生成CSV文件
     textgrid_to_csv(tg_filename)
@@ -386,5 +386,6 @@ def textgrid_to_csv(textgrid_file_path):
                 if interval.mark == "sound":
                     writer.writerow([original_filename, interval.minTime, interval.maxTime, interval.mark])
     
-    print(f"{tg_filename}\t|\t{get_current_time()}\t|\tCSV created at: {csv_filename}")
+    # print(f"{tg_filename}\t|\t{get_current_time()}\t|\tCSV created at: {csv_filename}")
+    print(f"[SOT] CSV created at: {csv_filename}")
     return csv_filename
