@@ -969,7 +969,7 @@ class MainWindow(QMainWindow):
                 background-color: #F8F9FA;
             }
         """)
-        self.print_label.setToolTip("显示最近的print输出")
+        self.print_label.setToolTip("Displays the most recent print output")
         # 固定output label的长度
         self.print_label.setFixedWidth(280)  # 固定宽度为300px
         self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
