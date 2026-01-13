@@ -4,6 +4,11 @@ import sys
 import webbrowser
 import io
 
+# 将项目根目录添加到Python路径
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+from src.utils.logger import system_logger, player_logger, params_logger, file_logger
+
 plat = os.name.lower()
 
 if plat == 'nt':  # Windows
@@ -37,7 +42,127 @@ from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
-# 自定义输出流类，用于捕获print语句
+# 自定义QLabel类，实现hover时文字自动滑动效果
+class ScrollingLabel(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setMouseTracking(True)
+        self.original_text = ""
+        self.scroll_offset = 0
+        self.scroll_timer = QTimer(self)
+        self.scroll_timer.timeout.connect(self.scroll_text)
+        self.scroll_speed = 3  # 增加滚动速度（像素/帧），从2改为5
+        self.scroll_delay = 50  # 滚动延迟（毫秒/帧）
+        self.scroll_pause = 500  # 滚动暂停时间（毫秒）
+        
+    def setText(self, text):
+        self.original_text = text
+        super().setText(text)
+        
+    def enterEvent(self, event):
+        # 鼠标悬停时开始滚动
+        if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
+            # 等待一段时间后开始滚动
+            QTimer.singleShot(self.scroll_pause, self.start_scrolling)
+        super().enterEvent(event)
+        
+    def leaveEvent(self, event):
+        # 鼠标离开时停止滚动并重置
+        self.stop_scrolling()
+        self.reset_scroll()
+        super().leaveEvent(event)
+        
+    def start_scrolling(self):
+        self.scroll_timer.start(self.scroll_delay)
+        
+    def stop_scrolling(self):
+        self.scroll_timer.stop()
+        
+    def reset_scroll(self):
+        self.scroll_offset = 0
+        super().setText(self.original_text)
+        
+    def scroll_text(self):
+        if not self.original_text:
+            return
+            
+        # 获取完整文本的宽度
+        text_width = self.fontMetrics().boundingRect(self.original_text).width()
+        # 获取标签的实际宽度（减去内边距）
+        label_width = self.width() - 16  # 减去左右内边距各8px
+        
+        # 如果文本宽度小于等于标签宽度，不需要滚动
+        if text_width <= label_width:
+            return
+            
+        # 计算最大滚动偏移量（当文字尾部到达标签右侧时）
+        max_scroll_offset = text_width - label_width
+        
+        # 计算滚动偏移
+        self.scroll_offset += self.scroll_speed
+        
+        # 检查是否达到最大偏移量
+        # 使用一个小的阈值，确保文本完全滚动到末尾
+        if self.scroll_offset >= max_scroll_offset - 5:  # 减去5像素的阈值，确保完全滚动
+            # 重置滚动偏移量，开始新的循环
+            self.scroll_offset = -label_width  # 从标签宽度的负值开始，创建平滑的循环效果
+        
+        # 计算起始索引（基于像素偏移量）
+        avg_char_width = self.fontMetrics().averageCharWidth()
+        if avg_char_width <= 0:
+            return
+        
+        # 计算起始索引，使用更精确的方法
+        # 从原始文本开始，找到第一个字符的位置，使得从该位置开始的文本
+        # 能够填满标签，并且当滚动到最大偏移量时，文本尾部刚好到达标签右侧
+        start_index = 0
+        current_offset = 0
+        
+        # 找到与当前滚动偏移量对应的字符索引
+        while start_index < len(self.original_text) and current_offset < self.scroll_offset:
+            char_width = self.fontMetrics().boundingRect(self.original_text[start_index]).width()
+            current_offset += char_width
+            start_index += 1
+        
+        # 确保起始索引不超出范围
+        start_index = min(start_index, len(self.original_text))
+        
+        # 获取从起始索引开始的文本
+        display_text = self.original_text[start_index:]
+        
+        # 确保文本始终填满标签
+        # 我们需要找到刚好能填满标签的文本长度
+        final_text = ""
+        temp_text = ""
+        temp_width = 0
+        
+        # 逐步添加字符，直到填满标签
+        for char in display_text:
+            char_width = self.fontMetrics().boundingRect(char).width()
+            if temp_width + char_width <= label_width:
+                temp_text += char
+                temp_width += char_width
+                final_text = temp_text
+            else:
+                # 已经超过标签宽度，使用前一个版本
+                break
+        
+        # 确保至少有一个字符，避免标签为空
+        if not final_text and display_text:
+            final_text = display_text[0]
+        
+        # 再次检查，确保文本宽度不超过标签宽度
+        while self.fontMetrics().boundingRect(final_text).width() > label_width and len(final_text) > 0:
+            final_text = final_text[:-1]
+        
+        # 确保至少有一个字符，避免标签为空
+        if not final_text and display_text:
+            final_text = display_text[0]
+        
+        super().setText(final_text)
+        # print(final_text)
+
+# 自定义输出流类，用于捕获print语句和logger输出
 class ConsoleOutput(io.StringIO):
     def __init__(self, callback):
         super().__init__()
@@ -86,7 +211,7 @@ class DetectPraditorThread(QThread):
             # 限制等待时间，避免无限阻塞
             if not self.wait(1000):  # 1秒超时
                 self.terminate()
-                print(f"[System] Termination timed out")
+                system_logger.warning("Termination timed out")
 
         
     
@@ -114,7 +239,7 @@ class DetectPraditorThread(QThread):
             
         except Exception as e:
             if not detection.stop_flag:
-                print(f"[System] Error: {e}")
+                system_logger.error(f"Error: {e}")
                 self.finished.emit([], [])
 
 
@@ -658,7 +783,7 @@ class MainWindow(QMainWindow):
         self.file_path = None
         self.which_one = 0
         self.setWindowTitle("Praditor")
-        self.setMinimumSize(1000, 750)
+        self.setMinimumSize(1200, 800)
         
         # 初始化线程池
         self.thread_pool = QThreadPool.globalInstance()
@@ -1027,7 +1152,7 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(vad_output_spacer)
         
         # 添加print输出显示label
-        self.print_label = QLabel(self)
+        self.print_label = ScrollingLabel(self)
         self.print_label.setText("Print output: ")
         self.print_label.setStyleSheet("""
             QLabel {
@@ -1041,7 +1166,7 @@ class MainWindow(QMainWindow):
         """)
         self.print_label.setToolTip("Displays the most recent print output")
         # 固定output label的长度
-        self.print_label.setFixedWidth(280)  # 固定宽度为300px
+        self.print_label.setFixedWidth(350)  # 固定宽度为300px
         self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.print_label.setTextFormat(Qt.PlainText)
         toolbar.addWidget(self.print_label)
@@ -1078,6 +1203,12 @@ class MainWindow(QMainWindow):
             # 更新print_label的文本，仅显示最后一行
             self.print_label.setText(f"{text}")
         
+        # 将update_print_label函数设置为logger的GUI回调
+        from src.utils.logger import gui_callback as logger_gui_callback
+        from src.utils.logger import gui_callback
+        import src.utils.logger
+        src.utils.logger.gui_callback = update_print_label
+        
         # 创建输出流实例
         self.console_output = ConsoleOutput(update_print_label)
         # 保存原始stdout
@@ -1086,7 +1217,7 @@ class MainWindow(QMainWindow):
         sys.stdout = self.console_output
         
         # 测试print输出功能
-        print("[System] Praditor started successfully!")
+        system_logger.info("Praditor started successfully!")
         
         # ---------------------
         # TOOLBAR
@@ -1312,11 +1443,11 @@ class MainWindow(QMainWindow):
     def playSound(self):
         if self.player.playbackState() == QMediaPlayer.PlayingState:
             self.player.stop()  # 如果正在播放则暂停
-            print("[Player] Stop")
+            player_logger.info("Stop")
         else:
             self.player.setSource(QUrl.fromLocalFile(self.file_path))
             self.player.play()    # 开始/恢复播放
-            print("[Player] Playing...")
+            player_logger.info("Playing...")
 
 
 
@@ -1443,12 +1574,12 @@ class MainWindow(QMainWindow):
         try:
             with open(txt_file_path, 'r') as txt_file:
                 self.MySliders.resetParams(eval(txt_file.read()))
-            print(f"[Params] TXT file read from: {txt_file_path}")
+            params_logger.info(f"TXT file read from: {txt_file_path}")
 
         except FileNotFoundError:
             # 切换到Default模式
             self.default_btn.setChecked(True)
-            print("[Params] Go back to Default mode")
+            params_logger.info("Go back to Default mode")
             self.showParams()
 
 
@@ -1603,7 +1734,7 @@ class MainWindow(QMainWindow):
 
             self.which_one = self.file_paths.index(file_name)
             self.file_path = self.file_paths[self.which_one]
-            print(f"[File] Selected file: {self.file_path}")
+            file_logger.info(f"Selected file: {self.file_path}")
             self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
             
             # 启用所有模式按钮
@@ -1629,7 +1760,7 @@ class MainWindow(QMainWindow):
             self.showXsetNum(is_test=False)
 
         else:
-            print("[File] Empty folder")
+            file_logger.warning("Empty folder")
 
 
     def showXsetNum(self, is_test=False):
@@ -2219,7 +2350,7 @@ class MainWindow(QMainWindow):
             if self.audio_sink.state() == QAudio.State.ActiveState:
                 self.audio_sink.stop()
                 self.buffer.close()
-                print("[Player] Audio stopped")
+                player_logger.info("Audio stopped")
         except AttributeError:
             pass
     
@@ -2236,7 +2367,7 @@ class MainWindow(QMainWindow):
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"[Params] Saved to folder as params{file_suffix}.txt: {txt_file_path}")
+            params_logger.info(f"Saved to folder as params{file_suffix}.txt: {txt_file_path}")
     
     def saveParamsToExeLocation(self):
         """保存参数到exe所在位置，文件名为params.txt或params_vad.txt（VAD模式下）"""
@@ -2251,7 +2382,7 @@ class MainWindow(QMainWindow):
         
         with open(txt_file_path, 'w') as txt_file:
             txt_file.write(f"{self.MySliders.getParams()}")
-        print(f"[Params] Saved to exe location: {txt_file_path}")
+        params_logger.info(f"Saved to exe location: {txt_file_path}")
     
     def saveParamsWithFileName(self):
         """保存参数到file同名，文件名后缀为.txt或_vad.txt（VAD模式下）"""
@@ -2264,7 +2395,7 @@ class MainWindow(QMainWindow):
             
             with open(txt_file_path, 'w') as txt_file:
                 txt_file.write(f"{self.MySliders.getParams()}")
-            print(f"[Params] Saved with file name: {txt_file_path}")
+            params_logger.info(f"Saved with file name: {txt_file_path}")
     
     def toggleMaximize(self):
         # 切换窗口最大化/还原状态
