@@ -168,6 +168,16 @@ qss_button_small_black = """
             border-color: #CCCCCC;
         }
 
+        QPushButton:hover {
+            background: #F0F0F0; 
+            color: #000000;
+            font-weight: bold;
+            border: 2px solid #000000;
+            border-radius: 5px;
+            margin: 0px;
+            padding: 4px 8px;
+        }
+
         QPushButton:pressed {
             background: #666666;
             color: white;

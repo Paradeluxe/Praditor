@@ -31,3 +31,5 @@ resources/test_audio/*.txt
 
 
 resources/test_audio/*.TextGrid
+
+main.py.bak
