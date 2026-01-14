@@ -51,9 +51,10 @@ class ScrollingLabel(QLabel):
         self.scroll_offset = 0
         self.scroll_timer = QTimer(self)
         self.scroll_timer.timeout.connect(self.scroll_text)
-        self.scroll_speed = 3  # 增加滚动速度（像素/帧），从2改为5
+        self.scroll_speed = 5  # 增加滚动速度（像素/帧），从2改为5
         self.scroll_delay = 50  # 滚动延迟（毫秒/帧）
-        self.scroll_pause = 500  # 滚动暂停时间（毫秒）
+        self.scroll_pause = 1000  # 滚动暂停时间（毫秒）
+        self.is_hovered = False  # 添加鼠标悬停状态标记
         
     def setText(self, text):
         self.original_text = text
@@ -61,6 +62,7 @@ class ScrollingLabel(QLabel):
         
     def enterEvent(self, event):
         # 鼠标悬停时开始滚动
+        self.is_hovered = True
         if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
             # 等待一段时间后开始滚动
             QTimer.singleShot(self.scroll_pause, self.start_scrolling)
@@ -68,6 +70,7 @@ class ScrollingLabel(QLabel):
         
     def leaveEvent(self, event):
         # 鼠标离开时停止滚动并重置
+        self.is_hovered = False
         self.stop_scrolling()
         self.reset_scroll()
         super().leaveEvent(event)
@@ -82,7 +85,23 @@ class ScrollingLabel(QLabel):
         self.scroll_offset = 0
         super().setText(self.original_text)
         
+    def restart_scrolling(self):
+        # 只有在鼠标悬停时才重新开始滚动
+        if not self.is_hovered:
+            return
+            
+        # 重置滚动偏移量，开始新的循环
+        self.scroll_offset = 0  # 从0开始，确保滚动重新开始
+        # 重置显示的文本为原始文本
+        super().setText(self.original_text)
+        # 在开始滚动之前停留1.2秒
+        QTimer.singleShot(1200, self.start_scrolling)
+        
     def scroll_text(self):
+        # 只有在鼠标悬停时才执行滚动逻辑
+        if not self.is_hovered:
+            return
+            
         if not self.original_text:
             return
             
@@ -104,8 +123,11 @@ class ScrollingLabel(QLabel):
         # 检查是否达到最大偏移量
         # 使用一个小的阈值，确保文本完全滚动到末尾
         if self.scroll_offset >= max_scroll_offset - 5:  # 减去5像素的阈值，确保完全滚动
-            # 重置滚动偏移量，开始新的循环
-            self.scroll_offset = -label_width  # 从标签宽度的负值开始，创建平滑的循环效果
+            # 停止当前滚动
+            self.stop_scrolling()
+            # 500毫秒后重新开始滚动
+            QTimer.singleShot(500, self.restart_scrolling)
+            return
         
         # 计算起始索引（基于像素偏移量）
         avg_char_width = self.fontMetrics().averageCharWidth()

@@ -9,7 +9,7 @@ from src.gui.styles import qss_slider_with_color
 class SingleSlider(QWidget):
     single_slider_value_changed = Signal(int)
 
-    def __init__(self, minimum, step, maximum, color="#1991D3", scale=1, default=None):
+    def __init__(self, minimum, step, maximum, color="#1991D3", scale=1, default=None, tooltip=None):
         super().__init__()
         self.scale = scale
         try:
@@ -31,6 +31,10 @@ class SingleSlider(QWidget):
         self.param_slider.setSingleStep(step)
         self.param_slider.setMaximum(maximum)
         self.param_slider.valueChanged.connect(self.slider_value_changed)
+        
+        # 添加tooltip
+        if tooltip:
+            self.param_slider.setToolTip(tooltip)
         
         # #2AD25E #1991D3
         self.param_slider.setStyleSheet(qss_slider_with_color(color))

@@ -11,25 +11,25 @@ class MySliders(QWidget):
         super().__init__()
 
         # 创建滑块实例，移除param_name参数
-        self.amp_slider_onset = SingleSlider(100, 1, 300, scale=0.01, default=147)
-        self.cutoff0_slider_onset = SingleSlider(1, 1, 500, default=60)
-        self.cutoff1_slider_onset = SingleSlider(4000, 1, 20000, default=10800)
-        self.numValid_slider_onset = SingleSlider(0, 1, 8000, default=475)
-        self.win_size_slider_onset = SingleSlider(2, 1, 500, default=152)
-        self.ratio_slider_onset = SingleSlider(50, 1, 100, scale=0.01, default=97)
-        self.penalty_slider_onset = SingleSlider(0, 1, 200, scale=0.1, default=147)
-        self.ref_len_slider_onset = SingleSlider(1, 1, 2000, default=1000)
-        self.eps_ratio_slider_onset = SingleSlider(0, 1, 300, scale=0.001, default=20)
+        self.amp_slider_onset = SingleSlider(100, 1, 300, scale=0.01, default=147, tooltip="Onset | Threshold for detecting onset")
+        self.cutoff0_slider_onset = SingleSlider(1, 1, 500, default=60, tooltip="Onset | Lower cutoff frequency of bandpass filter")
+        self.cutoff1_slider_onset = SingleSlider(4000, 1, 20000, default=10800, tooltip="Onset | Higher cutoff frequency of bandpass filter")
+        self.numValid_slider_onset = SingleSlider(0, 1, 8000, default=475, tooltip="Onset | NetActive | Minimum number of valid frames to trigger onset")
+        self.win_size_slider_onset = SingleSlider(2, 1, 500, default=152, tooltip="Onset | KernelSize | Size of the kernel (in frames)")
+        self.ratio_slider_onset = SingleSlider(50, 1, 100, scale=0.01, default=97, tooltip="Onset | KernelFrm% | % of frames retained in the kernel")
+        self.penalty_slider_onset = SingleSlider(0, 1, 200, scale=0.1, default=147, tooltip="Onset | Penalty for below-threshold frames")
+        self.ref_len_slider_onset = SingleSlider(1, 1, 2000, default=1000, tooltip="Onset | RefLen | Length of the reference segment used to generate baseline")
+        self.eps_ratio_slider_onset = SingleSlider(0, 1, 300, scale=0.001, default=20, tooltip="Onset | EPS% | Neighborhood radius in DBSCAN clustering")
 
-        self.amp_slider_offset = SingleSlider(100, 1, 300, scale=0.01, color="#2AD25E", default=194)
-        self.cutoff0_slider_offset = SingleSlider(1, 1, 500, color="#2AD25E", default=200)
-        self.cutoff1_slider_offset = SingleSlider(4000, 1, 20000, color="#2AD25E", default=10200)
-        self.numValid_slider_offset = SingleSlider(0, 1, 8000, color="#2AD25E", default=3335)
-        self.win_size_slider_offset = SingleSlider(2, 1, 500, color="#2AD25E", default=102)
-        self.ratio_slider_offset = SingleSlider(50, 1, 100, scale=0.01, color="#2AD25E", default=87)
-        self.penalty_slider_offset = SingleSlider(0, 1, 200, scale=0.1, color="#2AD25E", default=108)
-        self.ref_len_slider_offset = SingleSlider(1, 1, 2000, color="#2AD25E", default=1000)
-        self.eps_ratio_slider_offset = SingleSlider(0, 1, 300, scale=0.001, color="#2AD25E", default=15)
+        self.amp_slider_offset = SingleSlider(100, 1, 300, scale=0.01, color="#2AD25E", default=194, tooltip="Offset | Threshold for detecting offset")
+        self.cutoff0_slider_offset = SingleSlider(1, 1, 500, color="#2AD25E", default=200, tooltip="Offset | Lower cutoff frequency of bandpass filter")
+        self.cutoff1_slider_offset = SingleSlider(4000, 1, 20000, color="#2AD25E", default=10200, tooltip="Offset | Higher cutoff frequency of bandpass filter")
+        self.numValid_slider_offset = SingleSlider(0, 1, 8000, color="#2AD25E", default=3335, tooltip="Offset | NetActive | Minimum number of valid frames to trigger offset")
+        self.win_size_slider_offset = SingleSlider(2, 1, 500, color="#2AD25E", default=102, tooltip="Offset | KernelSize | Size of the kernel (in frames)")
+        self.ratio_slider_offset = SingleSlider(50, 1, 100, scale=0.01, color="#2AD25E", default=87, tooltip="Offset | KernelFrm% | % of frames retained in the kernel")
+        self.penalty_slider_offset = SingleSlider(0, 1, 200, scale=0.1, color="#2AD25E", default=108, tooltip="Offset | Penalty for below-threshold frames")
+        self.ref_len_slider_offset = SingleSlider(1, 1, 2000, color="#2AD25E", default=1000, tooltip="Offset | RefLen | Length of the reference segment used to generate baseline")
+        self.eps_ratio_slider_offset = SingleSlider(0, 1, 300, scale=0.001, color="#2AD25E", default=15, tooltip="Offset | EPS% | Neighborhood radius in DBSCAN clustering")
 
         layout = QGridLayout()
         layout.setHorizontalSpacing(35)  # 增加水平间距，使onset和offset sliders之间距离更大
@@ -70,6 +70,17 @@ class MySliders(QWidget):
                     color: #272727;
                 }
             """)
+        
+        # 添加tooltip到标签
+        self.name_labels["Threshold"].setToolTip("Threshold for detecting onset/offset")
+        self.name_labels["NetActive"].setToolTip("Minimum number of valid frames to trigger onset/offset")
+        self.name_labels["Penalty"].setToolTip("Penalty for below-threshold frames")
+        self.name_labels["RefLen"].setToolTip("Length of the reference segment used to generate baseline")
+        self.name_labels["KernelFrm%"].setToolTip("% of frames retained in the kernel")
+        self.name_labels["KernelSize"].setToolTip("Size of the kernel (in frames)")
+        self.name_labels["EPS%"].setToolTip("Neighborhood radius in DBSCAN clustering")
+        self.name_labels["LowPass"].setToolTip("Lower cutoff frequency of bandpass filter")
+        self.name_labels["HighPass"].setToolTip("Higher cutoff frequency of bandpass filter")
         
         # 将特定标签设置为灰色文字
         gray_labels = ["RefLen", "EPS%", "HighPass", "LowPass"]

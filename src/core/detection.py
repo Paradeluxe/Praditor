@@ -160,7 +160,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
 
     for i, (__offset, __onset) in enumerate(_onoffsets):
-        sot_logger.info(f"{which_set} {(i+1)/len(_onoffsets)*100:.1f}%")
+        sot_logger.info(f"{which_set.capitalize()} {(i+1)/len(_onoffsets)*100:.0f}%")
 
         # 检查是否需要停止
         if stop_flag:
