@@ -827,6 +827,9 @@ class MainWindow(QMainWindow):
         self.audio_output.setVolume(1.0)
 
         self.player.setAudioOutput(self.audio_output)
+        
+        # 连接媒体状态变化信号
+        self.player.mediaStatusChanged.connect(self.onMediaStatusChanged)
 
 
         # MENU
@@ -1473,6 +1476,10 @@ class MainWindow(QMainWindow):
             self.player.setSource(QUrl.fromLocalFile(self.file_path))
             self.player.play()    # 开始/恢复播放
             player_logger.info("Playing...")
+
+    def onMediaStatusChanged(self, status):
+        if status == QMediaPlayer.MediaStatus.EndOfMedia:
+            player_logger.info("Playback finished")
 
 
 
