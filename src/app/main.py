@@ -1449,6 +1449,9 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'file_path') and self.file_path:
             self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=is_vad_enabled)
             self.showXsetNum(is_test=False)
+        
+        # 更新滑块的tooltip文本
+        self.MySliders.updateTooltips(is_vad_enabled)
 
 
 

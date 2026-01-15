@@ -262,6 +262,39 @@ class MySliders(QWidget):
         if "eps_ratio" in offset_params:
             self.eps_ratio_slider_offset.param_slider.setValue(round(eval(offset_params["eps_ratio"]) / self.eps_ratio_slider_offset.scale))
 
+
+    def updateTooltips(self, is_vad_mode):
+        """更新滑块的tooltip文本，根据是否为VAD模式"""
+        if is_vad_mode:
+            # VAD模式下的tooltip
+            self.amp_slider_onset.param_slider.setToolTip("VAD | Threshold for detecting speech activity")
+            self.cutoff0_slider_onset.param_slider.setToolTip("VAD | Lower cutoff frequency of bandpass filter")
+            self.cutoff1_slider_onset.param_slider.setToolTip("VAD | Higher cutoff frequency of bandpass filter")
+            self.numValid_slider_onset.param_slider.setToolTip("VAD | Minimum number of valid frames to detect speech")
+            self.eps_ratio_slider_onset.param_slider.setToolTip("VAD | Neighborhood radius in DBSCAN clustering")
+        else:
+            # 非VAD模式下的tooltip
+            self.amp_slider_onset.param_slider.setToolTip("Onset | Threshold for detecting onset")
+            self.cutoff0_slider_onset.param_slider.setToolTip("Onset | Lower cutoff frequency of bandpass filter")
+            self.cutoff1_slider_onset.param_slider.setToolTip("Onset | Higher cutoff frequency of bandpass filter")
+            self.numValid_slider_onset.param_slider.setToolTip("Onset | NetActive | Minimum number of valid frames to trigger onset")
+            self.win_size_slider_onset.param_slider.setToolTip("Onset | KernelSize | Size of the kernel (in frames)")
+            self.ratio_slider_onset.param_slider.setToolTip("Onset | KernelFrm% | % of frames retained in the kernel")
+            self.penalty_slider_onset.param_slider.setToolTip("Onset | Penalty for below-threshold frames")
+            self.ref_len_slider_onset.param_slider.setToolTip("Onset | RefLen | Length of the reference segment used to generate baseline")
+            self.eps_ratio_slider_onset.param_slider.setToolTip("Onset | EPS% | Neighborhood radius in DBSCAN clustering")
+            
+            # 恢复Offset滑块的tooltip
+            self.amp_slider_offset.param_slider.setToolTip("Offset | Threshold for detecting offset")
+            self.cutoff0_slider_offset.param_slider.setToolTip("Offset | Lower cutoff frequency of bandpass filter")
+            self.cutoff1_slider_offset.param_slider.setToolTip("Offset | Higher cutoff frequency of bandpass filter")
+            self.numValid_slider_offset.param_slider.setToolTip("Offset | NetActive | Minimum number of valid frames to trigger offset")
+            self.win_size_slider_offset.param_slider.setToolTip("Offset | KernelSize | Size of the kernel (in frames)")
+            self.ratio_slider_offset.param_slider.setToolTip("Offset | KernelFrm% | % of frames retained in the kernel")
+            self.penalty_slider_offset.param_slider.setToolTip("Offset | Penalty for below-threshold frames")
+            self.ref_len_slider_offset.param_slider.setToolTip("Offset | RefLen | Length of the reference segment used to generate baseline")
+            self.eps_ratio_slider_offset.param_slider.setToolTip("Offset | EPS% | Neighborhood radius in DBSCAN clustering")
+
         
         
 if __name__ == '__main__':
