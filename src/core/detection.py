@@ -19,6 +19,112 @@ global stop_flag  # 全局停止变量
 stop_flag = False
 
 
+
+
+def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder", mode="general", verbose=False):
+    wav_path = audio_obj.fpath
+
+    audio_obj = ReadSound(wav_path)
+
+    folder_param_path = os.path.join(os.path.dirname(wav_path), "params_vad.txt")
+    file_txt_path = wav_path.replace(".wav", "_vad.txt")
+
+    match params:
+        case "file":
+            if os.path.exists(file_txt_path):
+                with open(file_txt_path, "r") as f:
+                    params = eval(f.read())
+            else:
+                params = default_params
+        case "folder":
+            if os.path.exists(folder_param_path):
+                with open(folder_param_path, "r") as f:
+                    params = eval(f.read())
+            else:
+                params = default_params
+        case "default":
+            params = default_params
+        case _:  # 最好直接输入dict
+            if type(params) == dict:
+                params = params
+            elif type(params) == str:
+                params = eval(params)
+            else:
+                params = default_params
+    
+    params["offset"] = params["onset"]  # VAD特供
+
+    segments = []
+
+    y = audio_obj.arr
+    sr = audio_obj.frame_rate
+
+    audio_len = len(y) /sr
+
+    start = 0.0 * 1000
+    end = segment_duration * 1000
+    while end <= audio_len * 1000:
+        segment = audio_obj[start:end]
+        # print(type(segment) == type(audio_obj))
+        onsets = detectPraditor(params, segment, "onset")
+        offsets = detectPraditor(params, segment, "offset")
+        # print()
+        # print(start, end)
+        # print(onsets, offsets, audio_len * 1000)
+        if not onsets or not offsets:
+            segments[-1][1] = end
+            # continue
+        else:
+
+            ################
+            # 找到一个尽可能大的pause，使得onset和offset之间的差值大于pause
+            ################
+
+            # 从最后一个onset开始往前遍历
+            tmp_pause = min_pause
+            found = False
+            while tmp_pause > 0 and not found:
+                for i in range(len(onsets)-1, 0, -1):
+                    current_onset = onsets[i]
+
+                    # 找到当前onset之前的最后一个offset
+                    try:
+                        prev_offset = [offset for offset in offsets if offset < current_onset][-1]
+                    except IndexError:
+                        continue
+
+                    if current_onset - prev_offset > tmp_pause:
+                        # 若差值大于tmp_pause，则取得他们的均值
+                        target_offset = (current_onset + prev_offset) / 2
+                        end = start + target_offset * 1000
+                        found = True
+                        break
+                if not found:
+                    tmp_pause -= 0.01
+            # -----------------
+
+            segments.append([start, end])
+
+        start = end
+        end = start + segment_duration * 1000
+
+        if end > audio_len * 1000:
+            if audio_len * 1000 - start > 10:
+                segments[-1][1] = audio_len * 1000
+                break
+            else:
+                segments.append([start, audio_len * 1000])
+                break
+    # print(segments)
+    if not segments:
+        segments.append([0.0, audio_len * 1000])
+    
+    # print(segments)
+    # exit()
+    return segments
+
+
+
 def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=-1):
     """
     合并后的检测函数

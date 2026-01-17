@@ -21,6 +21,7 @@ class ReadSound:
                 self.frame_rate = frame_rate
 
         else:  # 如果有fpath
+            self.fpath = fpath
             self.info = sf.info(fpath)
             # print(self.info)
 

@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.gui.styles import *
-from src.core.detection import detectPraditor, create_textgrid_with_time_point, stop_flag
+from src.core.detection import detectPraditor, create_textgrid_with_time_point, stop_flag, segment_audio
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
@@ -243,16 +243,28 @@ class DetectPraditorThread(QThread):
 
             onset_results, offset_results = [], []
 
-            if self.params["onset"]:
-                onset_results = detectPraditor(self.params, self.audio_obj, "onset", self.mode)
-            else:
-                onset_results = []
+            
+            count = 0
+            segments = segment_audio(self.audio_obj, segment_duration=15, params=self.params, min_pause=1, mode=self.mode)
+            for start, end in segments:
+                count += 1
+                clip_onset_results, clip_offset_results = [], []
+
+                audio_clip = self.audio_obj[start:end]
 
 
-            if self.params["offset"]:
-                offset_results = detectPraditor(self.params, self.audio_obj, "offset", self.mode)
-            else:
-                offset_results = []
+                if self.params["onset"]:
+                    clip_onset_results = detectPraditor(self.params, audio_clip, "onset", self.mode)
+                    clip_onset_results = [x + start/1000 for x in clip_onset_results]
+
+
+                if self.params["offset"]:
+                    clip_offset_results = detectPraditor(self.params, audio_clip, "offset", self.mode)
+                    clip_offset_results = [x + start/1000 for x in clip_offset_results]
+
+                # 合并当前片段的结果
+                onset_results.extend(clip_onset_results)
+                offset_results.extend(clip_offset_results)
 
 
             self.finished.emit(onset_results, offset_results)
