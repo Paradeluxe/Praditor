@@ -222,7 +222,7 @@ class DetectPraditorThread(QThread):
     
     def stop(self):
         """安全停止线程"""
-
+        
         # 设置全局停止标志
         from src.core import detection
         detection.stop_flag = True
@@ -235,6 +235,7 @@ class DetectPraditorThread(QThread):
                 self.terminate()
                 system_logger.warning("Termination timed out")
 
+        system_logger.info("Thread terminated")
         
     
     def run(self):
@@ -243,11 +244,16 @@ class DetectPraditorThread(QThread):
 
             onset_results, offset_results = [], []
 
-            
+            system_logger.info("Segmenting...")  # 记录开始分段日志
             count = 0
-            segments = segment_audio(self.audio_obj, segment_duration=15, params=self.params, min_pause=1, mode=self.mode)
+            segments = segment_audio(self.audio_obj, segment_duration=15, params=self.params, min_pause=1, mode="vad")
+            system_logger.info(f"Total segments: {len(segments)}")  # 记录总分段数
             for start, end in segments:
                 count += 1
+
+                # 记录当前进度百分比
+                progress = int((count / len(segments)) * 100)
+                system_logger.info(f"Detection progress: {progress:.0f}%")
                 clip_onset_results, clip_offset_results = [], []
 
                 audio_clip = self.audio_obj[start:end]

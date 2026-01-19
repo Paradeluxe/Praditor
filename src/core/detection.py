@@ -21,7 +21,7 @@ stop_flag = False
 
 
 
-def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder", mode="general", verbose=False):
+def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder", mode="vad", verbose=False):
     wav_path = audio_obj.fpath
 
     audio_obj = ReadSound(wav_path)
@@ -66,8 +66,8 @@ def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder"
     while end <= audio_len * 1000:
         segment = audio_obj[start:end]
         # print(type(segment) == type(audio_obj))
-        onsets = detectPraditor(params, segment, "onset")
-        offsets = detectPraditor(params, segment, "offset")
+        onsets = detectPraditor(params, segment, "onset", mode=mode)
+        offsets = detectPraditor(params, segment, "offset", mode=mode)
         # print()
         # print(start, end)
         # print(onsets, offsets, audio_len * 1000)
@@ -125,7 +125,7 @@ def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder"
 
 
 
-def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=-1):
+def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=-1, verbose=False):
     """
     合并后的检测函数
     
@@ -136,6 +136,7 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
         mode: "general"（通用模式）或"vad"（VAD模式）
         stime: 开始时间（毫秒），默认0
         etime: 结束时间（毫秒），默认-1表示整个音频
+        verbose: 是否输出详细信息，默认False
     """
     global stop_flag
 
@@ -151,6 +152,9 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
             except Exception:
                 pass
             # print(2)
+
+
+    mode = mode.lower()
 
     # VAD模式特殊处理：强制将offset参数设为与onset相同
     if mode == "vad":
@@ -227,7 +231,13 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     _points_confirmed = _points_array[_cluster.labels_ == noise_label]
 
     # 把最小cluster以下的所有点都囊括进来
-    _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
+    if len(_points_confirmed) == 0:
+        return []
+    try:
+        _points_compensation = np.array(range(len(_points_array)))[np.sum(np.square(_points_array), axis=1) <= np.mean(np.sum(np.square(_points_confirmed), axis=1))]
+    except Exception:
+        return []
+
 
     _labels = _cluster.labels_
     for i in _points_compensation:
@@ -266,7 +276,8 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
 
     for i, (__offset, __onset) in enumerate(_onoffsets):
-        sot_logger.info(f"{which_set.capitalize()} {(i+1)/len(_onoffsets)*100:.0f}%")
+        if verbose:
+            sot_logger.info(f"{which_set.capitalize()} {(i+1)/len(_onoffsets)*100:.0f}%")
 
         # 检查是否需要停止
         if stop_flag:
