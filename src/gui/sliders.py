@@ -294,6 +294,48 @@ class MySliders(QWidget):
             self.penalty_slider_offset.param_slider.setToolTip("Offset | Penalty for below-threshold frames")
             self.ref_len_slider_offset.param_slider.setToolTip("Offset | RefLen | Length of the reference segment used to generate baseline")
             self.eps_ratio_slider_offset.param_slider.setToolTip("Offset | EPS% | Neighborhood radius in DBSCAN clustering")
+    
+    def setEnabled(self, enabled):
+        """启用或禁用所有滑块和对应的可输入label"""
+        # 禁用/启用所有Onset滑块和可输入label
+        self.amp_slider_onset.param_slider.setEnabled(enabled)
+        self.amp_slider_onset.value_edit.setEnabled(enabled)
+        self.cutoff0_slider_onset.param_slider.setEnabled(enabled)
+        self.cutoff0_slider_onset.value_edit.setEnabled(enabled)
+        self.cutoff1_slider_onset.param_slider.setEnabled(enabled)
+        self.cutoff1_slider_onset.value_edit.setEnabled(enabled)
+        self.numValid_slider_onset.param_slider.setEnabled(enabled)
+        self.numValid_slider_onset.value_edit.setEnabled(enabled)
+        self.win_size_slider_onset.param_slider.setEnabled(enabled)
+        self.win_size_slider_onset.value_edit.setEnabled(enabled)
+        self.ratio_slider_onset.param_slider.setEnabled(enabled)
+        self.ratio_slider_onset.value_edit.setEnabled(enabled)
+        self.penalty_slider_onset.param_slider.setEnabled(enabled)
+        self.penalty_slider_onset.value_edit.setEnabled(enabled)
+        self.ref_len_slider_onset.param_slider.setEnabled(enabled)
+        self.ref_len_slider_onset.value_edit.setEnabled(enabled)
+        self.eps_ratio_slider_onset.param_slider.setEnabled(enabled)
+        self.eps_ratio_slider_onset.value_edit.setEnabled(enabled)
+        
+        # 禁用/启用所有Offset滑块和可输入label
+        self.amp_slider_offset.param_slider.setEnabled(enabled)
+        self.amp_slider_offset.value_edit.setEnabled(enabled)
+        self.cutoff0_slider_offset.param_slider.setEnabled(enabled)
+        self.cutoff0_slider_offset.value_edit.setEnabled(enabled)
+        self.cutoff1_slider_offset.param_slider.setEnabled(enabled)
+        self.cutoff1_slider_offset.value_edit.setEnabled(enabled)
+        self.numValid_slider_offset.param_slider.setEnabled(enabled)
+        self.numValid_slider_offset.value_edit.setEnabled(enabled)
+        self.win_size_slider_offset.param_slider.setEnabled(enabled)
+        self.win_size_slider_offset.value_edit.setEnabled(enabled)
+        self.ratio_slider_offset.param_slider.setEnabled(enabled)
+        self.ratio_slider_offset.value_edit.setEnabled(enabled)
+        self.penalty_slider_offset.param_slider.setEnabled(enabled)
+        self.penalty_slider_offset.value_edit.setEnabled(enabled)
+        self.ref_len_slider_offset.param_slider.setEnabled(enabled)
+        self.ref_len_slider_offset.value_edit.setEnabled(enabled)
+        self.eps_ratio_slider_offset.param_slider.setEnabled(enabled)
+        self.eps_ratio_slider_offset.value_edit.setEnabled(enabled)
 
         
         

@@ -283,6 +283,9 @@ class DetectPraditorThread(QThread):
                 self.finished.emit([], [])
 
 
+class CustomToolbar(QToolbar):
+    
+
 
 class CustomTitleBar(QWidget):
     """自定义Windows风格标题栏，类似Trae样式"""
@@ -363,22 +366,30 @@ class CustomTitleBar(QWidget):
         # 添加设置按钮到布局左侧
         layout.addWidget(self.help_menu_btn)
         
-        # 添加标题标签，设置居左显示（Windows风格）
-        self.title_label = QLabel("Praditor")
-        self.title_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        # 添加标题按钮，设置居左显示（Windows风格）
+        self.title_label = QPushButton("Praditor")
+        self.title_label.setFlat(True)
+        self.title_label.setFocusPolicy(Qt.NoFocus)
+        self.title_label.setCursor(QCursor(Qt.PointingHandCursor))
         self.title_label.setStyleSheet("""
-            QLabel {
+            QPushButton {
                 background-color: transparent; 
                 color: #333333; 
                 font-size: 13px; 
                 font-weight: bold; 
                 border: none; 
-                padding: 5px 10px 5px 5px;
+                padding: 5px 10px 5px 10px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: transparent; 
+            }
+            QPushButton:pressed {
+                background-color: transparent; 
             }
         """)
-        self.title_label.setCursor(QCursor(Qt.PointingHandCursor))
-        self.title_label.mousePressEvent = lambda event: self.file_menu_clicked.emit()
         self.title_label.setToolTip("Select an audio file")
+        self.title_label.clicked.connect(self.file_menu_clicked.emit)
         layout.addWidget(self.title_label)
  
         
@@ -756,39 +767,10 @@ class CustomTitleBar(QWidget):
     
     def set_title(self, title):
         """设置标题，确保Praditor部分加粗"""
-        if "Praditor" in title:
-            # 将Praditor部分加粗，其他部分保持正常
-            parts = title.split("Praditor")
-            formatted_title = f"<b>Praditor</b>{parts[1] if len(parts) > 1 else ''}"
-            self.title_label.setText(formatted_title)
-        else:
-            # 如果标题中没有Praditor，直接设置
-            self.title_label.setText(title)
-        # 确保标签支持HTML格式
-        self.title_label.setTextFormat(Qt.RichText)
-    
-    def update_maximize_button(self, is_maximized):
-        """更新最大化按钮状态"""
-        # macOS风格下，最大化按钮样式不变，只改变功能
-        pass
-    
-    def _setButtonEnabled(self, button, icon_name, enabled):
-        """设置按钮是否可用，并自动切换图标
-        
-        Args:
-            button (QPushButton): 要设置的按钮
-            icon_name (str): 图标名称（不带.svg后缀）
-            enabled (bool): 是否可用
-        """
-        # 设置按钮可用性
-        button.setEnabled(enabled)
-        
-        # 根据状态切换图标
-        if enabled:
-            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}.svg')))
-        else:
-            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}_gray.svg')))
 
+        self.title_label.setText(title)
+    
+    
 
 class MainWindow(QMainWindow):
     run_current_done = Signal()
@@ -848,48 +830,6 @@ class MainWindow(QMainWindow):
         
         # 连接媒体状态变化信号
         self.player.mediaStatusChanged.connect(self.onMediaStatusChanged)
-
-
-        # MENU
-        # --------------------------------------
-
-
-        file_menu = self.menuBar().addMenu("&File")
-        button_action = QAction("&Read file...", self)
-        button_action.setStatusTip("Read audio files HERE!")
-        button_action.triggered.connect(self.openFileDialog)
-        file_menu.addAction(button_action)
-
-
-        file_menu = self.menuBar().addMenu("&Help")
-        button_action = QAction("&Instructions", self)
-        button_action.setStatusTip("Folder to store target audios")
-        button_action.triggered.connect(self.browseInstruction)
-        file_menu.addAction(button_action)
-        # file_menu.setStyleSheet("""
-        #
-        # """)
-        self.menuBar().setStyleSheet("""            
-        QMenuBar {
-            background-color: #E9EDF1;
-            font-size: 10px;
-            color: black;
-        }
-
-        QMenu {
-            color: black; 
-            background-color: #EFEFEF;
-            border: 1px solid #676767;
-            height: 25px;
-
-        }
-
-        """)
-        
-        # 隐藏默认菜单栏，我们将在自定义标题栏中集成菜单功能
-        self.menuBar().setVisible(False)
-        
-        # --------------------------------------
 
 
 
@@ -1004,12 +944,10 @@ class MainWindow(QMainWindow):
             margin: 8px;
         }
         """)
-        # 使用对象名称设置样式
         
 
         self.addToolBar(Qt.BottomToolBarArea, toolbar)
-        # 保存工具栏引用，以便在resizeEvent中使用
-        self.toolbar = toolbar
+        self.toolbar = toolbar  # 保存工具栏引用，以便在resizeEvent中使用
         # ---------------------------------------------------------------
 
         # 添加自定义长度的spacer到最左侧
@@ -1079,10 +1017,10 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(self.save_btn)
         
         # Reset按钮
-        self.reset_svg_btn = QPushButton("Reset", self)
-        self.reset_svg_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
-        self.reset_svg_btn.setToolTip("Reset parameters to saved values")
-        self.reset_svg_btn.setStyleSheet("""
+        self.reset_btn = QPushButton("Reset", self)
+        self.reset_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
+        self.reset_btn.setToolTip("Reset parameters to saved values")
+        self.reset_btn.setStyleSheet("""
             QPushButton {
                 background-color: transparent; 
                 border: none; 
@@ -1105,9 +1043,9 @@ class MainWindow(QMainWindow):
                 margin: 0;
             }
         """)
-        self.reset_svg_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.reset_svg_btn.clicked.connect(self.resetParams)
-        toolbar.addWidget(self.reset_svg_btn)
+        self.reset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.reset_btn.clicked.connect(self.resetParams)
+        toolbar.addWidget(self.reset_btn)
 
         
         # Backward按钮
@@ -1800,8 +1738,8 @@ class MainWindow(QMainWindow):
             # 更新save和reset按钮的可用性
             self.updateToolbarButtonsState()
             self.showParams()
-            # 检查参数匹配，更新下划线
-            self.checkIfParamsExist()
+
+            self.checkIfParamsExist()  # 检查参数匹配，更新下划线
 
             dir_name = os.path.basename(os.path.dirname(self.file_path))
             base_name = os.path.basename(self.file_path)
@@ -1868,8 +1806,11 @@ class MainWindow(QMainWindow):
         # 退出run-all模式
         self.is_running_all = False
 
-        # 启用所有按钮
+        # 启用所有按钮和滑块
         self.setButtonsEnabled(True)
+        self.MySliders.setEnabled(True)
+        # self.toolbar.setEnabled(True)
+        self.updateToolbarButtonsState()
 
         # detection.stop_flag = False
     
@@ -1888,6 +1829,7 @@ class MainWindow(QMainWindow):
         
             # 清空线程列表，因为所有线程都已完成
             self.current_runnables.clear()
+
     
     def runAllAudioFiles(self):
         """Run Praditor on all audio files sequentially, displaying one audio after current detection finishes"""
@@ -2029,6 +1971,10 @@ class MainWindow(QMainWindow):
                 
                 # 启用所有按钮
                 self.setButtonsEnabled(True)
+                # 启用所有滑块和工具栏
+                self.MySliders.setEnabled(True)
+                # self.toolbar.setEnabled(True)
+                self.updateToolbarButtonsState()
                 
                 # 发射run完成信号
                 self.run_current_done.emit()
@@ -2036,6 +1982,9 @@ class MainWindow(QMainWindow):
             # 单个文件处理完成
             # 启用所有按钮
             self.setButtonsEnabled(True)
+            self.MySliders.setEnabled(True)
+            # self.toolbar.setEnabled(True)
+            self.updateToolbarButtonsState()
             
             # 发射run完成信号
             self.run_current_done.emit()
@@ -2047,10 +1996,13 @@ class MainWindow(QMainWindow):
         from src.core import detection
         detection.stop_flag = False
 
-        # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
-        if not self.is_running_all:
-            # 禁用除最小化、最大化、关闭、停止以外的所有按钮
-            self.setButtonsEnabled(False)
+        # 禁用所有滑块
+        self.MySliders.setEnabled(False)
+        # self.toolbar.setEnabled(False)
+        self.updateToolbarButtonsState()
+
+        if not self.is_running_all:  # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
+            self.setButtonsEnabled(False)  # 禁用除最小化、最大化、关闭、停止以外的所有按钮
 
         # 检测当前模式，直接使用detectPraditor函数
         is_vad_mode = self.vad_btn.isChecked()
@@ -2240,16 +2192,14 @@ class MainWindow(QMainWindow):
         self.save_btn.setIcon(QIcon(get_resource_path(f'resources/icons/save{"_gray" if not any_mode_selected else ""}.svg')))
         
         # 更新reset按钮
-        self.reset_svg_btn.setEnabled(reset_enabled)
-        self.reset_svg_btn.setIcon(QIcon(get_resource_path(f'resources/icons/reset{"_gray" if not reset_enabled else ""}.svg')))
+        self.reset_btn.setEnabled(reset_enabled)
+        self.reset_btn.setIcon(QIcon(get_resource_path(f'resources/icons/reset{"_gray" if not reset_enabled else ""}.svg')))
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
-        # print(f"backward_enabled: {backward_enabled}")
         self.backward_btn.setEnabled(backward_enabled)
         self.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
 
-        
         # 更新forward按钮 - 必须音频导入成功且有两套及以上的参数
         forward_enabled = audio_imported and has_multiple_params
         self.forward_btn.setEnabled(forward_enabled)
@@ -2278,8 +2228,9 @@ class MainWindow(QMainWindow):
             enabled: True表示恢复原始状态，False表示禁用
             禁用除了最小化、最大化、关闭、停止以外的所有按键
         """
-        # 标题栏按钮映射：按钮 -> 图标名称
-        titlebar_buttons_map = {
+        # 分类管理按钮
+        # 1. 带图标需要切换的按钮映射
+        icon_buttons_map = {
             self.title_bar.trash_btn: 'trash',
             self.title_bar.read_btn: 'read',
             self.title_bar.run_btn: 'play',
@@ -2287,66 +2238,66 @@ class MainWindow(QMainWindow):
             self.title_bar.test_btn: 'test',
             self.title_bar.prev_audio_btn: 'prev_audio',
             self.title_bar.next_audio_btn: 'next_audio',
+            self.title_bar.help_menu_btn: 'question',
+            self.save_btn: 'save',
+            self.reset_btn: 'reset',
         }
         
-        # 主窗口按钮
-        main_buttons_to_toggle = [
-            self.vad_btn,
-            self.run_onset,
-            self.run_offset,
-            self.default_btn,
-            self.folder_btn,
-            self.file_btn,
-            self.save_btn,
-            self.reset_svg_btn,
-            self.backward_btn,
-            self.forward_btn,
-            self.params_btn,
+        # 2. 仅需控制状态的按钮列表
+        state_only_buttons = [
+            self.title_bar.title_label,
+            self.title_bar.onset_btn,
+            self.title_bar.offset_btn
         ]
         
-        all_buttons_to_toggle = list(titlebar_buttons_map.keys()) + main_buttons_to_toggle
+        # 3. 所有需要切换状态的按钮
+        all_buttons = list(icon_buttons_map.keys()) + state_only_buttons
         
         if not enabled:
-            # 禁用前，保存所有需要切换的按钮的原始状态
-            self._button_original_states.clear()
-            for btn in all_buttons_to_toggle:
-                self._button_original_states[btn] = btn.isEnabled()
+            # 禁用逻辑：保存原始状态并禁用所有按钮
+            # 使用字典推导式简化状态保存
+            self._button_original_states = {btn: btn.isEnabled() for btn in all_buttons}
             
-            # 处理标题栏按钮，同时更新图标
-            for btn, icon_name in titlebar_buttons_map.items():
+            # 处理带图标按钮（切换图标+禁用）
+            for btn, icon_name in icon_buttons_map.items():
                 self._setButtonEnabled(btn, icon_name, False)
+                print(icon_name)
             
-            # 处理主窗口按钮
-            for btn in main_buttons_to_toggle:
+            # 处理仅状态按钮（直接禁用）
+            for btn in state_only_buttons:
                 btn.setEnabled(False)
         else:
-            # 恢复时，还原所有按钮的原始状态
-            for btn, icon_name in titlebar_buttons_map.items():
-                original_state = self._button_original_states.get(btn, True)
-                self._setButtonEnabled(btn, icon_name, original_state)
+            # 启用逻辑：恢复原始状态
+            # 处理带图标按钮
+            for btn, icon_name in icon_buttons_map.items():
+                self._setButtonEnabled(btn, icon_name, self._button_original_states.get(btn, True))
+                print(icon_name)
             
-            for btn in main_buttons_to_toggle:
-                original_state = self._button_original_states.get(btn, True)
-                btn.setEnabled(original_state)
+            # 处理仅状态按钮
+            for btn in state_only_buttons:
+                btn.setEnabled(self._button_original_states.get(btn, True))
         
-        # 确保最小化、最大化、关闭、停止按钮始终可用
-        self.title_bar.minimize_btn.setEnabled(True)
-        self.title_bar.maximize_btn.setEnabled(True)
-        self.title_bar.close_btn.setEnabled(True)
-        self.title_bar.stop_btn.setEnabled(True)
+        # 确保窗口控制和停止按钮始终可用
+        always_enabled_buttons = [
+            self.title_bar.minimize_btn,
+            self.title_bar.maximize_btn,
+            self.title_bar.close_btn,
+            self.title_bar.stop_btn
+        ]
+        for btn in always_enabled_buttons:
+            btn.setEnabled(True)
 
 
-        self.updateToolbarButtonsState()
 
 
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
-        # 取消其他两个按钮的选中状态
-        for btn in [self.default_btn, self.folder_btn, self.file_btn]:
+        
+        for btn in [self.default_btn, self.folder_btn, self.file_btn]:  # 取消其他两个按钮的选中状态
             if btn != clicked_btn:
                 btn.setChecked(False)
-        # 更新save和reset按钮状态
-        self.updateToolbarButtonsState()
+        
+        self.updateToolbarButtonsState()  # 更新save和reset按钮状态
 
 
     def prevnext_audio(self, direction=None):
