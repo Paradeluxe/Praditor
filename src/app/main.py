@@ -39,6 +39,7 @@ from src.gui.styles import *
 from src.core.detection import detectPraditor, create_textgrid_with_time_point, stop_flag, segment_audio
 from src.gui.plots import AudioViewer
 from src.gui.sliders import MySliders
+from src.gui.toolbar import CustomToolBar
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
@@ -283,7 +284,7 @@ class DetectPraditorThread(QThread):
                 self.finished.emit([], [])
 
 
-class CustomToolbar(QToolbar):
+# class CustomToolbar(QToolbar):
     
 
 
@@ -923,266 +924,25 @@ class MainWindow(QMainWindow):
         # TOOLBAR
         # ---------------------
 
-        toolbar = QToolBar("My main toolbar")
-
-        toolbar.setMovable(False)
-        toolbar.setStyleSheet("""
-        QToolBar {
-            background-color:white;
-            spacing: 0px;
-            border-width: 0px 2px 2px 2px;
-            border-style: solid;
-            border-color: #E9EDF1;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            margin: 0px;
-        }
-
-        QToolBar::separator {
-            background-color: #DBDBDB;
-            width: 1px;
-            margin: 8px;
-        }
-        """)
         
-
-        self.addToolBar(Qt.BottomToolBarArea, toolbar)
-        self.toolbar = toolbar  # 保存工具栏引用，以便在resizeEvent中使用
+        # 使用自定义工具栏
+        self.toolbar = CustomToolBar(self)
+        self.addToolBar(Qt.BottomToolBarArea, self.toolbar)
         # ---------------------------------------------------------------
-
-        # 添加自定义长度的spacer到最左侧
-        left_spacer = QWidget()
-        left_spacer.setFixedWidth(10)  # 自定义宽度为20px
-        toolbar.addWidget(left_spacer)
-        
-        # Default按钮
-        self.default_btn = QPushButton("Default", self)
-        self.default_btn.setCheckable(True)
-        self.default_btn.setChecked(False)
-        self.default_btn.setEnabled(False)
-        self.default_btn.setStyleSheet(qss_save_location_button)
-        self.default_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.default_btn.setToolTip("Use default parameters")
-        toolbar.addWidget(self.default_btn)
-        
-        # Folder按钮
-        self.folder_btn = QPushButton("Folder", self)
-        self.folder_btn.setCheckable(True)
-        self.folder_btn.setStyleSheet(qss_save_location_button)
-        self.folder_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.folder_btn.setEnabled(False)
-        self.folder_btn.setToolTip("Use folder-specific parameters")
-        toolbar.addWidget(self.folder_btn)
-        
-        # File按钮
-        self.file_btn = QPushButton("File", self)
-        self.file_btn.setCheckable(True)
-        self.file_btn.setStyleSheet(qss_save_location_button)
-        self.file_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.file_btn.setEnabled(False)
-        self.file_btn.setToolTip("Use file-specific parameters")
-        toolbar.addWidget(self.file_btn)
-                
-        toolbar.addSeparator()
-        
-        # 保存按钮
-        self.save_btn = QPushButton("Save", self)
-        self.save_btn.setIcon(QIcon(get_resource_path('resources/icons/save.svg')))
-        self.save_btn.setToolTip("Save parameters to selected location")
-        self.save_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-            QPushButton:disabled {
-                color: #CCCCCC;
-            }
-            QPushButton:hover {
-                background-color: #F0F0F0; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-        """)
-        self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.save_btn.clicked.connect(self.saveParams)
-        toolbar.addWidget(self.save_btn)
-        
-        # Reset按钮
-        self.reset_btn = QPushButton("Reset", self)
-        self.reset_btn.setIcon(QIcon(get_resource_path('resources/icons/reset.svg')))
-        self.reset_btn.setToolTip("Reset parameters to saved values")
-        self.reset_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-            QPushButton:disabled {
-                color: #CCCCCC;
-            }
-            QPushButton:hover {
-                background-color: #F0F0F0; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-        """)
-        self.reset_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.reset_btn.clicked.connect(self.resetParams)
-        toolbar.addWidget(self.reset_btn)
-
-        
-        # Backward按钮
-        self.backward_btn = QPushButton("Backward", self)
-        self.backward_btn.setIcon(QIcon(get_resource_path('resources/icons/backward.svg')))
-        self.backward_btn.setToolTip("Load previous parameters")
-        self.backward_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-            QPushButton:disabled {
-                color: #CCCCCC;
-            }
-            QPushButton:hover {
-                background-color: #F0F0F0; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-        """)
-        self.backward_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.backward_btn.clicked.connect(self.loadPreviousParams)
-        toolbar.addWidget(self.backward_btn)
-        
-        # Forward按钮
-        self.forward_btn = QPushButton("Forward", self)
-        self.forward_btn.setIcon(QIcon(get_resource_path('resources/icons/forward.svg')))
-        self.forward_btn.setToolTip("Load next parameters")
-        self.forward_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-            QPushButton:disabled {
-                color: #CCCCCC;
-            }
-            QPushButton:hover {
-                background-color: #F0F0F0; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
-            }
-        """)
-        self.forward_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.forward_btn.clicked.connect(self.loadNextParams)
-        toolbar.addWidget(self.forward_btn)
-        
-        # 添加伸缩空间，将参数索引标签推到右侧
-        spacer = QWidget()
-        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        toolbar.addWidget(spacer)
-        
-        # 添加VAD切换按钮
-        self.vad_btn = QPushButton("VAD", self)
-        self.vad_btn.setCheckable(True)
-        self.vad_btn.setChecked(False)
-        self.vad_btn.setStyleSheet(qss_button_small_black)
-        self.vad_btn.setFixedHeight(25)
-        self.vad_btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        self.vad_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.vad_btn.setToolTip("Toggle VAD mode")
-        self.vad_btn.clicked.connect(self.onVadButtonClicked)
-        toolbar.addWidget(self.vad_btn)
-        
-        # 添加spacer增加VAD按钮和output label之间的距离
-        vad_output_spacer = QWidget()
-        vad_output_spacer.setFixedWidth(15)  # 设置固定宽度为15px
-        toolbar.addWidget(vad_output_spacer)
-        
-        # 添加print输出显示label
-        self.print_label = ScrollingLabel(self)
-        self.print_label.setText("Print output: ")
-        self.print_label.setStyleSheet("""
-            QLabel {
-                color: #333333;
-                font-size: 12px;
-                border: 1px solid #E9EDF1;
-                border-radius: 4px;
-                padding: 4px 8px;
-                background-color: #F8F9FA;
-            }
-        """)
-        self.print_label.setToolTip("Displays the most recent print output")
-        # 固定output label的长度
-        self.print_label.setFixedWidth(350)  # 固定宽度为300px
-        self.print_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.print_label.setTextFormat(Qt.PlainText)
-        toolbar.addWidget(self.print_label)
-        
-        # 合并参数图标和索引标签为一个按钮
-        self.params_btn = QPushButton(self)
-        self.params_btn.setIcon(QIcon(get_resource_path('resources/icons/parameters.svg')))
-        self.params_btn.setText("0/0")
-        self.params_btn.setFixedHeight(24)
-        self.params_btn.setToolTip("Parameters index")
-        self.params_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent;
-                border: none;
-                color: #666666;
-                font-size: 12px;
-                text-align: left;
-                padding: 0px 10px;
-            }
-            QPushButton:disabled {
-                color: #CCCCCC;
-            }
-        """)
-        self.params_btn.setCursor(QCursor(Qt.ArrowCursor))
-        toolbar.addWidget(self.params_btn)
-        
-        # 添加自定义长度的spacer到最右侧
-        right_spacer = QWidget()
-        right_spacer.setFixedWidth(8)  # 自定义宽度为20px，与左侧保持一致
-        toolbar.addWidget(right_spacer)
-        
+        # 连接工具栏按钮信号
+        self.toolbar.save_btn.clicked.connect(self.saveParams)
+        self.toolbar.reset_btn.clicked.connect(self.resetParams)
+        self.toolbar.backward_btn.clicked.connect(self.loadPreviousParams)
+        self.toolbar.forward_btn.clicked.connect(self.loadNextParams)
+        self.toolbar.vad_btn.clicked.connect(self.onVadButtonClicked)
+        # 连接模式按钮信号
+        self.toolbar.default_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.default_btn))
+        self.toolbar.folder_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.folder_btn))
+        self.toolbar.file_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.file_btn))
         # 初始化输出流，将print语句重定向到GUI
         def update_print_label(text):
             # 更新print_label的文本，仅显示最后一行
-            self.print_label.setText(f"{text}")
+            self.toolbar.print_label.setText(f"{text}")
         
         # 将update_print_label函数设置为logger的GUI回调
         from src.utils.logger import gui_callback as logger_gui_callback
@@ -1246,9 +1006,9 @@ class MainWindow(QMainWindow):
         self.MySliders.anySliderValueChanged.connect(self.checkIfParamsExist)
         
         # 模式按钮点击事件连接
-        self.default_btn.clicked.connect(lambda: self.onModeButtonClicked(self.default_btn))
-        self.folder_btn.clicked.connect(lambda: self.onModeButtonClicked(self.folder_btn))
-        self.file_btn.clicked.connect(lambda: self.onModeButtonClicked(self.file_btn))
+        self.toolbar.default_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.default_btn))
+        self.toolbar.folder_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.folder_btn))
+        self.toolbar.file_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.file_btn))
         
         # 初始化时检查一次参数匹配，确保刚载入GUI时也能显示下划线
         self.checkIfParamsExist()
@@ -1258,7 +1018,7 @@ class MainWindow(QMainWindow):
         
     def onVadButtonClicked(self):
         """处理VAD按钮点击事件"""
-        self.toggleVadMode(self.vad_btn.isChecked())
+        self.toggleVadMode(self.toolbar.vad_btn.isChecked())
     
     def toggleVadMode(self, is_vad_enabled):
         """切换VAD模式，调整UI布局"""
@@ -1400,9 +1160,9 @@ class MainWindow(QMainWindow):
         self.checkIfParamsExist()
 
         # 切换模式后，不选中任何按钮
-        self.default_btn.setChecked(False)
-        self.folder_btn.setChecked(False)
-        self.file_btn.setChecked(False)
+        self.toolbar.default_btn.setChecked(False)
+        self.toolbar.folder_btn.setChecked(False)
+        self.toolbar.file_btn.setChecked(False)
         
         # 重新读取音频结果，根据当前模式选择不同的结果文件
         if hasattr(self, 'file_path') and self.file_path:
@@ -1440,7 +1200,7 @@ class MainWindow(QMainWindow):
 
 
     def readXset(self):
-        if self.vad_btn.isChecked():
+        if self.toolbar.vad_btn.isChecked():
             self.AudioViewer.tg_dict_tp = get_frm_intervals_from_textgrid(self.file_path)
         else:
             self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
@@ -1542,13 +1302,13 @@ class MainWindow(QMainWindow):
         txt_file_path = None
         
         # 检查是否处于VAD模式
-        is_vad_mode = self.vad_btn.isChecked()
+        is_vad_mode = self.toolbar.vad_btn.isChecked()
         file_suffix = "_vad" if is_vad_mode else ""
         
-        if self.file_btn.isChecked():
+        if self.toolbar.file_btn.isChecked():
             # File模式：从file同名的txt文件读取
             txt_file_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
-        elif self.folder_btn.isChecked():
+        elif self.toolbar.folder_btn.isChecked():
             # Folder模式：从当前文件夹的同名txt文件读取
             folder_path = os.path.dirname(self.file_path)
             folder_name = os.path.basename(folder_path)
@@ -1566,20 +1326,20 @@ class MainWindow(QMainWindow):
 
         except FileNotFoundError:
             # 切换到Default模式
-            self.default_btn.setChecked(True)
+            self.toolbar.default_btn.setChecked(True)
             params_logger.info("Go back to Default mode")
             self.showParams()
 
 
     def saveParams(self):
         # 检查每个按钮的状态，如果被选中就保存到相应位置
-        if self.default_btn.isChecked():
+        if self.toolbar.default_btn.isChecked():
             # Default模式：保存到应用程序所在位置
             self.saveParamsToExeLocation()
-        if self.folder_btn.isChecked():
+        if self.toolbar.folder_btn.isChecked():
             # Folder模式：保存到当前文件夹，文件名与文件夹同名
             self.saveParamsWithFolderName()
-        if self.file_btn.isChecked():
+        if self.toolbar.file_btn.isChecked():
             # File模式：保存到file同名
             self.saveParamsWithFileName()
         
@@ -1595,7 +1355,7 @@ class MainWindow(QMainWindow):
         # current_params_dict = self.MySliders.getParams()
         
         # 检查是否处于VAD模式
-        is_vad_mode = self.vad_btn.isChecked()
+        is_vad_mode = self.toolbar.vad_btn.isChecked()
         file_suffix = "_vad" if is_vad_mode else ""
         
         # 检查Default模式
@@ -1613,9 +1373,9 @@ class MainWindow(QMainWindow):
                 pass
         
         # 设置default_btn的file_exists和param_matched属性
-        self.default_btn.setProperty("file_exists", os.path.exists(default_params_path))
-        self.default_btn.setProperty("param_matched", default_params_match)
-        self.default_btn.style().polish(self.default_btn)  # 刷新样式
+        self.toolbar.default_btn.setProperty("file_exists", os.path.exists(default_params_path))
+        self.toolbar.default_btn.setProperty("param_matched", default_params_match)
+        self.toolbar.default_btn.style().polish(self.toolbar.default_btn)  # 刷新样式
         
         # 检查Folder模式
         folder_params_exists = False
@@ -1634,9 +1394,9 @@ class MainWindow(QMainWindow):
                     pass
         
         # 设置folder_btn的file_exists和param_matched属性
-        self.folder_btn.setProperty("file_exists", folder_params_exists)
-        self.folder_btn.setProperty("param_matched", folder_params_match)
-        self.folder_btn.style().polish(self.folder_btn)  # 刷新样式
+        self.toolbar.folder_btn.setProperty("file_exists", folder_params_exists)
+        self.toolbar.folder_btn.setProperty("param_matched", folder_params_match)
+        self.toolbar.folder_btn.style().polish(self.toolbar.folder_btn)  # 刷新样式
         
         # 检查File模式
         file_params_exists = False
@@ -1654,9 +1414,9 @@ class MainWindow(QMainWindow):
                     pass
         
         # 设置file_btn的file_exists和param_matched属性
-        self.file_btn.setProperty("file_exists", file_params_exists)
-        self.file_btn.setProperty("param_matched", file_params_match)
-        self.file_btn.style().polish(self.file_btn)  # 刷新样式
+        self.toolbar.file_btn.setProperty("file_exists", file_params_exists)
+        self.toolbar.file_btn.setProperty("param_matched", file_params_match)
+        self.toolbar.file_btn.style().polish(self.toolbar.file_btn)  # 刷新样式
 
     def showParams(self):
         # 简化版showParams，处理多种参数模式
@@ -1664,7 +1424,7 @@ class MainWindow(QMainWindow):
             return
         
         # 检查是否处于VAD模式
-        is_vad_mode = self.vad_btn.isChecked()
+        is_vad_mode = self.toolbar.vad_btn.isChecked()
         file_suffix = "_vad" if is_vad_mode else ""
         
         # 默认使用文件同名参数
@@ -1700,7 +1460,7 @@ class MainWindow(QMainWindow):
 
     def lastParams(self):
         # 获取当前模式（默认或VAD）
-        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
 
         if len(self.param_sets[current_mode]) == 2:
             self.MySliders.resetParams(self.param_sets[current_mode][-2])
@@ -1723,17 +1483,17 @@ class MainWindow(QMainWindow):
             self.which_one = self.file_paths.index(file_name)
             self.file_path = self.file_paths[self.which_one]
             file_logger.info(f"Selected file: {self.file_path}")
-            self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
+            self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.toolbar.vad_btn.isChecked())
             
             # 启用所有模式按钮
-            self.default_btn.setEnabled(True)
-            self.folder_btn.setEnabled(True)
-            self.file_btn.setEnabled(True)
+            self.toolbar.default_btn.setEnabled(True)
+            self.toolbar.folder_btn.setEnabled(True)
+            self.toolbar.file_btn.setEnabled(True)
             
             # 三个按钮都不选中
-            self.default_btn.setChecked(False)
-            self.folder_btn.setChecked(False)
-            self.file_btn.setChecked(False)
+            self.toolbar.default_btn.setChecked(False)
+            self.toolbar.folder_btn.setChecked(False)
+            self.toolbar.file_btn.setChecked(False)
             
             # 更新save和reset按钮的可用性
             self.updateToolbarButtonsState()
@@ -1806,13 +1566,48 @@ class MainWindow(QMainWindow):
         # 退出run-all模式
         self.is_running_all = False
 
-        # 启用所有按钮和滑块
-        self.setButtonsEnabled(True)
-        self.MySliders.setEnabled(True)
-        # self.toolbar.setEnabled(True)
-        self.updateToolbarButtonsState()
+        # 重置停止标志
+        detection.stop_flag = False
 
-        # detection.stop_flag = False
+        # 直接启用所有带图标按钮
+        icon_buttons_map = {
+            self.title_bar.trash_btn: 'trash',
+            self.title_bar.read_btn: 'read',
+            self.title_bar.run_btn: 'play',
+            self.title_bar.run_all_btn: 'run-all',
+            self.title_bar.test_btn: 'test',
+            self.title_bar.prev_audio_btn: 'prev_audio',
+            self.title_bar.next_audio_btn: 'next_audio',
+            self.title_bar.help_menu_btn: 'question',
+            self.toolbar.save_btn: 'save',
+            self.toolbar.reset_btn: 'reset',
+            self.toolbar.backward_btn: 'backward',
+            self.toolbar.forward_btn: 'forward',
+        }
+        for btn, icon_name in icon_buttons_map.items():
+            self._setButtonEnabled(btn, icon_name, True)
+
+        # 直接启用所有仅状态按钮
+        state_only_buttons = [
+            self.title_bar.title_label,
+            self.title_bar.onset_btn,
+            self.title_bar.offset_btn,
+            self.toolbar.file_btn,
+            self.toolbar.folder_btn,
+            self.toolbar.default_btn
+        ]
+        for btn in state_only_buttons:
+            btn.setEnabled(True)
+
+        # 启用滑块、工具栏和模式按钮
+        self.MySliders.setEnabled(True)
+        self.toolbar.setEnabled(True)
+        self.toolbar.default_btn.setEnabled(True)
+        self.toolbar.folder_btn.setEnabled(True)
+        self.toolbar.file_btn.setEnabled(True)
+
+        # 更新工具栏按钮状态
+        self.updateToolbarButtonsState()
     
 
     
@@ -1849,7 +1644,7 @@ class MainWindow(QMainWindow):
         dir_name = os.path.basename(os.path.dirname(self.file_path))
         base_name = os.path.basename(self.file_path)
         self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
-        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
+        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.toolbar.vad_btn.isChecked())
         self.showXsetNum(is_test=False)
         
         # 启动检测
@@ -1949,7 +1744,7 @@ class MainWindow(QMainWindow):
                 base_name = os.path.basename(self.file_path)
                 self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
                 # 读取新的音频文件
-                self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
+                self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.toolbar.vad_btn.isChecked())
                 # 显示当前音频的xset数量
                 self.showXsetNum(is_test=False)
                 # 启动下一个音频的检测
@@ -1973,7 +1768,7 @@ class MainWindow(QMainWindow):
                 self.setButtonsEnabled(True)
                 # 启用所有滑块和工具栏
                 self.MySliders.setEnabled(True)
-                # self.toolbar.setEnabled(True)
+                self.toolbar.setEnabled(True)
                 self.updateToolbarButtonsState()
                 
                 # 发射run完成信号
@@ -1983,7 +1778,7 @@ class MainWindow(QMainWindow):
             # 启用所有按钮
             self.setButtonsEnabled(True)
             self.MySliders.setEnabled(True)
-            # self.toolbar.setEnabled(True)
+            self.toolbar.setEnabled(True)
             self.updateToolbarButtonsState()
             
             # 发射run完成信号
@@ -1997,15 +1792,16 @@ class MainWindow(QMainWindow):
         detection.stop_flag = False
 
         # 禁用所有滑块
+        self.setButtonsEnabled(False)  # 禁用除最小化、最大化、关闭、停止以外的所有按钮
         self.MySliders.setEnabled(False)
-        # self.toolbar.setEnabled(False)
-        self.updateToolbarButtonsState()
+        self.toolbar.setEnabled(False)
+        # self.updateToolbarButtonsState()
 
-        if not self.is_running_all:  # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
-            self.setButtonsEnabled(False)  # 禁用除最小化、最大化、关闭、停止以外的所有按钮
+        # if not self.is_running_all:  # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
+        
 
         # 检测当前模式，直接使用detectPraditor函数
-        is_vad_mode = self.vad_btn.isChecked()
+        is_vad_mode = self.toolbar.vad_btn.isChecked()
         
         if is_vad_mode:
             if float(self.MySliders.cutoff1_slider_onset.value_edit.text()) > float(self.AudioViewer.audio_samplerate)/2:
@@ -2079,7 +1875,7 @@ class MainWindow(QMainWindow):
         current_params = self.MySliders.getParams()
         
         # 获取当前模式（默认或VAD）
-        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
         
         # 如果当前参数已经在列表中，移除它
         if current_params in self.param_sets[current_mode]:
@@ -2102,7 +1898,7 @@ class MainWindow(QMainWindow):
     def loadPreviousParams(self):
         """加载前一套参数"""
         # 获取当前模式（默认或VAD）
-        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
         if self.param_sets[current_mode] and self.current_param_index[current_mode] > 0:
             self.current_param_index[current_mode] -= 1
             self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
@@ -2113,7 +1909,7 @@ class MainWindow(QMainWindow):
     def loadNextParams(self):
         """加载后一套参数"""
         # 获取当前模式（默认或VAD）
-        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
         if self.param_sets[current_mode] and self.current_param_index[current_mode] < len(self.param_sets[current_mode]) - 1:
             self.current_param_index[current_mode] += 1
             self.MySliders.resetParams(self.param_sets[current_mode][self.current_param_index[current_mode]])
@@ -2126,7 +1922,7 @@ class MainWindow(QMainWindow):
         # print(self.param_sets)
         if hasattr(self, 'params_btn'):
             # 获取当前模式（默认或VAD）
-            current_mode = "vad" if self.vad_btn.isChecked() else "default"
+            current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
             # 获取当前模式的参数集
             param_set = self.param_sets[current_mode]
             
@@ -2145,7 +1941,7 @@ class MainWindow(QMainWindow):
                 total_count = 0
                 
             # 根据当前模式显示该模式的参数索引和总数
-            self.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
+            self.toolbar.params_btn.setText(f"{display_index}/{min(total_count, 10)}")
     
 
     def updateToolbarButtonsState(self):
@@ -2154,56 +1950,63 @@ class MainWindow(QMainWindow):
         - reset按钮：必须选中的模式存在对应的参数文件
         - forward和backward按钮：必须成功导入音频且有两套及以上的参数
         """
+
+
+        # # 如果所有模式按钮都不可用，尝试启用默认模式按钮
+        # if not (self.toolbar.default_btn.isEnabled() or self.toolbar.folder_btn.isEnabled() or self.toolbar.file_btn.isEnabled()):
+        #     self.toolbar.default_btn.setEnabled(True)
+
+
         # 检查是否有任何模式按钮被选中
-        any_mode_selected = self.default_btn.isChecked() or self.folder_btn.isChecked() or self.file_btn.isChecked()
+        any_mode_selected = self.toolbar.default_btn.isChecked() or self.toolbar.folder_btn.isChecked() or self.toolbar.file_btn.isChecked()
         
         # 检查音频是否已成功导入
         audio_imported = hasattr(self, 'file_path') and self.file_path is not None and len(self.file_path) > 0
         
         # 检查是否有两套及以上的参数
-        current_mode = "vad" if self.vad_btn.isChecked() else "default"
+        current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
         has_multiple_params = len(self.param_sets[current_mode]) >= 2
         
         # 检查当前选中的模式是否存在对应的参数文件
         reset_enabled = False
         if any_mode_selected:
             # 检查是否处于VAD模式
-            is_vad_mode = self.vad_btn.isChecked()
+            is_vad_mode = self.toolbar.vad_btn.isChecked()
             file_suffix = "_vad" if is_vad_mode else ""
             
-            if self.default_btn.isChecked():
+            if self.toolbar.default_btn.isChecked():
                 # Default模式：检查应用程序所在目录的params文件
                 default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"params{file_suffix}.txt")
                 if not os.path.exists(default_params_path):
                     default_params_path = get_resource_path(f"src/app/params{file_suffix}.txt")
                 reset_enabled = os.path.exists(default_params_path)
-            elif self.folder_btn.isChecked() and audio_imported:
+            elif self.toolbar.folder_btn.isChecked() and audio_imported:
                 # Folder模式：检查当前文件夹的params文件
                 folder_path = os.path.dirname(self.file_path)
                 folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")
                 reset_enabled = os.path.exists(folder_params_path)
-            elif self.file_btn.isChecked() and audio_imported:
+            elif self.toolbar.file_btn.isChecked() and audio_imported:
                 # File模式：检查文件同名的params文件
                 file_params_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
                 reset_enabled = os.path.exists(file_params_path)
         
         # 更新save按钮
-        self.save_btn.setEnabled(any_mode_selected)
-        self.save_btn.setIcon(QIcon(get_resource_path(f'resources/icons/save{"_gray" if not any_mode_selected else ""}.svg')))
+        self.toolbar.save_btn.setEnabled(any_mode_selected)
+        self.toolbar.save_btn.setIcon(QIcon(get_resource_path(f'resources/icons/save{"_gray" if not any_mode_selected else ""}.svg')))
         
         # 更新reset按钮
-        self.reset_btn.setEnabled(reset_enabled)
-        self.reset_btn.setIcon(QIcon(get_resource_path(f'resources/icons/reset{"_gray" if not reset_enabled else ""}.svg')))
+        self.toolbar.reset_btn.setEnabled(reset_enabled)
+        self.toolbar.reset_btn.setIcon(QIcon(get_resource_path(f'resources/icons/reset{"_gray" if not reset_enabled else ""}.svg')))
         
         # 更新backward按钮 - 必须音频导入成功且有两套及以上的参数
         backward_enabled = audio_imported and has_multiple_params
-        self.backward_btn.setEnabled(backward_enabled)
-        self.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
+        self.toolbar.backward_btn.setEnabled(backward_enabled)
+        self.toolbar.backward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/backward{"_gray" if not backward_enabled else ""}.svg')))
 
         # 更新forward按钮 - 必须音频导入成功且有两套及以上的参数
         forward_enabled = audio_imported and has_multiple_params
-        self.forward_btn.setEnabled(forward_enabled)
-        self.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
+        self.toolbar.forward_btn.setEnabled(forward_enabled)
+        self.toolbar.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
     
     def _setButtonEnabled(self, button, icon_name, enabled):
         """设置按钮是否可用，并自动切换图标
@@ -2225,10 +2028,12 @@ class MainWindow(QMainWindow):
     def setButtonsEnabled(self, enabled: bool):
         """设置按钮的启用状态
         Args:
+            btns_esc: 要排除的按钮列表
             enabled: True表示恢复原始状态，False表示禁用
             禁用除了最小化、最大化、关闭、停止以外的所有按键
         """
-        # 分类管理按钮
+        # 分类管理按钮 
+
         # 1. 带图标需要切换的按钮映射
         icon_buttons_map = {
             self.title_bar.trash_btn: 'trash',
@@ -2239,15 +2044,20 @@ class MainWindow(QMainWindow):
             self.title_bar.prev_audio_btn: 'prev_audio',
             self.title_bar.next_audio_btn: 'next_audio',
             self.title_bar.help_menu_btn: 'question',
-            self.save_btn: 'save',
-            self.reset_btn: 'reset',
+            self.toolbar.save_btn: 'save',
+            self.toolbar.reset_btn: 'reset',
+            self.toolbar.backward_btn: 'backward',
+            self.toolbar.forward_btn: 'forward',
         }
         
         # 2. 仅需控制状态的按钮列表
         state_only_buttons = [
             self.title_bar.title_label,
             self.title_bar.onset_btn,
-            self.title_bar.offset_btn
+            self.title_bar.offset_btn,
+            self.toolbar.file_btn,
+            self.toolbar.folder_btn,
+            self.toolbar.default_btn
         ]
         
         # 3. 所有需要切换状态的按钮
@@ -2293,7 +2103,7 @@ class MainWindow(QMainWindow):
     def onModeButtonClicked(self, clicked_btn):
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
         
-        for btn in [self.default_btn, self.folder_btn, self.file_btn]:  # 取消其他两个按钮的选中状态
+        for btn in [self.toolbar.default_btn, self.toolbar.folder_btn, self.toolbar.file_btn]:  # 取消其他两个按钮的选中状态
             if btn != clicked_btn:
                 btn.setChecked(False)
         
@@ -2325,17 +2135,17 @@ class MainWindow(QMainWindow):
         dir_name = os.path.basename(os.path.dirname(self.file_path))
         base_name = os.path.basename(self.file_path)
         self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
-        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.vad_btn.isChecked())
+        self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.toolbar.vad_btn.isChecked())
         
         # 启用所有模式按钮
-        self.default_btn.setEnabled(True)
-        self.folder_btn.setEnabled(True)
-        self.file_btn.setEnabled(True)
+        self.toolbar.default_btn.setEnabled(True)
+        self.toolbar.folder_btn.setEnabled(True)
+        self.toolbar.file_btn.setEnabled(True)
         
         # 三个按钮都不选中
-        self.default_btn.setChecked(False)
-        self.folder_btn.setChecked(False)
-        self.file_btn.setChecked(False)
+        self.toolbar.default_btn.setChecked(False)
+        self.toolbar.folder_btn.setChecked(False)
+        self.toolbar.file_btn.setChecked(False)
         
         # 更新save和reset按钮的可用性
         self.updateToolbarButtonsState()
@@ -2360,7 +2170,7 @@ class MainWindow(QMainWindow):
         """保存参数到当前文件夹，文件名为params.txt或params_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
             # 检查是否处于VAD模式
-            is_vad_mode = self.vad_btn.isChecked()
+            is_vad_mode = self.toolbar.vad_btn.isChecked()
             file_suffix = "_vad" if is_vad_mode else ""
             
             folder_path = os.path.dirname(self.file_path)
@@ -2376,7 +2186,7 @@ class MainWindow(QMainWindow):
         exe_dir = os.path.dirname(os.path.abspath(__file__))
         
         # 检查是否处于VAD模式
-        is_vad_mode = self.vad_btn.isChecked()
+        is_vad_mode = self.toolbar.vad_btn.isChecked()
         file_suffix = "_vad" if is_vad_mode else ""
         
         txt_file_path = os.path.join(exe_dir, f"params{file_suffix}.txt")
@@ -2389,7 +2199,7 @@ class MainWindow(QMainWindow):
         """保存参数到file同名，文件名后缀为.txt或_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
             # 检查是否处于VAD模式
-            is_vad_mode = self.vad_btn.isChecked()
+            is_vad_mode = self.toolbar.vad_btn.isChecked()
             file_suffix = "_vad" if is_vad_mode else ""
             
             txt_file_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
