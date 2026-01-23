@@ -12,12 +12,11 @@ class GUIHandler(logging.Handler):
             msg = self.format(record)
             gui_callback(msg)
 
-def setup_logger(name='Praditor', log_file='praditor.log', level=logging.INFO):
+def setup_logger(name='Praditor', level=logging.INFO):
     """设置日志记录器
     
     Args:
         name: 日志记录器名称，默认'Praditor'
-        log_file: 日志文件路径，默认'praditor.log'
         level: 日志级别，默认logging.INFO
         
     Returns:
@@ -39,23 +38,13 @@ def setup_logger(name='Praditor', log_file='praditor.log', level=logging.INFO):
     console_handler.setLevel(level)
     console_handler.setFormatter(formatter)
     
-    # 创建文件处理器（支持日志轮转）
-    file_handler = RotatingFileHandler(
-        log_file, 
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setLevel(level)
-    file_handler.setFormatter(formatter)
-    
     # 创建GUI处理器
     gui_handler = GUIHandler()
     gui_handler.setLevel(level)
     gui_handler.setFormatter(formatter)
     
-    # 添加处理器到logger
+    # 添加处理器到logger（仅保留控制台和GUI）
     logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
     logger.addHandler(gui_handler)
     
     return logger
