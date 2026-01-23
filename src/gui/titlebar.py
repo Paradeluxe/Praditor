@@ -452,3 +452,26 @@ class CustomTitleBar(QWidget):
         """设置按钮是否可用"""
         # 根据需要实现按钮启用/禁用逻辑
         pass
+        
+    def setIsRunning(self, is_running):
+        """设置is_running状态，控制除stop、min、max、close之外的所有按钮"""
+        # 收集所有需要管理的按钮
+        buttons_to_manage = [
+            self.help_menu_btn,
+            self.title_label,
+            self.prev_audio_btn,
+            self.next_audio_btn,
+            self.onset_btn,
+            self.offset_btn,
+            self.trash_btn,
+            self.read_btn,
+            self.run_btn,
+            self.run_all_btn,
+            self.test_btn
+        ]
+        
+        for btn in buttons_to_manage:
+            btn.setEnabled(not is_running)
+        
+        # 确保stop按钮在运行时可用
+        self.stop_btn.setEnabled(is_running)

@@ -180,12 +180,6 @@ class CustomToolBar(QToolBar):
             }
             QPushButton:hover {
                 background-color: #F0F0F0; 
-                border: none; 
-                color: #333333; 
-                font-size: 13px; 
-                text-align: center; 
-                padding: 8px 12px; 
-                margin: 0;
             }
         """)
         self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))

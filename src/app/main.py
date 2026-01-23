@@ -44,147 +44,147 @@ from src.gui.titlebar import CustomTitleBar
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
-# 自定义QLabel类，实现hover时文字自动滑动效果
-class ScrollingLabel(QLabel):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setMouseTracking(True)
-        self.original_text = ""
-        self.scroll_offset = 0
-        self.scroll_timer = QTimer(self)
-        self.scroll_timer.timeout.connect(self.scroll_text)
-        self.scroll_speed = 5  # 增加滚动速度（像素/帧），从2改为5
-        self.scroll_delay = 50  # 滚动延迟（毫秒/帧）
-        self.scroll_pause = 1000  # 滚动暂停时间（毫秒）
-        self.is_hovered = False  # 添加鼠标悬停状态标记
+# # 自定义QLabel类，实现hover时文字自动滑动效果
+# class ScrollingLabel(QLabel):
+#     def __init__(self, parent=None):
+#         super().__init__(parent)
+#         self.setMouseTracking(True)
+#         self.original_text = ""
+#         self.scroll_offset = 0
+#         self.scroll_timer = QTimer(self)
+#         self.scroll_timer.timeout.connect(self.scroll_text)
+#         self.scroll_speed = 5  # 增加滚动速度（像素/帧），从2改为5
+#         self.scroll_delay = 50  # 滚动延迟（毫秒/帧）
+#         self.scroll_pause = 1000  # 滚动暂停时间（毫秒）
+#         self.is_hovered = False  # 添加鼠标悬停状态标记
         
-    def setText(self, text):
-        self.original_text = text
-        super().setText(text)
+#     def setText(self, text):
+#         self.original_text = text
+#         super().setText(text)
         
-    def enterEvent(self, event):
-        # 鼠标悬停时开始滚动
-        self.is_hovered = True
-        if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
-            # 等待一段时间后开始滚动
-            QTimer.singleShot(self.scroll_pause, self.start_scrolling)
-        super().enterEvent(event)
+#     def enterEvent(self, event):
+#         # 鼠标悬停时开始滚动
+#         self.is_hovered = True
+#         if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
+#             # 等待一段时间后开始滚动
+#             QTimer.singleShot(self.scroll_pause, self.start_scrolling)
+#         super().enterEvent(event)
         
-    def leaveEvent(self, event):
-        # 鼠标离开时停止滚动并重置
-        self.is_hovered = False
-        self.stop_scrolling()
-        self.reset_scroll()
-        super().leaveEvent(event)
+#     def leaveEvent(self, event):
+#         # 鼠标离开时停止滚动并重置
+#         self.is_hovered = False
+#         self.stop_scrolling()
+#         self.reset_scroll()
+#         super().leaveEvent(event)
         
-    def start_scrolling(self):
-        self.scroll_timer.start(self.scroll_delay)
+#     def start_scrolling(self):
+#         self.scroll_timer.start(self.scroll_delay)
         
-    def stop_scrolling(self):
-        self.scroll_timer.stop()
+#     def stop_scrolling(self):
+#         self.scroll_timer.stop()
         
-    def reset_scroll(self):
-        self.scroll_offset = 0
-        super().setText(self.original_text)
+#     def reset_scroll(self):
+#         self.scroll_offset = 0
+#         super().setText(self.original_text)
         
-    def restart_scrolling(self):
-        # 只有在鼠标悬停时才重新开始滚动
-        if not self.is_hovered:
-            return
+#     def restart_scrolling(self):
+#         # 只有在鼠标悬停时才重新开始滚动
+#         if not self.is_hovered:
+#             return
             
-        # 重置滚动偏移量，开始新的循环
-        self.scroll_offset = 0  # 从0开始，确保滚动重新开始
-        # 重置显示的文本为原始文本
-        super().setText(self.original_text)
-        # 在开始滚动之前停留1.2秒
-        QTimer.singleShot(1200, self.start_scrolling)
+#         # 重置滚动偏移量，开始新的循环
+#         self.scroll_offset = 0  # 从0开始，确保滚动重新开始
+#         # 重置显示的文本为原始文本
+#         super().setText(self.original_text)
+#         # 在开始滚动之前停留1.2秒
+#         QTimer.singleShot(1200, self.start_scrolling)
         
-    def scroll_text(self):
-        # 只有在鼠标悬停时才执行滚动逻辑
-        if not self.is_hovered:
-            return
+#     def scroll_text(self):
+#         # 只有在鼠标悬停时才执行滚动逻辑
+#         if not self.is_hovered:
+#             return
             
-        if not self.original_text:
-            return
+#         if not self.original_text:
+#             return
             
-        # 获取完整文本的宽度
-        text_width = self.fontMetrics().boundingRect(self.original_text).width()
-        # 获取标签的实际宽度（减去内边距）
-        label_width = self.width() - 16  # 减去左右内边距各8px
+#         # 获取完整文本的宽度
+#         text_width = self.fontMetrics().boundingRect(self.original_text).width()
+#         # 获取标签的实际宽度（减去内边距）
+#         label_width = self.width() - 16  # 减去左右内边距各8px
         
-        # 如果文本宽度小于等于标签宽度，不需要滚动
-        if text_width <= label_width:
-            return
+#         # 如果文本宽度小于等于标签宽度，不需要滚动
+#         if text_width <= label_width:
+#             return
             
-        # 计算最大滚动偏移量（当文字尾部到达标签右侧时）
-        max_scroll_offset = text_width - label_width
+#         # 计算最大滚动偏移量（当文字尾部到达标签右侧时）
+#         max_scroll_offset = text_width - label_width
         
-        # 计算滚动偏移
-        self.scroll_offset += self.scroll_speed
+#         # 计算滚动偏移
+#         self.scroll_offset += self.scroll_speed
         
-        # 检查是否达到最大偏移量
-        # 使用一个小的阈值，确保文本完全滚动到末尾
-        if self.scroll_offset >= max_scroll_offset - 5:  # 减去5像素的阈值，确保完全滚动
-            # 停止当前滚动
-            self.stop_scrolling()
-            # 500毫秒后重新开始滚动
-            QTimer.singleShot(500, self.restart_scrolling)
-            return
+#         # 检查是否达到最大偏移量
+#         # 使用一个小的阈值，确保文本完全滚动到末尾
+#         if self.scroll_offset >= max_scroll_offset - 5:  # 减去5像素的阈值，确保完全滚动
+#             # 停止当前滚动
+#             self.stop_scrolling()
+#             # 500毫秒后重新开始滚动
+#             QTimer.singleShot(500, self.restart_scrolling)
+#             return
         
-        # 计算起始索引（基于像素偏移量）
-        avg_char_width = self.fontMetrics().averageCharWidth()
-        if avg_char_width <= 0:
-            return
+#         # 计算起始索引（基于像素偏移量）
+#         avg_char_width = self.fontMetrics().averageCharWidth()
+#         if avg_char_width <= 0:
+#             return
         
-        # 计算起始索引，使用更精确的方法
-        # 从原始文本开始，找到第一个字符的位置，使得从该位置开始的文本
-        # 能够填满标签，并且当滚动到最大偏移量时，文本尾部刚好到达标签右侧
-        start_index = 0
-        current_offset = 0
+#         # 计算起始索引，使用更精确的方法
+#         # 从原始文本开始，找到第一个字符的位置，使得从该位置开始的文本
+#         # 能够填满标签，并且当滚动到最大偏移量时，文本尾部刚好到达标签右侧
+#         start_index = 0
+#         current_offset = 0
         
-        # 找到与当前滚动偏移量对应的字符索引
-        while start_index < len(self.original_text) and current_offset < self.scroll_offset:
-            char_width = self.fontMetrics().boundingRect(self.original_text[start_index]).width()
-            current_offset += char_width
-            start_index += 1
+#         # 找到与当前滚动偏移量对应的字符索引
+#         while start_index < len(self.original_text) and current_offset < self.scroll_offset:
+#             char_width = self.fontMetrics().boundingRect(self.original_text[start_index]).width()
+#             current_offset += char_width
+#             start_index += 1
         
-        # 确保起始索引不超出范围
-        start_index = min(start_index, len(self.original_text))
+#         # 确保起始索引不超出范围
+#         start_index = min(start_index, len(self.original_text))
         
-        # 获取从起始索引开始的文本
-        display_text = self.original_text[start_index:]
+#         # 获取从起始索引开始的文本
+#         display_text = self.original_text[start_index:]
         
-        # 确保文本始终填满标签
-        # 我们需要找到刚好能填满标签的文本长度
-        final_text = ""
-        temp_text = ""
-        temp_width = 0
+#         # 确保文本始终填满标签
+#         # 我们需要找到刚好能填满标签的文本长度
+#         final_text = ""
+#         temp_text = ""
+#         temp_width = 0
         
-        # 逐步添加字符，直到填满标签
-        for char in display_text:
-            char_width = self.fontMetrics().boundingRect(char).width()
-            if temp_width + char_width <= label_width:
-                temp_text += char
-                temp_width += char_width
-                final_text = temp_text
-            else:
-                # 已经超过标签宽度，使用前一个版本
-                break
+#         # 逐步添加字符，直到填满标签
+#         for char in display_text:
+#             char_width = self.fontMetrics().boundingRect(char).width()
+#             if temp_width + char_width <= label_width:
+#                 temp_text += char
+#                 temp_width += char_width
+#                 final_text = temp_text
+#             else:
+#                 # 已经超过标签宽度，使用前一个版本
+#                 break
         
-        # 确保至少有一个字符，避免标签为空
-        if not final_text and display_text:
-            final_text = display_text[0]
+#         # 确保至少有一个字符，避免标签为空
+#         if not final_text and display_text:
+#             final_text = display_text[0]
         
-        # 再次检查，确保文本宽度不超过标签宽度
-        while self.fontMetrics().boundingRect(final_text).width() > label_width and len(final_text) > 0:
-            final_text = final_text[:-1]
+#         # 再次检查，确保文本宽度不超过标签宽度
+#         while self.fontMetrics().boundingRect(final_text).width() > label_width and len(final_text) > 0:
+#             final_text = final_text[:-1]
         
-        # 确保至少有一个字符，避免标签为空
-        if not final_text and display_text:
-            final_text = display_text[0]
+#         # 确保至少有一个字符，避免标签为空
+#         if not final_text and display_text:
+#             final_text = display_text[0]
         
-        super().setText(final_text)
-        # print(final_text)
+#         super().setText(final_text)
+#         # print(final_text)
 
 # 自定义输出流类，用于捕获print语句和logger输出
 class ConsoleOutput(io.StringIO):
@@ -399,12 +399,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.AudioViewer, 1)  # 添加拉伸因子1，让AudioViewer占据更多空间
         
         # ---------------------------------------------------
-
-        # ---------------------------------------------------
-        # self.ParamButtons = ParamButtons()
-        # layout.addWidget(self.ParamButtons)
-        # ---------------------------------------------------
-
         # ---------------------------------------------------
         self.MySliders = MySliders()
         self.MySliders.setFixedHeight(320)  # 设置固定高度，避免过度拉伸
@@ -1167,8 +1161,6 @@ class MainWindow(QMainWindow):
         # 启动检测
         self.execPraditor(is_test=False)
 
-        self.updateToolbarButtonsState()
-
 
 
     
@@ -1178,16 +1170,12 @@ class MainWindow(QMainWindow):
         detection.stop_flag = False
         self.execPraditor(is_test=False)
 
-        self.updateToolbarButtonsState()
-
     
     def on_test_signal(self):
         """处理test_signal信号，在执行检测前设置stop_flag = False"""
         from src.core import detection
         detection.stop_flag = False
         self.execPraditor(is_test=True)
-
-        self.updateToolbarButtonsState()
 
     
     def process_detection_results(self):
@@ -1613,6 +1601,10 @@ class MainWindow(QMainWindow):
         ]
         for btn in always_enabled_buttons:
             btn.setEnabled(True)
+        
+        # 设置titlebar的is_running状态
+        # 当enabled为False时，表示正在运行；为True时，表示已停止
+        self.title_bar.setIsRunning(not enabled)
 
 
 
