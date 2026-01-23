@@ -272,7 +272,10 @@ class AudioViewer(QWidget):
             self.interval_ms = 100 * 128
         elif self.interval_ms < 100:
             self.interval_ms = 100
-        self.tg_dict_tp = self.readAudio(self.fpath)
+        
+        # 只有当音频文件已加载时才调用readAudio
+        if self.fpath and self.audio_obj:
+            self.tg_dict_tp = self.readAudio(self.fpath)
 
         super().keyPressEvent(event)
 
@@ -285,7 +288,7 @@ class AudioViewer(QWidget):
             event: 鼠标滚轮事件对象
         """
 
-        if not self.fpath:
+        if not self.fpath or not self.audio_obj:
             return
         # print(event.modifiers())
         delta = event.angleDelta()
@@ -328,7 +331,6 @@ class AudioViewer(QWidget):
 
 
 
-
         if self.max_amp_ratio > 1.0:
             self.max_amp_ratio = 1.0
         elif self.max_amp_ratio < 0.1:
@@ -350,6 +352,10 @@ class AudioViewer(QWidget):
         
         确保时间窗口不超过音频时长，且分辨率适应窗口大小
         """
+        # 确保audio_obj已成功创建
+        if not self.audio_obj:
+            return
+            
         # 首先，一个时间窗的最大时间不可以超过这个音频的时间；若超过，则调整为音频时间
         if self.audio_obj.duration_seconds * 1000 < self.interval_ms:
             self.interval_ms = int(self.audio_obj.duration_seconds * 1000)
@@ -371,11 +377,24 @@ class AudioViewer(QWidget):
         Returns:
             检测结果字典
         """
+        # 确保文件路径有效
+        if not fpath:
+            return {"onset": [], "offset": []}
+        
         # print(fpath)
         if self.fpath != fpath:
             self.fpath = fpath
-            # self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
-            self.audio_obj = ReadSound(self.fpath)
+            try:
+                # self.audio_obj = AudioSegment.from_file(self.fpath, format=self.fpath.split(".")[-1]).split_to_mono()[0]
+                self.audio_obj = ReadSound(self.fpath)
+            except Exception as e:
+                # 处理音频文件读取失败的情况
+                self.audio_obj = None
+                return {"onset": [], "offset": []}
+        
+        # 确保audio_obj已成功创建
+        if not self.audio_obj:
+            return {"onset": [], "offset": []}
 
         self.audio_samplerate = self.audio_obj.frame_rate
         self.max_amp = self.audio_obj.max * self.max_amp_ratio
@@ -461,6 +480,10 @@ class AudioViewer(QWidget):
         self.label_etime.setText(f"{formatted_time(self.slider_timerange.sliderPosition()+self.interval_ms)}")
         self.updateSlider()
 
+        # 确保audio_obj已成功创建
+        if not self.audio_obj:
+            return
+            
         this_series = QLineSeries()
         # this_series.setColor("rgb(193,204,208)")
         pen = QPen(QColor("grey"))
