@@ -1045,8 +1045,11 @@ class MainWindow(QMainWindow):
         self.toolbar.file_btn.setEnabled(True)
         self.toolbar.vad_btn.setEnabled(True)
 
-        # 更新工具栏按钮状态
-        self.updateToolbarButtonsState()
+        
+        self.updateToolbarButtonsState()  # 更新工具栏按钮状态
+
+        system_logger.info("Abort")  # 记录手动停止日志，确保Reset按钮在参数文件保存后显示为可用
+        
     
 
     
