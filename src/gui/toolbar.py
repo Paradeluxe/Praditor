@@ -46,8 +46,8 @@ class ScrollingLabel(QLabel):
         # 鼠标悬停时开始滚动
         self.is_hovered = True
         if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
-            # 等待一段时间后开始滚动
-            QTimer.singleShot(self.scroll_pause, self.start_scrolling)
+            # 等待1秒后开始滚动
+            QTimer.singleShot(1000, self.start_scrolling)
         super().enterEvent(event)
         
     def leaveEvent(self, event):
@@ -97,8 +97,8 @@ class ScrollingLabel(QLabel):
             
         # 重置滚动偏移量
         self.scroll_offset = 0  # 从0开始，确保滚动重新开始
-        # 重新启动滚动计时器
-        self.start_scrolling()
+        # 开始滚动前停留1秒
+        QTimer.singleShot(1500, self.start_scrolling)
         
     def scroll_text(self):
         """执行文本滚动逻辑
@@ -120,37 +120,40 @@ class ScrollingLabel(QLabel):
         # 计算滚动偏移
         self.scroll_offset += self.scroll_speed
         
-        # 检查是否达到最大偏移量（当文字尾部到达标签右侧时）
-        max_scroll_offset = text_width + 20  # 添加20px的额外空间，使滚动更自然
+        # 检查是否达到最大偏移量（当文字右侧触碰到标签右侧时）
+        # 当滚动偏移量等于文本宽度减去标签宽度时，文字右侧刚好触碰到标签右侧
+        max_scroll_offset = text_width - label_width
         
         if self.scroll_offset >= max_scroll_offset:
-            # 停止当前滚动
+            # 停止当前滚动，保持当前显示的文本（文字右侧触碰到标签右侧的状态）
             self.stop_scrolling()
-            # 500毫秒后重新开始滚动
-            QTimer.singleShot(500, self.restart_scrolling)
+            # 滚完那一刻停留1.5秒
+            QTimer.singleShot(1500, self.restart_scrolling_from_beginning)
             return
             
-        # 创建滚动文本（添加一些空格作为分隔）
-        scroll_text = self.original_text + " " * 10 + self.original_text
+        # 计算当前应该显示的文本
+        # 使用QLabel的setText方法配合QLabel的对齐方式来实现滚动效果
+        # 这里我们使用QFontMetrics来计算需要显示的文本
         
         # 计算当前应该显示的文本起始位置
+        # 我们需要显示从scroll_offset开始的文本，长度为label_width
         start_index = 0
         current_offset = 0
         
         # 找到与当前滚动偏移量对应的字符索引
-        while start_index < len(scroll_text) and current_offset < self.scroll_offset:
-            char_width = self.fontMetrics().boundingRect(scroll_text[start_index]).width()
+        while start_index < len(self.original_text) and current_offset < self.scroll_offset:
+            char_width = self.fontMetrics().boundingRect(self.original_text[start_index]).width()
             current_offset += char_width
             start_index += 1
         
         # 确保起始索引不超出范围
-        start_index = min(start_index, len(scroll_text))
+        start_index = min(start_index, len(self.original_text))
         
         # 从起始索引开始，截取能填满标签宽度的文本
         display_text = ""
         temp_width = 0
         
-        for char in scroll_text[start_index:]:
+        for char in self.original_text[start_index:]:
             char_width = self.fontMetrics().boundingRect(char).width()
             if temp_width + char_width <= label_width:
                 display_text += char
@@ -159,10 +162,22 @@ class ScrollingLabel(QLabel):
                 break
         
         # 确保至少显示一个字符
-        if not display_text and scroll_text:
-            display_text = scroll_text[0]
+        if not display_text and self.original_text:
+            display_text = self.original_text[0]
         
         super().setText(display_text)
+        
+    def restart_scrolling_from_beginning(self):
+        """从开头重新开始滚动
+        
+        重置滚动偏移量，恢复原始文本，然后开始滚动
+        """
+        # 重置滚动偏移量
+        self.scroll_offset = 0
+        # 恢复显示原始文本
+        super().setText(self.original_text)
+        # 开始滚动前停留1秒
+        QTimer.singleShot(1000, self.start_scrolling)
 
 
 class CustomToolBar(QToolBar):
