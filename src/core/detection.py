@@ -22,6 +22,9 @@ stop_flag = False
 
 
 def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder", mode="vad", verbose=False):
+
+    if stop_flag:
+        return []
     wav_path = audio_obj.fpath
 
     audio_obj = ReadSound(wav_path)
@@ -64,6 +67,8 @@ def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder"
     start = 0.0 * 1000
     end = segment_duration * 1000
     while end <= audio_len * 1000:
+        if stop_flag:
+            return []
         segment = audio_obj[start:end]
         # print(type(segment) == type(audio_obj))
         onsets = detectPraditor(params, segment, "onset", mode=mode)
@@ -138,7 +143,6 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
         etime: 结束时间（毫秒），默认-1表示整个音频
         verbose: 是否输出详细信息，默认False
     """
-    global stop_flag
 
     if stop_flag:
         return []

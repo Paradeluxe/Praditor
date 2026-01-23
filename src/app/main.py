@@ -251,6 +251,13 @@ class DetectPraditorThread(QThread):
             segments = segment_audio(self.audio_obj, segment_duration=15, params=self.params, min_pause=1, mode="vad")
             system_logger.info(f"Total segments: {len(segments)}")  # 记录总分段数
             for start, end in segments:
+
+                # 设置全局停止标志
+                from src.core import detection
+                if detection.stop_flag:
+                    break
+
+
                 count += 1
 
                 # 记录当前进度百分比
@@ -1075,9 +1082,6 @@ class MainWindow(QMainWindow):
         # 退出run-all模式
         self.is_running_all = False
 
-        # 重置停止标志
-        detection.stop_flag = False
-
         # 直接启用所有带图标按钮
         icon_buttons_map = {
             self.title_bar.trash_btn: 'trash',
@@ -1103,7 +1107,8 @@ class MainWindow(QMainWindow):
             self.title_bar.offset_btn,
             self.toolbar.file_btn,
             self.toolbar.folder_btn,
-            self.toolbar.default_btn
+            self.toolbar.default_btn,
+            self.toolbar.vad_btn
         ]
         for btn in state_only_buttons:
             btn.setEnabled(True)
@@ -1114,6 +1119,7 @@ class MainWindow(QMainWindow):
         self.toolbar.default_btn.setEnabled(True)
         self.toolbar.folder_btn.setEnabled(True)
         self.toolbar.file_btn.setEnabled(True)
+        self.toolbar.vad_btn.setEnabled(True)
 
         # 更新工具栏按钮状态
         self.updateToolbarButtonsState()
@@ -1149,6 +1155,10 @@ class MainWindow(QMainWindow):
         self.is_running_all = True
         self.run_all_current_index = 0  # 从第一个音频开始
         
+        # 重置stop_flag
+        from src.core import detection
+        detection.stop_flag = False
+        
         # 显示第一个音频
         self.which_one = self.run_all_current_index
         self.file_path = self.file_paths[self.which_one]
@@ -1157,6 +1167,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(f"Praditor - {dir_name}/{base_name} ({self.which_one+1}/{len(self.file_paths)})")
         self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=self.toolbar.vad_btn.isChecked())
         self.showXsetNum(is_test=False)
+        
         
         # 启动检测
         self.execPraditor(is_test=False)
@@ -1230,8 +1241,8 @@ class MainWindow(QMainWindow):
             
             self.readXset()
             self.showXsetNum(is_test=is_test)
-            self.update_current_param()
-        
+            # self.update_current_param()
+        # 
         # 检查是否处于run-all模式
         if self.is_running_all:
             # 递增当前索引
@@ -1269,21 +1280,88 @@ class MainWindow(QMainWindow):
                     # 清空列表
                     self.current_runnables.clear()
                 
-                # 启用所有按钮
-                self.setButtonsEnabled(True)
-                # 启用所有滑块和工具栏
+                # 直接启用所有带图标按钮，与stopDetection方法保持一致
+                icon_buttons_map = {
+                    self.title_bar.trash_btn: 'trash',
+                    self.title_bar.read_btn: 'read',
+                    self.title_bar.run_btn: 'play',
+                    self.title_bar.run_all_btn: 'run-all',
+                    self.title_bar.test_btn: 'test',
+                    self.title_bar.prev_audio_btn: 'prev_audio',
+                    self.title_bar.next_audio_btn: 'next_audio',
+                    self.title_bar.help_menu_btn: 'question',
+                    self.toolbar.save_btn: 'save',
+                    self.toolbar.reset_btn: 'reset',
+                    self.toolbar.backward_btn: 'backward',
+                    self.toolbar.forward_btn: 'forward',
+                }
+                for btn, icon_name in icon_buttons_map.items():
+                    self._setButtonEnabled(btn, icon_name, True)
+
+                # 直接启用所有仅状态按钮，与stopDetection方法保持一致
+                state_only_buttons = [
+                    self.title_bar.title_label,
+                    self.title_bar.onset_btn,
+                    self.title_bar.offset_btn,
+                    self.toolbar.file_btn,
+                    self.toolbar.folder_btn,
+                    self.toolbar.default_btn,
+                    self.toolbar.vad_btn
+                ]
+                for btn in state_only_buttons:
+                    btn.setEnabled(True)
+
+                # 启用滑块、工具栏和模式按钮
                 self.MySliders.setEnabled(True)
                 self.toolbar.setEnabled(True)
+                self.toolbar.default_btn.setEnabled(True)
+                self.toolbar.folder_btn.setEnabled(True)
+                self.toolbar.file_btn.setEnabled(True)
+                self.toolbar.vad_btn.setEnabled(True)
                 self.updateToolbarButtonsState()
                 
                 # 发射run完成信号
                 self.run_current_done.emit()
         else:
             # 单个文件处理完成
-            # 启用所有按钮
-            self.setButtonsEnabled(True)
+            # 直接启用所有带图标按钮，与stopDetection方法保持一致
+            icon_buttons_map = {
+                self.title_bar.trash_btn: 'trash',
+                self.title_bar.read_btn: 'read',
+                self.title_bar.run_btn: 'play',
+                self.title_bar.run_all_btn: 'run-all',
+                self.title_bar.test_btn: 'test',
+                self.title_bar.prev_audio_btn: 'prev_audio',
+                self.title_bar.next_audio_btn: 'next_audio',
+                self.title_bar.help_menu_btn: 'question',
+                self.toolbar.save_btn: 'save',
+                self.toolbar.reset_btn: 'reset',
+                self.toolbar.backward_btn: 'backward',
+                self.toolbar.forward_btn: 'forward',
+            }
+            for btn, icon_name in icon_buttons_map.items():
+                self._setButtonEnabled(btn, icon_name, True)
+
+            # 直接启用所有仅状态按钮，与stopDetection方法保持一致
+            state_only_buttons = [
+                self.title_bar.title_label,
+                self.title_bar.onset_btn,
+                self.title_bar.offset_btn,
+                self.toolbar.file_btn,
+                self.toolbar.folder_btn,
+                self.toolbar.default_btn,
+                self.toolbar.vad_btn
+            ]
+            for btn in state_only_buttons:
+                btn.setEnabled(True)
+
+            # 启用滑块、工具栏和模式按钮
             self.MySliders.setEnabled(True)
             self.toolbar.setEnabled(True)
+            self.toolbar.default_btn.setEnabled(True)
+            self.toolbar.folder_btn.setEnabled(True)
+            self.toolbar.file_btn.setEnabled(True)
+            self.toolbar.vad_btn.setEnabled(True)
             self.updateToolbarButtonsState()
             
             # 发射run完成信号
@@ -1295,6 +1373,9 @@ class MainWindow(QMainWindow):
 
         from src.core import detection
         detection.stop_flag = False
+
+        self.update_current_param()
+
 
         # 禁用所有滑块
         self.setButtonsEnabled(False)  # 禁用除最小化、最大化、关闭、停止以外的所有按钮
@@ -1425,7 +1506,7 @@ class MainWindow(QMainWindow):
     def updateParamIndexLabel(self):
         """更新参数索引标签"""
         # print(self.param_sets)
-        if hasattr(self, 'params_btn'):
+        if hasattr(self.toolbar, 'params_btn'):
             # 获取当前模式（默认或VAD）
             current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
             # 获取当前模式的参数集
@@ -1562,7 +1643,8 @@ class MainWindow(QMainWindow):
             self.title_bar.offset_btn,
             self.toolbar.file_btn,
             self.toolbar.folder_btn,
-            self.toolbar.default_btn
+            self.toolbar.default_btn,
+            self.toolbar.vad_btn
         ]
         
         # 3. 所有需要切换状态的按钮
