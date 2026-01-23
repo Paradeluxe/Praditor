@@ -381,6 +381,29 @@ class MainWindow(QMainWindow):
         # 初始化时更新save和reset按钮状态
         self.updateToolbarButtonsState()
         
+        # 初始禁用除help和导入文件之外的所有按钮
+        # help按钮和导入文件按钮（title_label）保持启用
+        self.title_bar.prev_audio_btn.setEnabled(False)
+        self.title_bar.next_audio_btn.setEnabled(False)
+        self.title_bar.onset_btn.setEnabled(False)
+        self.title_bar.offset_btn.setEnabled(False)
+        self.title_bar.trash_btn.setEnabled(False)
+        self.title_bar.read_btn.setEnabled(False)
+        self.title_bar.run_btn.setEnabled(False)
+        self.title_bar.run_all_btn.setEnabled(False)
+        self.title_bar.test_btn.setEnabled(False)
+        self.title_bar.stop_btn.setEnabled(False)
+        
+        # 工具栏按钮初始禁用
+        self.toolbar.save_btn.setEnabled(False)
+        self.toolbar.reset_btn.setEnabled(False)
+        self.toolbar.backward_btn.setEnabled(False)
+        self.toolbar.forward_btn.setEnabled(False)
+        self.toolbar.vad_btn.setEnabled(False)
+        self.toolbar.default_btn.setEnabled(False)
+        self.toolbar.folder_btn.setEnabled(False)
+        self.toolbar.file_btn.setEnabled(False)
+        
     def onVadButtonClicked(self):
         """处理VAD按钮点击事件"""
         self.toggleVadMode(self.toolbar.vad_btn.isChecked())
@@ -921,7 +944,26 @@ class MainWindow(QMainWindow):
             self.toolbar.folder_btn.setEnabled(True)
             self.toolbar.file_btn.setEnabled(True)
             
-            # 三个按钮都不选中
+            # 启用其他工具栏按钮
+            self.toolbar.save_btn.setEnabled(True)
+            self.toolbar.reset_btn.setEnabled(True)
+            self.toolbar.backward_btn.setEnabled(True)
+            self.toolbar.forward_btn.setEnabled(True)
+            self.toolbar.vad_btn.setEnabled(True)
+            
+            # 启用标题栏中的功能按钮
+            self.title_bar.prev_audio_btn.setEnabled(True)
+            self.title_bar.next_audio_btn.setEnabled(True)
+            self.title_bar.onset_btn.setEnabled(True)
+            self.title_bar.offset_btn.setEnabled(True)
+            self.title_bar.trash_btn.setEnabled(True)
+            self.title_bar.read_btn.setEnabled(True)
+            self.title_bar.run_btn.setEnabled(True)
+            self.title_bar.run_all_btn.setEnabled(True)
+            self.title_bar.test_btn.setEnabled(True)
+            self.title_bar.stop_btn.setEnabled(False)  # stop按钮只有在运行时才启用
+            
+            # 三个模式按钮都不选中
             self.toolbar.default_btn.setChecked(False)
             self.toolbar.folder_btn.setChecked(False)
             self.toolbar.file_btn.setChecked(False)
