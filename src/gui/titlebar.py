@@ -449,7 +449,11 @@ class CustomTitleBar(QWidget):
         self.title_label.setText(title)
     
     def setButtonsEnabled(self, enabled):
-        """设置按钮是否可用"""
+        """设置按钮是否可用
+        
+        Args:
+            enabled: 是否启用按钮
+        """
         # 根据需要实现按钮启用/禁用逻辑
         pass
         

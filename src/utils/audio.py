@@ -9,7 +9,19 @@ import soundfile as sf
 
 
 class ReadSound:
+    """音频文件读取和处理类
+    
+    用于读取音频文件，处理音频数据，并提供音频切片功能
+    """
     def __init__(self, fpath=None, arr=None, duration_seconds=None, frame_rate=None):
+        """初始化ReadSound对象
+        
+        Args:
+            fpath: 音频文件路径
+            arr: 音频数据数组
+            duration_seconds: 音频时长（秒）
+            frame_rate: 采样率
+        """
 
 
         if fpath is None:
@@ -38,6 +50,14 @@ class ReadSound:
         self.max = np.max(np.abs(self.arr))
 
     def __getitem__(self, ms):
+        """获取音频切片
+        
+        Args:
+            ms: slice对象，表示毫秒范围
+            
+        Returns:
+            ReadSound对象，包含指定时间段的音频数据
+        """
 
 
         start = int(ms.start * self.frame_rate / 1000) if ms.start is not None else 0
@@ -50,6 +70,11 @@ class ReadSound:
         return ReadSound(arr=self.arr[start:end], duration_seconds=(end - start) / 1000, frame_rate=self.frame_rate)
 
     def get_array_of_samples(self):
+        """获取音频样本数组
+        
+        Returns:
+            音频数据数组
+        """
         return self.arr
 
 
@@ -65,6 +90,11 @@ def resource_path(relative_path):
 
 
 def get_current_time():
+    """获取当前时间字符串
+    
+    Returns:
+        格式化的当前时间字符串，格式为HH:MM:SS.mmm
+    """
     # 获取当前时间
     now = datetime.now()
     # 格式化时间字符串
@@ -73,6 +103,18 @@ def get_current_time():
 
 
 def bandpass_filter(data, lowcut, highcut, fs, order=4):
+    """带通滤波器
+    
+    Args:
+        data: 音频数据数组
+        lowcut: 低截止频率
+        highcut: 高截止频率
+        fs: 采样率
+        order: 滤波器阶数
+        
+    Returns:
+        滤波后的音频数据
+    """
     nyquist = 0.5 * fs
     low = lowcut / nyquist
     high = highcut / nyquist
@@ -90,6 +132,17 @@ def bandpass_filter(data, lowcut, highcut, fs, order=4):
 
 
 def lowpass_filter(data, highcut, fs, order=4):
+    """低通滤波器
+    
+    Args:
+        data: 音频数据数组
+        highcut: 高截止频率
+        fs: 采样率
+        order: 滤波器阶数
+        
+    Returns:
+        滤波后的音频数据
+    """
     nyquist = 0.5 * fs
     high = highcut / nyquist
     b, a = butter(order, high, btype='low', output="ba")
@@ -98,6 +151,14 @@ def lowpass_filter(data, highcut, fs, order=4):
 
 
 def isAudioFile(fpath):
+    """检查文件是否为音频文件
+    
+    Args:
+        fpath: 文件路径
+        
+    Returns:
+        bool，True表示是音频文件，False表示不是
+    """
     # 所有的音频后缀
     audio_extensions = [
         '.mp3',  # MPEG Audio Layer-3
@@ -135,6 +196,14 @@ def isAudioFile(fpath):
 
 
 def get_frm_points_from_textgrid(audio_file_path):
+    """从TextGrid文件中读取点数据
+    
+    Args:
+        audio_file_path: 音频文件路径
+        
+    Returns:
+        包含onset和offset时间点的字典
+    """
 
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
@@ -152,6 +221,14 @@ def get_frm_points_from_textgrid(audio_file_path):
 
 
 def get_frm_intervals_from_textgrid(audio_file_path):
+    """从TextGrid文件中读取区间数据
+    
+    Args:
+        audio_file_path: 音频文件路径
+        
+    Returns:
+        包含onset和offset区间的字典
+    """
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     tg_file_path = os.path.join(audio_dir, audio_filename + "_vad.TextGrid")

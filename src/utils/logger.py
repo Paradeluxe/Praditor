@@ -13,8 +13,15 @@ class GUIHandler(logging.Handler):
             gui_callback(msg)
 
 def setup_logger(name='Praditor', log_file='praditor.log', level=logging.INFO):
-    """
-    设置日志记录器
+    """设置日志记录器
+    
+    Args:
+        name: 日志记录器名称，默认'Praditor'
+        log_file: 日志文件路径，默认'praditor.log'
+        level: 日志级别，默认logging.INFO
+        
+    Returns:
+        配置好的日志记录器对象
     """
     # 创建logger
     logger = logging.getLogger(name)

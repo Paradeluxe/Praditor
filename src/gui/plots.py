@@ -11,6 +11,14 @@ from src.utils.audio import ReadSound, get_frm_points_from_textgrid, get_frm_int
 
 
 def formatted_time(ms):
+    """将毫秒转换为格式化的时间字符串
+    
+    Args:
+        ms: 毫秒数
+        
+    Returns:
+        格式化的时间字符串，格式为mm:ss.mmm
+    """
     # 将毫秒转换成秒和毫秒
     seconds = ms // 1000
     milliseconds = ms % 1000
@@ -27,6 +35,15 @@ def formatted_time(ms):
     return f"{minutes:d}:{seconds:02d}.{milliseconds:03d}"
 
 def downsampleSignal(signal, max_limit):
+    """对信号进行降采样，减少数据点数
+    
+    Args:
+        signal: 原始信号数组
+        max_limit: 最大数据点限制
+        
+    Returns:
+        降采样后的信号数组
+    """
     limit = max_limit if len(signal) > max_limit else len(signal)
     if not isinstance(limit, int) or limit <= 0:
         raise ValueError(f"limit must be a positive integer, not {limit}")
@@ -44,6 +61,18 @@ def downsampleSignal(signal, max_limit):
     return downsampled_signal
 
 def downsampleXset(xsets, stime, duration, max_show_frm, samplerate):
+    """对Xset数据进行降采样，适应显示需求
+    
+    Args:
+        xsets: Xset数据列表
+        stime: 开始时间
+        duration: 持续时间
+        max_show_frm: 最大显示帧数
+        samplerate: 采样率
+        
+    Returns:
+        降采样后的Xset数据列表
+    """
     # print(max_show_frm, etime, stime)
     limit = max_show_frm if duration * samplerate > max_show_frm else int(duration * samplerate)
 
@@ -55,8 +84,18 @@ def downsampleXset(xsets, stime, duration, max_show_frm, samplerate):
 
 
 class AudioViewer(QWidget):
-
+    """音频可视化组件，用于显示音频波形和检测结果
+    
+    包含音频波形显示、时间滑块、缩放功能和检测结果可视化
+    """
+    
     def __init__(self):#, interval_ms=40000, resolution=20000):
+        """初始化AudioViewer组件
+        
+        Args:
+            interval_ms: 初始时间窗口大小（毫秒）
+            resolution: 显示分辨率
+        """
         super().__init__()
         self.max_amp_ratio = 1.0
         self.tg_dict_tp = {"onset": [], "offset": []}
@@ -210,6 +249,13 @@ class AudioViewer(QWidget):
 
 
     def keyPressEvent(self, event):
+        """处理键盘按键事件
+        
+        支持Ctrl+I和Ctrl+O快捷键，用于缩小和放大时间窗口
+        
+        Args:
+            event: 键盘事件对象
+        """
 
         if event.modifiers() == Qt.ControlModifier:
             # print(event)
@@ -231,6 +277,13 @@ class AudioViewer(QWidget):
         super().keyPressEvent(event)
 
     def wheelEvent(self, event):
+        """处理鼠标滚轮事件
+        
+        支持Ctrl+滚轮缩放时间窗口，Shift+滚轮左右拖动，单独滚轮调整振幅显示
+        
+        Args:
+            event: 鼠标滚轮事件对象
+        """
 
         if not self.fpath:
             return
@@ -293,6 +346,10 @@ class AudioViewer(QWidget):
 
 
     def adjustWinSizeResolution(self):
+        """调整窗口大小和分辨率
+        
+        确保时间窗口不超过音频时长，且分辨率适应窗口大小
+        """
         # 首先，一个时间窗的最大时间不可以超过这个音频的时间；若超过，则调整为音频时间
         if self.audio_obj.duration_seconds * 1000 < self.interval_ms:
             self.interval_ms = int(self.audio_obj.duration_seconds * 1000)
@@ -305,6 +362,15 @@ class AudioViewer(QWidget):
 
 
     def readAudio(self, fpath, is_vad_mode=False):
+        """读取音频文件并更新可视化
+        
+        Args:
+            fpath: 音频文件路径
+            is_vad_mode: 是否为VAD模式
+            
+        Returns:
+            检测结果字典
+        """
         # print(fpath)
         if self.fpath != fpath:
             self.fpath = fpath
@@ -340,6 +406,10 @@ class AudioViewer(QWidget):
 
 
     def updateSlider(self):
+        """更新时间滑块
+        
+        根据音频时长和当前时间窗口大小，更新滑块的最大位置和样式
+        """
         
         self.slider_timerange.setMaximum(self.maximum - self.interval_ms)
         # 计算slider宽度，确保有最小宽度20px，防止handler不可见，同时最大宽度不超过slider本身长度-1
@@ -361,6 +431,13 @@ class AudioViewer(QWidget):
 
 
     def resizeEvent(self, event):  # 窗口大小改变时调用 (包括初始化设置写完之后)
+        """处理窗口大小改变事件
+        
+        调整滑块样式以适应新的窗口大小
+        
+        Args:
+            event: 窗口大小改变事件对象
+        """
         slider_width = int(self.slider_timerange.width() * self.interval_ms / self.maximum) 
         
         # 根据是否导入音频决定滑块样式
@@ -376,6 +453,10 @@ class AudioViewer(QWidget):
 
 
     def updateChart(self):
+        """更新图表显示
+        
+        根据当前时间窗口，更新音频波形的显示
+        """
         self.label_stime.setText(f"{formatted_time(self.slider_timerange.sliderPosition())}")
         self.label_etime.setText(f"{formatted_time(self.slider_timerange.sliderPosition()+self.interval_ms)}")
         self.updateSlider()
@@ -403,6 +484,12 @@ class AudioViewer(QWidget):
 
 
     def hideXset(self, xsets=[], isVisible=True):
+        """隐藏或显示Xset检测结果
+        
+        Args:
+            xsets: Xset检测结果列表
+            isVisible: 是否可见
+        """
         stime = self.slider_timerange.sliderPosition() / 1000
         xsets = downsampleXset(xsets, stime, self.interval_ms/1000, self.resolution, self.audio_samplerate)
         for line in self._chart.series():
@@ -414,6 +501,11 @@ class AudioViewer(QWidget):
 
 
     def removeXset(self, xsets=[]):
+        """移除Xset检测结果
+        
+        Args:
+            xsets: Xset检测结果列表
+        """
 
         if not xsets:
             return
@@ -433,6 +525,11 @@ class AudioViewer(QWidget):
 
 
     def updateXset(self, tg_dict):#, showOnset=True, showOffset=True):
+        """更新Xset检测结果显示
+        
+        Args:
+            tg_dict: 包含onset和offset检测结果的字典
+        """
 
         if not tg_dict:
             return
@@ -477,6 +574,10 @@ class AudioViewer(QWidget):
 
 
     def sliderValueChanged(self):
+        """滑块值变化事件处理
+        
+        当时间滑块值改变时，更新图表和Xset显示
+        """
         self.updateChart()
         self.updateXset(self.tg_dict_tp)
 

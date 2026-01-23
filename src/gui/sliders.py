@@ -162,10 +162,21 @@ class MySliders(QWidget):
 
     
     def sliderValueDidChange(self):
+        """滑块值变化事件处理
+        
+        当任何滑块值发生变化时，发送信号通知相关组件
+        """
         self.anySliderValueChanged.emit(1)
     
 
     def getParams(self):
+        """获取当前所有滑块的参数值
+        
+        根据滑块的可见性，收集Onset和Offset的参数值
+        
+        Returns:
+            包含onset和offset参数的字典
+        """
 
         params = {
             "onset": {},
@@ -218,6 +229,13 @@ class MySliders(QWidget):
 
 
     def resetParams(self, params):
+        """重置滑块参数到指定值
+        
+        根据提供的参数字典，更新所有对应滑块的位置
+        
+        Args:
+            params: 包含onset和offset参数的字典
+        """
         # 重置Onset参数，只处理params字典中实际存在的键
         onset_params = params.get("onset", {})
         

@@ -44,150 +44,9 @@ from src.gui.titlebar import CustomTitleBar
 from src.utils.audio import isAudioFile, get_frm_points_from_textgrid, get_frm_intervals_from_textgrid
 from src.utils.resources import get_resource_path
 
-# # 自定义QLabel类，实现hover时文字自动滑动效果
-# class ScrollingLabel(QLabel):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.setMouseTracking(True)
-#         self.original_text = ""
-#         self.scroll_offset = 0
-#         self.scroll_timer = QTimer(self)
-#         self.scroll_timer.timeout.connect(self.scroll_text)
-#         self.scroll_speed = 5  # 增加滚动速度（像素/帧），从2改为5
-#         self.scroll_delay = 50  # 滚动延迟（毫秒/帧）
-#         self.scroll_pause = 1000  # 滚动暂停时间（毫秒）
-#         self.is_hovered = False  # 添加鼠标悬停状态标记
-        
-#     def setText(self, text):
-#         self.original_text = text
-#         super().setText(text)
-        
-#     def enterEvent(self, event):
-#         # 鼠标悬停时开始滚动
-#         self.is_hovered = True
-#         if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
-#             # 等待一段时间后开始滚动
-#             QTimer.singleShot(self.scroll_pause, self.start_scrolling)
-#         super().enterEvent(event)
-        
-#     def leaveEvent(self, event):
-#         # 鼠标离开时停止滚动并重置
-#         self.is_hovered = False
-#         self.stop_scrolling()
-#         self.reset_scroll()
-#         super().leaveEvent(event)
-        
-#     def start_scrolling(self):
-#         self.scroll_timer.start(self.scroll_delay)
-        
-#     def stop_scrolling(self):
-#         self.scroll_timer.stop()
-        
-#     def reset_scroll(self):
-#         self.scroll_offset = 0
-#         super().setText(self.original_text)
-        
-#     def restart_scrolling(self):
-#         # 只有在鼠标悬停时才重新开始滚动
-#         if not self.is_hovered:
-#             return
-            
-#         # 重置滚动偏移量，开始新的循环
-#         self.scroll_offset = 0  # 从0开始，确保滚动重新开始
-#         # 重置显示的文本为原始文本
-#         super().setText(self.original_text)
-#         # 在开始滚动之前停留1.2秒
-#         QTimer.singleShot(1200, self.start_scrolling)
-        
-#     def scroll_text(self):
-#         # 只有在鼠标悬停时才执行滚动逻辑
-#         if not self.is_hovered:
-#             return
-            
-#         if not self.original_text:
-#             return
-            
-#         # 获取完整文本的宽度
-#         text_width = self.fontMetrics().boundingRect(self.original_text).width()
-#         # 获取标签的实际宽度（减去内边距）
-#         label_width = self.width() - 16  # 减去左右内边距各8px
-        
-#         # 如果文本宽度小于等于标签宽度，不需要滚动
-#         if text_width <= label_width:
-#             return
-            
-#         # 计算最大滚动偏移量（当文字尾部到达标签右侧时）
-#         max_scroll_offset = text_width - label_width
-        
-#         # 计算滚动偏移
-#         self.scroll_offset += self.scroll_speed
-        
-#         # 检查是否达到最大偏移量
-#         # 使用一个小的阈值，确保文本完全滚动到末尾
-#         if self.scroll_offset >= max_scroll_offset - 5:  # 减去5像素的阈值，确保完全滚动
-#             # 停止当前滚动
-#             self.stop_scrolling()
-#             # 500毫秒后重新开始滚动
-#             QTimer.singleShot(500, self.restart_scrolling)
-#             return
-        
-#         # 计算起始索引（基于像素偏移量）
-#         avg_char_width = self.fontMetrics().averageCharWidth()
-#         if avg_char_width <= 0:
-#             return
-        
-#         # 计算起始索引，使用更精确的方法
-#         # 从原始文本开始，找到第一个字符的位置，使得从该位置开始的文本
-#         # 能够填满标签，并且当滚动到最大偏移量时，文本尾部刚好到达标签右侧
-#         start_index = 0
-#         current_offset = 0
-        
-#         # 找到与当前滚动偏移量对应的字符索引
-#         while start_index < len(self.original_text) and current_offset < self.scroll_offset:
-#             char_width = self.fontMetrics().boundingRect(self.original_text[start_index]).width()
-#             current_offset += char_width
-#             start_index += 1
-        
-#         # 确保起始索引不超出范围
-#         start_index = min(start_index, len(self.original_text))
-        
-#         # 获取从起始索引开始的文本
-#         display_text = self.original_text[start_index:]
-        
-#         # 确保文本始终填满标签
-#         # 我们需要找到刚好能填满标签的文本长度
-#         final_text = ""
-#         temp_text = ""
-#         temp_width = 0
-        
-#         # 逐步添加字符，直到填满标签
-#         for char in display_text:
-#             char_width = self.fontMetrics().boundingRect(char).width()
-#             if temp_width + char_width <= label_width:
-#                 temp_text += char
-#                 temp_width += char_width
-#                 final_text = temp_text
-#             else:
-#                 # 已经超过标签宽度，使用前一个版本
-#                 break
-        
-#         # 确保至少有一个字符，避免标签为空
-#         if not final_text and display_text:
-#             final_text = display_text[0]
-        
-#         # 再次检查，确保文本宽度不超过标签宽度
-#         while self.fontMetrics().boundingRect(final_text).width() > label_width and len(final_text) > 0:
-#             final_text = final_text[:-1]
-        
-#         # 确保至少有一个字符，避免标签为空
-#         if not final_text and display_text:
-#             final_text = display_text[0]
-        
-#         super().setText(final_text)
-#         # print(final_text)
 
-# 自定义输出流类，用于捕获print语句和logger输出
-class ConsoleOutput(io.StringIO):
+
+class ConsoleOutput(io.StringIO):  # 自定义输出流类，用于捕获print语句和logger输出
     def __init__(self, callback):
         super().__init__()
         self.callback = callback
@@ -211,8 +70,9 @@ class ConsoleOutput(io.StringIO):
             self.callback(self.buffer.strip())
             self.buffer = ""
 
-# 异步检测任务类
-class DetectPraditorThread(QThread):
+
+
+class DetectPraditorThread(QThread):  # 异步检测任务类
     finished = Signal(list, list)  # 参数：onset_results, offset_results
     
     def __init__(self, params, audio_obj, mode):
@@ -492,17 +352,6 @@ class MainWindow(QMainWindow):
         # 调整主窗口的边距，确保工具栏与标题栏完全对齐
         main_layout.setContentsMargins(0, 0, 0, 0)
         
-        # 确保工具栏与标题栏的视觉效果完全一致
-        # 由于QToolBar默认会自动填充主窗口宽度，无需额外设置宽度
-        # 只需确保边距和圆角半径一致即可
-
-
-        # 初始化参数txt
-        # 检查是否存在default mode
-        # if not os.path.exists("params.txt"):
-        #     with open("params.txt", 'w') as txt_file:
-        #         txt_file.write(f"{self.MySliders.getParams()}")
-        # else:
         # 初始化参数文件，使用当前文件所在目录
         default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.txt")
         if not os.path.exists(default_params_path):
@@ -666,14 +515,12 @@ class MainWindow(QMainWindow):
             layout.setColumnStretch(2, 1)  # 恢复Offset列拉伸因子
             layout.setColumnMinimumWidth(2, 200)  # 恢复Offset列最小宽度限制
         
-        # 切换模式后更新参数索引标签，确保显示当前模式的参数
-        self.updateParamIndexLabel()
         
-        # 按照File→Folder→Default优先级加载参数
-        self.showParams()
+        self.updateParamIndexLabel()  # 切换模式后更新参数索引标签，确保显示当前模式的参数
         
-        # 检查参数文件是否存在，更新按钮状态
-        self.checkIfParamsExist()
+        self.showParams()  # 按照File→Folder→Default优先级加载参数
+        
+        self.checkIfParamsExist()  # 检查参数文件是否存在，更新按钮状态
 
         # 切换模式后，不选中任何按钮
         self.toolbar.default_btn.setChecked(False)
@@ -685,12 +532,17 @@ class MainWindow(QMainWindow):
             self.AudioViewer.tg_dict_tp = self.AudioViewer.readAudio(self.file_path, is_vad_mode=is_vad_enabled)
             self.showXsetNum(is_test=False)
         
-        # 更新滑块的tooltip文本
-        self.MySliders.updateTooltips(is_vad_enabled)
+        
+        self.MySliders.updateTooltips(is_vad_enabled)  # 更新滑块的tooltip文本
 
 
 
     def keyPressEvent(self, event):
+        """处理键盘按键事件，实现空格键或F5键控制音频播放/暂停
+        
+        Args:
+            event: 键盘事件对象
+        """
 
         if self.player.playbackState() == QMediaPlayer.PlayingState:
             self.playSound()
@@ -701,6 +553,10 @@ class MainWindow(QMainWindow):
         super().keyPressEvent(event)
 
     def playSound(self):
+        """控制音频播放/暂停
+        
+        如果音频正在播放则停止，否则开始播放当前打开的音频文件
+        """
         if self.player.playbackState() == QMediaPlayer.PlayingState:
             self.player.stop()  # 如果正在播放则暂停
             player_logger.info("Stop")
@@ -710,12 +566,21 @@ class MainWindow(QMainWindow):
             player_logger.info("Playing...")
 
     def onMediaStatusChanged(self, status):
+        """处理媒体状态变化事件
+        
+        Args:
+            status: 媒体状态对象
+        """
         if status == QMediaPlayer.MediaStatus.EndOfMedia:
             player_logger.info("Playback finished")
 
 
 
     def readXset(self):
+        """读取音频文件对应的TextGrid结果文件
+        
+        根据当前模式（普通/VAD）选择不同的结果文件格式
+        """
         if self.toolbar.vad_btn.isChecked():
             self.AudioViewer.tg_dict_tp = get_frm_intervals_from_textgrid(self.file_path)
         else:
@@ -736,8 +601,10 @@ class MainWindow(QMainWindow):
 
 
     def clearXset(self):
-        # self.AudioViewer.tg_dict_tp = get_frm_points_from_textgrid(self.file_path)
-
+        """清除当前显示的检测结果
+        
+        根据当前选中的Onset/Offset按钮状态，清除对应的检测结果
+        """
         if not self.run_onset.isChecked():
             self.AudioViewer.removeXset(self.AudioViewer.tg_dict_tp["onset"])
         if not self.run_offset.isChecked():
@@ -747,6 +614,10 @@ class MainWindow(QMainWindow):
 
 
     def turnOnset(self):
+        """切换Onset检测状态
+        
+        根据Onset按钮状态，更新滑块颜色、禁用状态和检测结果显示
+        """
         if not self.run_onset.isChecked():
             onset_color = "#AFAFAF"
             slider_status = True
@@ -779,6 +650,10 @@ class MainWindow(QMainWindow):
 
 
     def turnOffset(self):
+        """切换Offset检测状态
+        
+        根据Offset按钮状态，更新滑块颜色、禁用状态和检测结果显示
+        """
         if not self.run_offset.isChecked():
             offset_color = "#AFAFAF"
             slider_status = True
@@ -813,6 +688,10 @@ class MainWindow(QMainWindow):
 
 
     def resetParams(self):
+        """重置参数到当前选中模式的默认值
+        
+        根据当前选中的模式（Default/Folder/File），从对应的参数文件中加载参数
+        """
         # 由于按钮可以同时被选中，我们需要确定优先读取哪个位置的参数
         # 优先级：File > Folder > Default
         txt_file_path = None
@@ -848,6 +727,10 @@ class MainWindow(QMainWindow):
 
 
     def saveParams(self):
+        """保存当前参数到所有选中模式的参数文件
+        
+        根据当前选中的模式（Default/Folder/File），将参数保存到对应的文件中
+        """
         # 检查每个按钮的状态，如果被选中就保存到相应位置
         if self.toolbar.default_btn.isChecked():
             # Default模式：保存到应用程序所在位置
@@ -859,82 +742,106 @@ class MainWindow(QMainWindow):
             # File模式：保存到file同名
             self.saveParamsWithFileName()
         
-        # 保存参数后检查是否与任何模式匹配，更新下划线
-        self.checkIfParamsExist()
         
-        # 更新工具栏按钮状态，确保Reset按钮在参数文件保存后显示为可用
-        self.updateToolbarButtonsState()
+        self.checkIfParamsExist()  # 保存参数后检查是否与任何模式匹配，更新下划线
+        
+        
+        self.updateToolbarButtonsState()  # 更新工具栏按钮状态，确保Reset按钮在参数文件保存后显示为可用
 
 
     def checkIfParamsExist(self):
+        """
+        检查不同模式下的参数文件是否存在，以及当前参数是否与文件中保存的参数匹配
+        
+        该方法会检查三种模式的参数文件：
+        1. Default模式：检查应用程序目录下的params.txt或params_vad.txt文件
+        2. Folder模式：检查当前打开文件所在目录下的params.txt或params_vad.txt文件
+        3. File模式：检查与当前打开文件同名的.txt参数文件
+        
+        同时会根据VAD模式状态，决定使用带_vad后缀的参数文件还是普通参数文件
+        检查结果会通过按钮属性反映，用于UI样式显示（如按钮颜色变化）
+        """
+        # 获取当前滑块参数的字符串表示
         current_params = str(self.MySliders.getParams())
         # current_params_dict = self.MySliders.getParams()
         
-        # 检查是否处于VAD模式
+        # 检查是否处于VAD模式，决定参数文件后缀
         is_vad_mode = self.toolbar.vad_btn.isChecked()
         file_suffix = "_vad" if is_vad_mode else ""
         
-        # 检查Default模式
+        # ======================== Default模式检查 ========================
+        # 构建默认参数文件路径：首先检查当前目录，若不存在则检查资源路径
         default_params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"params{file_suffix}.txt")
         if not os.path.exists(default_params_path):
             default_params_path = get_resource_path(f"src/app/params{file_suffix}.txt")
         
-        default_params_match = False
+        default_params_match = False  # 默认参数是否匹配
         if os.path.exists(default_params_path):
             try:
                 with open(default_params_path, 'r') as txt_file:
+                    # 读取并解析默认参数文件内容，转换为字符串进行比较
                     default_params = str(eval(txt_file.read()))
                     default_params_match = (current_params == default_params)
-            except:
+            except Exception as e:
+                # 解析失败时忽略错误
                 pass
         
-        # 设置default_btn的file_exists和param_matched属性
+        # 设置默认按钮的属性，用于样式显示（如文件存在状态和参数匹配状态）
         self.toolbar.default_btn.setProperty("file_exists", os.path.exists(default_params_path))
         self.toolbar.default_btn.setProperty("param_matched", default_params_match)
-        self.toolbar.default_btn.style().polish(self.toolbar.default_btn)  # 刷新样式
+        self.toolbar.default_btn.style().polish(self.toolbar.default_btn)  # 刷新按钮样式，应用新属性
         
-        # 检查Folder模式
-        folder_params_exists = False
-        folder_params_match = False
-        if self.file_path:
-            folder_path = os.path.dirname(self.file_path)
-            folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")
+        # ======================== Folder模式检查 ========================
+        folder_params_exists = False  # 文件夹参数文件是否存在
+        folder_params_match = False  # 文件夹参数是否与当前参数匹配
+        if self.file_path:  # 仅当有打开文件时才检查
+            folder_path = os.path.dirname(self.file_path)  # 获取当前文件所在文件夹
+            folder_params_path = os.path.join(folder_path, f"params{file_suffix}.txt")  # 构建文件夹参数文件路径
             
             if os.path.exists(folder_params_path):
                 folder_params_exists = True
                 try:
                     with open(folder_params_path, 'r') as txt_file:
+                        # 读取并解析文件夹参数文件内容，转换为字符串进行比较
                         folder_params = str(eval(txt_file.read()))
                         folder_params_match = (current_params == folder_params)
-                except:
+                except Exception as e:
+                    # 解析失败时忽略错误
                     pass
         
-        # 设置folder_btn的file_exists和param_matched属性
+        # 设置文件夹按钮的属性，用于样式显示
         self.toolbar.folder_btn.setProperty("file_exists", folder_params_exists)
         self.toolbar.folder_btn.setProperty("param_matched", folder_params_match)
-        self.toolbar.folder_btn.style().polish(self.toolbar.folder_btn)  # 刷新样式
+        self.toolbar.folder_btn.style().polish(self.toolbar.folder_btn)  # 刷新按钮样式，应用新属性
         
-        # 检查File模式
-        file_params_exists = False
-        file_params_match = False
-        if self.file_path:
+        # ======================== File模式检查 ========================
+        file_params_exists = False  # 文件参数文件是否存在
+        file_params_match = False  # 文件参数是否与当前参数匹配
+        if self.file_path:  # 仅当有打开文件时才检查
+            # 构建与当前文件同名的参数文件路径（替换扩展名）
             file_params_path = os.path.splitext(self.file_path)[0] + f"{file_suffix}.txt"
             
             if os.path.exists(file_params_path):
                 file_params_exists = True
                 try:
                     with open(file_params_path, 'r') as txt_file:
+                        # 读取并解析文件参数内容，转换为字符串进行比较
                         file_params = str(eval(txt_file.read()))
                         file_params_match = (current_params == file_params)
-                except:
+                except Exception as e:
+                    # 解析失败时忽略错误
                     pass
         
-        # 设置file_btn的file_exists和param_matched属性
+        # 设置文件按钮的属性，用于样式显示
         self.toolbar.file_btn.setProperty("file_exists", file_params_exists)
         self.toolbar.file_btn.setProperty("param_matched", file_params_match)
-        self.toolbar.file_btn.style().polish(self.toolbar.file_btn)  # 刷新样式
+        self.toolbar.file_btn.style().polish(self.toolbar.file_btn)  # 刷新按钮样式，应用新属性
 
     def showParams(self):
+        """显示参数，按照File→Folder→Default优先级加载参数
+        
+        根据当前打开的音频文件，从不同位置加载参数并应用到滑块上
+        """
         # 简化版showParams，处理多种参数模式
         if self.file_path is None:
             return
@@ -975,6 +882,10 @@ class MainWindow(QMainWindow):
 
 
     def lastParams(self):
+        """加载上一套参数
+        
+        从当前模式的参数集中加载上一套参数
+        """
         # 获取当前模式（默认或VAD）
         current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
 
@@ -984,6 +895,10 @@ class MainWindow(QMainWindow):
 
 
     def openFileDialog(self):
+        """打开文件选择对话框，选择音频文件
+        
+        支持多种音频格式，选择后加载音频并显示相关信息
+        """
 
         # 设置过滤器，仅显示音频文件
         audio_filters = "Audio Files (*.mp3 *.wav *.ogg *.aac *.flac *.amr *.wma *.aiff)"
@@ -1028,6 +943,11 @@ class MainWindow(QMainWindow):
 
 
     def showXsetNum(self, is_test=False):
+        """更新onset/offset按钮的显示文本，包含检测结果数量
+        
+        Args:
+            is_test: 是否为测试模式，测试模式下显示问号标记
+        """
         """根据当前tg_dict_tp的内容，更新onset/offset按钮的显示文本"""
         
         # 确保onset和offset键存在，不存在则初始化为空列表
@@ -1053,6 +973,10 @@ class MainWindow(QMainWindow):
                 self.run_offset.setText(f"Offset: {len(self.AudioViewer.tg_dict_tp['offset'])}")
 
     def browseInstruction(self):
+        """打开帮助文档
+        
+        使用默认浏览器打开GitHub上的Praditor使用说明
+        """
         # 使用webbrowser模块打开默认浏览器并导航到指定网址
         webbrowser.open('https://github.com/Paradeluxe/Praditor?tab=readme-ov-file#how-to-use-praditor')
     
@@ -1127,6 +1051,12 @@ class MainWindow(QMainWindow):
 
     
     def on_detect_finished(self, onset_results, offset_results):
+        """检测任务完成后的处理
+        
+        Args:
+            onset_results: Onset检测结果列表
+            offset_results: Offset检测结果列表
+        """
         """检测任务完成后的处理"""
         self.detection_results["onset"] = onset_results
         self.detection_results["offset"] = offset_results
@@ -1142,6 +1072,10 @@ class MainWindow(QMainWindow):
 
     
     def runAllAudioFiles(self):
+        """依次对所有音频文件执行Praditor检测
+        
+        按照顺序处理文件夹中的所有音频文件，检测完成后自动切换到下一个文件
+        """
         """Run Praditor on all audio files sequentially, displaying one audio after current detection finishes"""
         if not hasattr(self, 'file_paths') or len(self.file_paths) == 0:
             return
@@ -1176,6 +1110,10 @@ class MainWindow(QMainWindow):
 
     
     def on_run_signal(self):
+        """处理run信号，开始执行检测
+        
+        设置stop_flag为False，然后执行检测
+        """
         """处理run_signal信号，在执行检测前设置stop_flag = False"""
         from src.core import detection
         detection.stop_flag = False
@@ -1183,6 +1121,10 @@ class MainWindow(QMainWindow):
 
     
     def on_test_signal(self):
+        """处理test信号，开始测试检测
+        
+        设置stop_flag为False，然后执行测试检测
+        """
         """处理test_signal信号，在执行检测前设置stop_flag = False"""
         from src.core import detection
         detection.stop_flag = False
@@ -1190,6 +1132,10 @@ class MainWindow(QMainWindow):
 
     
     def process_detection_results(self):
+        """处理检测结果
+        
+        对检测结果进行后处理，包括结果筛选、排序和保存
+        """
         # 处理所有检测结果
         onsets = self.detection_results["onset"]
         offsets = self.detection_results["offset"]
@@ -1370,6 +1316,11 @@ class MainWindow(QMainWindow):
 
 
     def execPraditor(self, is_test: bool):
+        """执行Praditor检测
+        
+        Args:
+            is_test: 是否为测试模式，测试模式下不保存结果
+        """
 
         from src.core import detection
         detection.stop_flag = False
@@ -1381,9 +1332,6 @@ class MainWindow(QMainWindow):
         self.setButtonsEnabled(False)  # 禁用除最小化、最大化、关闭、停止以外的所有按钮
         self.MySliders.setEnabled(False)
         self.toolbar.setEnabled(False)
-        # self.updateToolbarButtonsState()
-
-        # if not self.is_running_all:  # 仅在非run-all模式下禁用按钮，run-all模式下已经在runAllAudioFiles方法中禁用了
         
 
         # 检测当前模式，直接使用detectPraditor函数
@@ -1458,6 +1406,10 @@ class MainWindow(QMainWindow):
             self.process_detection_results()
     
     def update_current_param(self):
+        """更新当前参数集
+        
+        将当前滑块参数添加到参数集中，限制最多保存10套参数
+        """
         current_params = self.MySliders.getParams()
         
         # 获取当前模式（默认或VAD）
@@ -1482,6 +1434,10 @@ class MainWindow(QMainWindow):
     
 
     def loadPreviousParams(self):
+        """加载前一套参数
+        
+        从当前模式的参数集中加载上一套参数
+        """
         """加载前一套参数"""
         # 获取当前模式（默认或VAD）
         current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
@@ -1493,6 +1449,10 @@ class MainWindow(QMainWindow):
     
 
     def loadNextParams(self):
+        """加载后一套参数
+        
+        从当前模式的参数集中加载下一套参数
+        """
         """加载后一套参数"""
         # 获取当前模式（默认或VAD）
         current_mode = "vad" if self.toolbar.vad_btn.isChecked() else "default"
@@ -1504,6 +1464,10 @@ class MainWindow(QMainWindow):
     
 
     def updateParamIndexLabel(self):
+        """更新参数索引标签
+        
+        更新工具栏上显示的当前参数索引和总数
+        """
         """更新参数索引标签"""
         # print(self.param_sets)
         if hasattr(self.toolbar, 'params_btn'):
@@ -1536,12 +1500,6 @@ class MainWindow(QMainWindow):
         - reset按钮：必须选中的模式存在对应的参数文件
         - forward和backward按钮：必须成功导入音频且有两套及以上的参数
         """
-
-
-        # # 如果所有模式按钮都不可用，尝试启用默认模式按钮
-        # if not (self.toolbar.default_btn.isEnabled() or self.toolbar.folder_btn.isEnabled() or self.toolbar.file_btn.isEnabled()):
-        #     self.toolbar.default_btn.setEnabled(True)
-
 
         # 检查是否有任何模式按钮被选中
         any_mode_selected = self.toolbar.default_btn.isChecked() or self.toolbar.folder_btn.isChecked() or self.toolbar.file_btn.isChecked()
@@ -1605,11 +1563,7 @@ class MainWindow(QMainWindow):
         # 设置按钮可用性
         button.setEnabled(enabled)
         
-        # 根据状态切换图标
-        if enabled:
-            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}.svg')))
-        else:
-            button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}_gray.svg')))
+        button.setIcon(QIcon(get_resource_path(f'resources/icons/{icon_name}{"_gray" if not enabled else ""}.svg')))
     
     def setButtonsEnabled(self, enabled: bool):
         """设置按钮的启用状态
@@ -1692,6 +1646,13 @@ class MainWindow(QMainWindow):
 
 
     def onModeButtonClicked(self, clicked_btn):
+        """模式按钮点击事件处理
+        
+        确保一次只能选中一个模式按钮
+        
+        Args:
+            clicked_btn: 被点击的模式按钮
+        """
         """模式按钮点击事件处理，确保一次只能选中一个模式"""
         
         for btn in [self.toolbar.default_btn, self.toolbar.folder_btn, self.toolbar.file_btn]:  # 取消其他两个按钮的选中状态
@@ -1702,6 +1663,11 @@ class MainWindow(QMainWindow):
 
 
     def prevnext_audio(self, direction=None):
+        """处理音频切换
+        
+        Args:
+            direction: 切换方向，"prev"表示上一个，"next"表示下一个
+        """
         """处理prev/next音频切换
         direction: None表示从按钮触发，使用sender判断；"prev"或"next"表示从信号触发
         """
@@ -1748,6 +1714,10 @@ class MainWindow(QMainWindow):
 
 
     def stopSound(self):
+        """停止音频播放
+        
+        停止当前正在播放的音频
+        """
         try:
             if self.audio_sink.state() == QAudio.State.ActiveState:
                 self.audio_sink.stop()
@@ -1758,6 +1728,10 @@ class MainWindow(QMainWindow):
     
 
     def saveParamsWithFolderName(self):
+        """保存参数到当前文件夹
+        
+        文件名为params.txt或params_vad.txt（VAD模式下）
+        """
         """保存参数到当前文件夹，文件名为params.txt或params_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
             # 检查是否处于VAD模式
@@ -1772,6 +1746,10 @@ class MainWindow(QMainWindow):
             params_logger.info(f"Saved to folder as params{file_suffix}.txt: {txt_file_path}")
     
     def saveParamsToExeLocation(self):
+        """保存参数到应用程序所在位置
+        
+        文件名为params.txt或params_vad.txt（VAD模式下）
+        """
         """保存参数到exe所在位置，文件名为params.txt或params_vad.txt（VAD模式下）"""
         # 获取当前脚本所在目录（相当于exe所在位置）
         exe_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1787,6 +1765,10 @@ class MainWindow(QMainWindow):
         params_logger.info(f"Saved to exe location: {txt_file_path}")
     
     def saveParamsWithFileName(self):
+        """保存参数到音频文件同名文件
+        
+        文件名与当前音频文件同名，后缀为.txt或_vad.txt（VAD模式下）
+        """
         """保存参数到file同名，文件名后缀为.txt或_vad.txt（VAD模式下）"""
         if hasattr(self, 'file_path') and self.file_path:
             # 检查是否处于VAD模式
@@ -1800,6 +1782,10 @@ class MainWindow(QMainWindow):
             params_logger.info(f"Saved with file name: {txt_file_path}")
     
     def toggleMaximize(self):
+        """切换窗口最大化/还原状态
+        
+        根据当前窗口状态，切换到最大化或还原状态
+        """
         # 切换窗口最大化/还原状态
         if self.isMaximized():
             self.showNormal()
@@ -1807,12 +1793,26 @@ class MainWindow(QMainWindow):
             self.showMaximized()
     
     def setWindowTitle(self, title):
+        """设置窗口标题
+        
+        同时更新自定义标题栏的标题
+        
+        Args:
+            title: 新的窗口标题
+        """
         # 重写setWindowTitle方法，同时更新自定义标题栏
         super().setWindowTitle(title)
         if hasattr(self, 'title_bar'):
             self.title_bar.set_title(title)
     
     def paintEvent(self, event):
+        """重绘窗口背景
+        
+        绘制带有抗锯齿的圆角背景和阴影效果
+        
+        Args:
+            event: 绘图事件对象
+        """
         # 重写paintEvent事件，绘制带有抗锯齿的圆角背景和阴影
         painter = QPainter(self)
         
@@ -1863,6 +1863,13 @@ class MainWindow(QMainWindow):
         painter.fillPath(main_path, background_color)
     
     def mousePressEvent(self, event):
+        """处理鼠标按下事件
+        
+        当点击主窗口背景时，将焦点设置到主窗口，使QLineEdit失去焦点
+        
+        Args:
+            event: 鼠标事件对象
+        """
         # 重写鼠标按下事件，当点击主窗口背景时，将焦点设置到主窗口
         # 这样可以让QLineEdit失去焦点
         self.setFocus(Qt.MouseFocusReason)

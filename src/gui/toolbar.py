@@ -8,7 +8,13 @@ from src.gui.styles import qss_save_location_button, qss_button_small_black
 
 # 自定义QLabel类，实现hover时文字自动滑动效果
 class ScrollingLabel(QLabel):
+    """自定义QLabel类，实现hover时文字自动滑动效果"""
     def __init__(self, parent=None):
+        """初始化滚动标签
+        
+        Args:
+            parent: 父窗口部件
+        """
         super().__init__(parent)
         self.setMouseTracking(True)
         self.original_text = ""
@@ -21,10 +27,22 @@ class ScrollingLabel(QLabel):
         self.is_hovered = False  # 鼠标悬停状态标记
         
     def setText(self, text):
+        """设置标签文本，并保存原始文本用于滚动
+        
+        Args:
+            text: 要显示的文本
+        """
         self.original_text = text
         super().setText(text)
         
     def enterEvent(self, event):
+        """鼠标进入事件处理
+        
+        当鼠标悬停时，开始滚动文本（如果文本长度超过标签宽度）
+        
+        Args:
+            event: 鼠标事件对象
+        """
         # 鼠标悬停时开始滚动
         self.is_hovered = True
         if self.text() and self.fontMetrics().boundingRect(self.text()).width() > self.width():
@@ -33,6 +51,13 @@ class ScrollingLabel(QLabel):
         super().enterEvent(event)
         
     def leaveEvent(self, event):
+        """鼠标离开事件处理
+        
+        当鼠标离开时，停止滚动并重置文本位置
+        
+        Args:
+            event: 鼠标事件对象
+        """
         # 鼠标离开时停止滚动并重置
         self.is_hovered = False
         self.stop_scrolling()
@@ -40,47 +65,108 @@ class ScrollingLabel(QLabel):
         super().leaveEvent(event)
         
     def start_scrolling(self):
+        """开始文本滚动
+        
+        启动滚动计时器，触发scroll_text方法
+        """
         self.scroll_timer.start(self.scroll_delay)
         
     def stop_scrolling(self):
+        """停止文本滚动
+        
+        停止滚动计时器
+        """
         self.scroll_timer.stop()
         
     def reset_scroll(self):
+        """重置滚动位置
+        
+        将滚动偏移量重置为0，并恢复原始文本显示
+        """
         self.scroll_offset = 0
         super().setText(self.original_text)
         
     def restart_scrolling(self):
+        """重新开始文本滚动
+        
+        只有在鼠标悬停时才重新开始滚动
+        """
         # 只有在鼠标悬停时才重新开始滚动
         if not self.is_hovered:
             return
             
-        # 重置滚动偏移量，开始新的循环
+        # 重置滚动偏移量
         self.scroll_offset = 0  # 从0开始，确保滚动重新开始
+        # 重新启动滚动计时器
+        self.start_scrolling()
         
     def scroll_text(self):
-        if not self.text():
+        """执行文本滚动逻辑
+        
+        根据滚动偏移量计算当前应该显示的文本部分，并更新标签显示
+        """
+        if not self.original_text:
             return
             
-        text_width = self.fontMetrics().boundingRect(self.text()).width()
-        if text_width <= self.width():
+        # 获取完整文本的宽度
+        text_width = self.fontMetrics().boundingRect(self.original_text).width()
+        # 获取标签的实际宽度（减去内边距）
+        label_width = self.width() - 16  # 减去左右内边距各8px
+        
+        # 如果文本宽度小于等于标签宽度，不需要滚动
+        if text_width <= label_width:
             return
             
-        # 计算滚动后的文本
+        # 计算滚动偏移
         self.scroll_offset += self.scroll_speed
-        if self.scroll_offset >= text_width + self.width():
-            # 重置滚动
-            self.scroll_offset = 0
-            QTimer.singleShot(self.scroll_pause, self.restart_scrolling)
+        
+        # 检查是否达到最大偏移量（当文字尾部到达标签右侧时）
+        max_scroll_offset = text_width + 20  # 添加20px的额外空间，使滚动更自然
+        
+        if self.scroll_offset >= max_scroll_offset:
+            # 停止当前滚动
+            self.stop_scrolling()
+            # 500毫秒后重新开始滚动
+            QTimer.singleShot(500, self.restart_scrolling)
             return
             
-        # 创建滚动文本
-        scroll_text = self.original_text + " " * 5 + self.original_text
-        cropped_text = self.fontMetrics().elidedText(scroll_text, Qt.ElideNone, text_width + self.width())
-        display_text = cropped_text[self.scroll_offset // (text_width + self.width()) * (text_width + 5):]
+        # 创建滚动文本（添加一些空格作为分隔）
+        scroll_text = self.original_text + " " * 10 + self.original_text
+        
+        # 计算当前应该显示的文本起始位置
+        start_index = 0
+        current_offset = 0
+        
+        # 找到与当前滚动偏移量对应的字符索引
+        while start_index < len(scroll_text) and current_offset < self.scroll_offset:
+            char_width = self.fontMetrics().boundingRect(scroll_text[start_index]).width()
+            current_offset += char_width
+            start_index += 1
+        
+        # 确保起始索引不超出范围
+        start_index = min(start_index, len(scroll_text))
+        
+        # 从起始索引开始，截取能填满标签宽度的文本
+        display_text = ""
+        temp_width = 0
+        
+        for char in scroll_text[start_index:]:
+            char_width = self.fontMetrics().boundingRect(char).width()
+            if temp_width + char_width <= label_width:
+                display_text += char
+                temp_width += char_width
+            else:
+                break
+        
+        # 确保至少显示一个字符
+        if not display_text and scroll_text:
+            display_text = scroll_text[0]
+        
         super().setText(display_text)
 
 
 class CustomToolBar(QToolBar):
+    """自定义工具栏类，包含各种控制按钮和状态显示"""
     # 定义信号
     default_btn_clicked = Signal()
     folder_btn_clicked = Signal()
@@ -92,6 +178,11 @@ class CustomToolBar(QToolBar):
     vad_btn_clicked = Signal()
     
     def __init__(self, parent=None):
+        """初始化自定义工具栏
+        
+        Args:
+            parent: 父窗口部件
+        """
         super().__init__("My main toolbar", parent)
         
         self.setMovable(False)
@@ -356,15 +447,31 @@ class CustomToolBar(QToolBar):
         self.addWidget(right_spacer)
         
     def updateParamsIndex(self, current, total):
-        """更新参数索引显示"""
+        """更新参数索引显示
+        
+        Args:
+            current: 当前参数索引
+            total: 总参数数量
+        """
         self.params_btn.setText(f"{current}/{total}")
         
     def updatePrintOutput(self, text):
-        """更新打印输出显示"""
+        """更新打印输出显示
+        
+        Args:
+            text: 要显示的打印输出文本
+        """
         self.print_label.setText(f"{text}")
         
     def updateButtonStates(self, any_mode_selected, reset_enabled, backward_enabled, forward_enabled):
-        """更新按钮状态和图标"""
+        """更新按钮状态和图标
+        
+        Args:
+            any_mode_selected: 是否有任何模式按钮被选中
+            reset_enabled: 重置按钮是否可用
+            backward_enabled: 后退按钮是否可用
+            forward_enabled: 前进按钮是否可用
+        """
         # 更新保存按钮图标
         self.save_btn.setIcon(QIcon(get_resource_path(f'resources/icons/save{"_gray" if not any_mode_selected else ""}.svg')))
         # 更新重置按钮图标
@@ -375,6 +482,11 @@ class CustomToolBar(QToolBar):
         self.forward_btn.setIcon(QIcon(get_resource_path(f'resources/icons/forward{"_gray" if not forward_enabled else ""}.svg')))
 
     def setEnabled(self, enabled):
+        """设置工具栏所有按钮的启用状态
+        
+        Args:
+            enabled: 是否启用工具栏按钮
+        """
         if not enabled:
             # 保存所有按钮的当前状态
             self._button_states.clear()

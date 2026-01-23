@@ -69,10 +69,18 @@ class SingleSlider(QWidget):
         self.setLayout(layout)
 
     def slider_value_changed(self):
+        """滑块值变化事件处理
+        
+        当滑块位置变化时，更新编辑框显示的值
+        """
         self.value_edit.setText(f"{(self.param_slider.sliderPosition() * self.scale):.{self.digit}f}")
         self.single_slider_value_changed.emit(1)
 
     def edit_value_changed(self):
+        """编辑框值变化事件处理
+        
+        当用户在编辑框中输入值时，更新滑块位置
+        """
         try:
             # 获取用户输入的值
             input_value = float(self.value_edit.text())

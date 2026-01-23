@@ -22,6 +22,19 @@ stop_flag = False
 
 
 def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder", mode="vad", verbose=False):
+    """分割音频文件，用于VAD模式下的音频处理
+    
+    Args:
+        audio_obj: 音频对象
+        segment_duration: 分段持续时间（秒）
+        min_pause: 最小暂停时间（秒）
+        params: 参数来源，"file"、"folder"、"default"或直接传入参数字典
+        mode: 模式，默认为"vad"
+        verbose: 是否输出详细信息
+    
+    Returns:
+        分段结果列表，每个元素为[start, end]，单位为毫秒
+    """
 
     if stop_flag:
         return []
@@ -386,6 +399,17 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
 
 
 def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[], offsets=[]):
+    """创建TextGrid文件，包含检测结果
+    
+    Args:
+        audio_file_path: 音频文件路径
+        is_vad_mode: 是否为VAD模式
+        onsets: Onset检测结果列表
+        offsets: Offset检测结果列表
+    
+    Returns:
+        None
+    """
     # 获取音频文件的目录和文件名（不包括扩展名）
     audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
