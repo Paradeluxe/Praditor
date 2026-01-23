@@ -289,6 +289,7 @@ class CustomToolBar(QToolBar):
             }
         """)
         self.save_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.save_btn.setEnabled(False)  # 初始禁用
         self.save_btn.clicked.connect(self.save_btn_clicked)
         self.addWidget(self.save_btn)
         self._all_buttons.append(self.save_btn)
@@ -321,6 +322,7 @@ class CustomToolBar(QToolBar):
             }
         """)
         self.reset_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.reset_btn.setEnabled(False)  # 初始禁用
         self.reset_btn.clicked.connect(self.reset_btn_clicked)
         self.addWidget(self.reset_btn)
         self._all_buttons.append(self.reset_btn)
@@ -354,6 +356,7 @@ class CustomToolBar(QToolBar):
             }
         """)
         self.backward_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.backward_btn.setEnabled(False)  # 初始禁用
         self.backward_btn.clicked.connect(self.backward_btn_clicked)
         self.addWidget(self.backward_btn)
         self._all_buttons.append(self.backward_btn)
@@ -386,6 +389,7 @@ class CustomToolBar(QToolBar):
             }
         """)
         self.forward_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.forward_btn.setEnabled(False)  # 初始禁用
         self.forward_btn.clicked.connect(self.forward_btn_clicked)
         self.addWidget(self.forward_btn)
         self._all_buttons.append(self.forward_btn)
@@ -404,6 +408,7 @@ class CustomToolBar(QToolBar):
         self.vad_btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         self.vad_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.vad_btn.setToolTip("Toggle VAD mode")
+        self.vad_btn.setEnabled(False)  # 初始禁用
         self.vad_btn.clicked.connect(self.vad_btn_clicked)
         self.addWidget(self.vad_btn)
         self._all_buttons.append(self.vad_btn)

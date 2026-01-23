@@ -102,6 +102,9 @@ class DetectPraditorThread(QThread):  # 异步检测任务类
     
     def run(self):
         from src.core import detection
+        if detection.stop_flag:
+            system_logger.info("Abort")
+            self.finished.emit([], [])
         try:
 
             onset_results, offset_results = [], []
@@ -109,7 +112,7 @@ class DetectPraditorThread(QThread):  # 异步检测任务类
             system_logger.info("Segmenting...")  # 记录开始分段日志
             count = 0
             segments = segment_audio(self.audio_obj, segment_duration=15, params=self.params, min_pause=1, mode="vad")
-            system_logger.info(f"Total segments: {len(segments)}")  # 记录总分段数
+
             for start, end in segments:
 
                 # 设置全局停止标志
@@ -375,34 +378,10 @@ class MainWindow(QMainWindow):
         self.toolbar.folder_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.folder_btn))
         self.toolbar.file_btn.clicked.connect(lambda: self.onModeButtonClicked(self.toolbar.file_btn))
         
-        # 初始化时检查一次参数匹配，确保刚载入GUI时也能显示下划线
-        self.checkIfParamsExist()
         
-        # 初始化时更新save和reset按钮状态
-        self.updateToolbarButtonsState()
+        self.checkIfParamsExist()  # 初始化时检查一次参数匹配，确保刚载入GUI时也能显示下划线
         
-        # 初始禁用除help和导入文件之外的所有按钮
-        # help按钮和导入文件按钮（title_label）保持启用
-        self.title_bar.prev_audio_btn.setEnabled(False)
-        self.title_bar.next_audio_btn.setEnabled(False)
-        self.title_bar.onset_btn.setEnabled(False)
-        self.title_bar.offset_btn.setEnabled(False)
-        self.title_bar.trash_btn.setEnabled(False)
-        self.title_bar.read_btn.setEnabled(False)
-        self.title_bar.run_btn.setEnabled(False)
-        self.title_bar.run_all_btn.setEnabled(False)
-        self.title_bar.test_btn.setEnabled(False)
-        self.title_bar.stop_btn.setEnabled(False)
-        
-        # 工具栏按钮初始禁用
-        self.toolbar.save_btn.setEnabled(False)
-        self.toolbar.reset_btn.setEnabled(False)
-        self.toolbar.backward_btn.setEnabled(False)
-        self.toolbar.forward_btn.setEnabled(False)
-        self.toolbar.vad_btn.setEnabled(False)
-        self.toolbar.default_btn.setEnabled(False)
-        self.toolbar.folder_btn.setEnabled(False)
-        self.toolbar.file_btn.setEnabled(False)
+        self.updateToolbarButtonsState()  # 初始化时更新save和reset按钮状态
         
     def onVadButtonClicked(self):
         """处理VAD按钮点击事件"""

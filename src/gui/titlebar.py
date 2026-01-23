@@ -138,6 +138,7 @@ class CustomTitleBar(QWidget):
         """)
         self.prev_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.prev_audio_btn.setToolTip("Previous Audio")
+        self.prev_audio_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.prev_audio_btn)
         
         # 添加后一个音频按钮
@@ -162,6 +163,7 @@ class CustomTitleBar(QWidget):
         """)
         self.next_audio_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_audio_btn.setToolTip("Next Audio")
+        self.next_audio_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.next_audio_btn)
 
 
@@ -176,6 +178,7 @@ class CustomTitleBar(QWidget):
         self.onset_btn.setCheckable(True)
         self.onset_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.onset_btn.setToolTip("Extract Onsets")
+        self.onset_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.onset_btn)
         
         layout.addSpacing(8)
@@ -187,6 +190,7 @@ class CustomTitleBar(QWidget):
         self.offset_btn.setCheckable(True)
         self.offset_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.offset_btn.setToolTip("Extract Offsets")
+        self.offset_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.offset_btn)
         
         layout.addSpacing(8)  # 添加按钮之间的空格
@@ -217,6 +221,7 @@ class CustomTitleBar(QWidget):
         """)
         self.trash_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.trash_btn.setToolTip("Clear onsets and offsets")
+        self.trash_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.trash_btn)
         
         # 添加read按钮（用于显示onsets和offsets）
@@ -241,6 +246,7 @@ class CustomTitleBar(QWidget):
         """)
         self.read_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.read_btn.setToolTip("Display onsets and offsets")
+        self.read_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.read_btn)
         
         # 添加运行按钮（类似IDE中的播放键）
@@ -265,6 +271,7 @@ class CustomTitleBar(QWidget):
         """)
         self.run_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.run_btn.setToolTip("Run Praditor on audio")
+        self.run_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.run_btn)
         
         # 添加run-all按钮
@@ -289,6 +296,7 @@ class CustomTitleBar(QWidget):
         """)
         self.run_all_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.run_all_btn.setToolTip("Run Praditor on all audio files")
+        self.run_all_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.run_all_btn)
         
         # 添加停止按钮
@@ -313,6 +321,7 @@ class CustomTitleBar(QWidget):
         """)
         self.stop_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.stop_btn.setToolTip("Stop Praditor detection")
+        self.stop_btn.setEnabled(False)  # 初始禁用，只有在运行时才启用
         layout.addWidget(self.stop_btn)
         
         # 添加测试按钮
@@ -337,6 +346,7 @@ class CustomTitleBar(QWidget):
         """)
         self.test_btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.test_btn.setToolTip("Test Praditor on audio")
+        self.test_btn.setEnabled(False)  # 初始禁用
         layout.addWidget(self.test_btn)
 
         layout.addSpacing(8)  # 添加按钮之间的空格
