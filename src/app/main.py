@@ -1183,16 +1183,34 @@ class MainWindow(QMainWindow):
     
                 new_onsets = []
                 new_offsets = []
-                for i, onset in enumerate(onsets):
-                    if i == 0:
-                        new_offsets.append(offsets[-1])
-                        new_onsets.append(onset)
-                    else:
-                        try:
-                            new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
+                if len(onsets) <= len(offsets):
+                    for i, onset in enumerate(onsets):
+                        if i == 0:
+                            new_offsets.append(offsets[-1])
                             new_onsets.append(onset)
-                        except ValueError:
-                            pass
+                        else:
+                            try:
+                                new_offsets.append(max([offset for offset in offsets if onsets[i-1] < offset < onset]))
+                                new_onsets.append(onset)
+                            except ValueError:
+                                pass
+
+
+            
+                else:  # len(onsets) > len(offsets)
+                    reversed_offsets = list(reversed(offsets))
+                    for i, reversed_offset in enumerate(reversed_offsets):
+                        if i == 0:
+                            new_onsets.append(onsets[0])
+                            new_offsets.append(reversed_offset)
+                        else:
+                            try:
+                                new_onsets.append(min([onset for onset in onsets if reversed_offset < onset < reversed_offsets[i-1]]))
+                                new_offsets.append(reversed_offset)
+
+                            except ValueError:
+                                pass
+                    new_offsets = list(reversed(new_offsets))
     
                 onsets = sorted(new_onsets)
                 offsets = sorted(new_offsets)
