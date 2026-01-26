@@ -133,16 +133,33 @@ else:
 # 检测当前操作系统
 def get_os_suffix():
     """获取操作系统后缀"""
-    if sys.platform.startswith('win'):
+    # 更详细的调试信息
+    print(f"[DEBUG] Platform detection:")
+    print(f"[DEBUG]   sys.platform = {sys.platform}")
+    print(f"[DEBUG]   os.name = {os.name}")
+    
+    # 更健壮的平台检测逻辑
+    platform = sys.platform.lower()
+    
+    if platform in ['win32', 'cygwin']:
+        print(f"[DEBUG]   Detected Windows platform")
         return '_win'
-    elif sys.platform.startswith('darwin'):
+    elif platform == 'darwin':
+        print(f"[DEBUG]   Detected macOS platform")
         return '_mac'
+    elif platform.startswith('linux'):
+        print(f"[DEBUG]   Detected Linux platform")
+        return '_linux'
     else:
+        print(f"[DEBUG]   Detected unknown platform")
         return ''
 
 # 设置应用名称
 OS_SUFFIX = get_os_suffix()
+print(f"[DEBUG] OS_SUFFIX = '{OS_SUFFIX}'")
 APP_NAME = f'Praditor_{APP_VERSION}{OS_SUFFIX}'
+print(f"[DEBUG] Final APP_NAME = '{APP_NAME}'")
+print(f"[DEBUG] This name will be used for the PyInstaller --name parameter")
 
 
 
