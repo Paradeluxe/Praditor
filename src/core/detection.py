@@ -398,6 +398,67 @@ def detectPraditor(params, audio_obj, which_set, mode="general", stime=0, etime=
     return _answer
 
 
+def update_parent_folder_csv(audio_file_path, is_vad_mode, onsets, offsets):
+    """更新父文件夹中的汇总CSV文件
+    
+    Args:
+        audio_file_path: 音频文件路径
+        is_vad_mode: 是否为VAD模式
+        onsets: Onset检测结果列表
+        offsets: Offset检测结果列表
+    """
+    audio_dir = os.path.dirname(os.path.abspath(audio_file_path))
+    parent_dir = os.path.dirname(audio_dir)
+    folder_name = os.path.basename(audio_dir)
+    
+    parent_csv_path = os.path.join(parent_dir, f"{folder_name}.csv")
+    
+    audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
+    
+    existing_data = []
+    if os.path.exists(parent_csv_path):
+        try:
+            with open(parent_csv_path, "r", newline="", encoding="utf-8") as csvfile:
+                reader = csv.DictReader(csvfile)
+                existing_data = list(reader)
+        except (csv.Error, StopIteration):
+            existing_data = []
+    
+    existing_data = [row for row in existing_data if row.get("filename") != audio_filename]
+    
+    if is_vad_mode:
+        for i in range(len(onsets)):
+            if i < len(offsets):
+                existing_data.append({
+                    "filename": audio_filename,
+                    "minTime": onsets[i],
+                    "maxTime": offsets[i],
+                    "mark": "sound"
+                })
+    else:
+        max_len = max(len(onsets), len(offsets))
+        for i in range(max_len):
+            onset = onsets[i] if i < len(onsets) else ""
+            offset = offsets[i] if i < len(offsets) else ""
+            existing_data.append({
+                "filename": audio_filename,
+                "onset": onset,
+                "offset": offset
+            })
+    
+    if is_vad_mode:
+        fieldnames = ["filename", "minTime", "maxTime", "mark"]
+    else:
+        fieldnames = ["filename", "onset", "offset"]
+    
+    with open(parent_csv_path, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(existing_data)
+    
+    sot_logger.info(f"Parent folder CSV updated at: {parent_csv_path}")
+
+
 def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[], offsets=[]):
     """创建TextGrid文件，包含检测结果
     
@@ -484,6 +545,9 @@ def create_textgrid_with_time_point(audio_file_path, is_vad_mode:bool, onsets=[]
     
     # 生成CSV文件
     textgrid_to_csv(tg_filename)
+    
+    # 更新父文件夹中的汇总CSV文件
+    update_parent_folder_csv(audio_file_path, is_vad_mode, onsets, offsets)
 
 
 def textgrid_to_csv(textgrid_file_path):
