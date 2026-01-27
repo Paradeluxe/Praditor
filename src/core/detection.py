@@ -411,7 +411,8 @@ def update_parent_folder_csv(audio_file_path, is_vad_mode, onsets, offsets):
     parent_dir = os.path.dirname(audio_dir)
     folder_name = os.path.basename(audio_dir)
     
-    parent_csv_path = os.path.join(parent_dir, f"{folder_name}.csv")
+    csv_suffix = "_vad" if is_vad_mode else ""
+    parent_csv_path = os.path.join(parent_dir, f"{folder_name}{csv_suffix}.csv")
     
     audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
     
@@ -424,27 +425,56 @@ def update_parent_folder_csv(audio_file_path, is_vad_mode, onsets, offsets):
         except (csv.Error, StopIteration):
             existing_data = []
     
-    existing_data = [row for row in existing_data if row.get("filename") != audio_filename]
+    new_data = []
+    found = False
+    for row in existing_data:
+        if row.get("filename") == audio_filename:
+            if not found:
+                if is_vad_mode:
+                    for i in range(len(onsets)):
+                        if i < len(offsets):
+                            new_data.append({
+                                "filename": audio_filename,
+                                "minTime": onsets[i],
+                                "maxTime": offsets[i],
+                                "mark": "sound"
+                            })
+                else:
+                    max_len = max(len(onsets), len(offsets))
+                    for i in range(max_len):
+                        onset = onsets[i] if i < len(onsets) else ""
+                        offset = offsets[i] if i < len(offsets) else ""
+                        new_data.append({
+                            "filename": audio_filename,
+                            "onset": onset,
+                            "offset": offset
+                        })
+                found = True
+        else:
+            new_data.append(row)
     
-    if is_vad_mode:
-        for i in range(len(onsets)):
-            if i < len(offsets):
-                existing_data.append({
+    if not found:
+        if is_vad_mode:
+            for i in range(len(onsets)):
+                if i < len(offsets):
+                    new_data.append({
+                        "filename": audio_filename,
+                        "minTime": onsets[i],
+                        "maxTime": offsets[i],
+                        "mark": "sound"
+                    })
+        else:
+            max_len = max(len(onsets), len(offsets))
+            for i in range(max_len):
+                onset = onsets[i] if i < len(onsets) else ""
+                offset = offsets[i] if i < len(offsets) else ""
+                new_data.append({
                     "filename": audio_filename,
-                    "minTime": onsets[i],
-                    "maxTime": offsets[i],
-                    "mark": "sound"
+                    "onset": onset,
+                    "offset": offset
                 })
-    else:
-        max_len = max(len(onsets), len(offsets))
-        for i in range(max_len):
-            onset = onsets[i] if i < len(onsets) else ""
-            offset = offsets[i] if i < len(offsets) else ""
-            existing_data.append({
-                "filename": audio_filename,
-                "onset": onset,
-                "offset": offset
-            })
+    
+    new_data.sort(key=lambda x: x.get("filename", ""))
     
     if is_vad_mode:
         fieldnames = ["filename", "minTime", "maxTime", "mark"]
@@ -454,7 +484,7 @@ def update_parent_folder_csv(audio_file_path, is_vad_mode, onsets, offsets):
     with open(parent_csv_path, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(existing_data)
+        writer.writerows(new_data)
     
     sot_logger.info(f"Parent folder CSV updated at: {parent_csv_path}")
 
