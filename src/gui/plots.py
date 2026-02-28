@@ -110,6 +110,7 @@ class AudioViewer(QWidget):
         self.resolution = 1
         self.showOnset = True
         self.showOffset = True
+        self.time_labels = {}
 
 
         self.audio_obj = None
@@ -176,10 +177,13 @@ class AudioViewer(QWidget):
         self.chart_view.mousePressEvent = self.chart_mouse_press_event
         self.chart_view.mouseMoveEvent = self.chart_mouse_move_event
         self.chart_view.mouseReleaseEvent = self.chart_mouse_release_event
+        self.chart_view.enterEvent = self.chart_enter_event
+        self.chart_view.leaveEvent = self.chart_leave_event
         
         # 拖动状态变量
         self.is_dragging = False
         self.last_mouse_pos = 0
+        self.time_labels_visible = False  # 控制时间标签是否显示
 
         # --------------------------------------------
         # --------------------------------------------
@@ -204,11 +208,11 @@ class AudioViewer(QWidget):
         self.label_zero.setAlignment(Qt.AlignCenter)
         self.label_zero.setStyleSheet("color: gray; font-weight: bold; background: transparent;")
         
-        # 创建图表容器，使用QGridLayout实现图表和时间标签的重叠布局
+        # 创建图表容器，使用 QGridLayout 实现图表和时间标签的重叠布局
         chart_container = QWidget()
         chart_container.setStyleSheet("background: transparent;")
         chart_layout = QGridLayout(chart_container)
-        chart_layout.setContentsMargins(0, 15, 0, 20)  # 增加内部上方padding 15px，下方20px
+        chart_layout.setContentsMargins(0, 15, 0, 30)  # 增加内部上方 padding 15px，下方 30px 以容纳时间标签
         chart_layout.setSpacing(0)
         
         # 添加图表到网格布局，占据整个宽度，高度设为1行
@@ -524,10 +528,10 @@ class AudioViewer(QWidget):
 
 
     def removeXset(self, xsets=[]):
-        """移除Xset检测结果
+        """移除 Xset 检测结果
         
         Args:
-            xsets: Xset检测结果列表
+            xsets: Xset 检测结果列表
         """
 
         if not xsets:
@@ -544,38 +548,57 @@ class AudioViewer(QWidget):
                 # print(point.x())
                 if point.x() in xsets:
                     self._chart.removeSeries(line)
+                    if point.x() in self.time_labels:
+                        label = self.time_labels[point.x()]
+                        label.deleteLater()
+                        del self.time_labels[point.x()]
 
 
 
     def updateXset(self, tg_dict):#, showOnset=True, showOffset=True):
-        """更新Xset检测结果显示
+        """更新 Xset 检测结果显示
         
         Args:
-            tg_dict: 包含onset和offset检测结果的字典
+            tg_dict: 包含 onset 和 offset 检测结果的字典
         """
 
         if not tg_dict:
             return
 
+        # 先清除旧的时间标签
+        self.clearTimeLabels()
+        
         stime = self.slider_timerange.sliderPosition() / 1000
         # etime = (self.slider_timerange.sliderPosition() + self.interval_ms) / 1000
 
         for mode in tg_dict:
             # if (not showOnset and mode == "onset") or (not showOffset and mode == "offset"):
             #     continue
-            xsets = tg_dict[mode]
-
-            xsets = downsampleXset(xsets, stime, self.interval_ms/1000, self.resolution, self.audio_samplerate)
+            original_xsets = tg_dict[mode]
+            
+            # 降采样用于显示位置
+            xsets = downsampleXset(original_xsets, stime, self.interval_ms/1000, self.resolution, self.audio_samplerate)
+            
+            # 创建原始时间值到降采样位置的映射
+            time_map = {}
+            for i, original_time in enumerate(original_xsets):
+                if stime <= original_time <= stime + self.interval_ms/1000:
+                    # 找到对应的降采样位置
+                    xset_pos = xsets[i] if i < len(xsets) else None
+                    if xset_pos is not None:
+                        time_map[xset_pos] = original_time
 
             for xset in xsets:
                 test_series = QLineSeries()
                 # test_series.setColor("#1991D3")
                 if mode == "onset":
                     pen = QPen(QColor("#1991D3"))
+                    color = "#1991D3"
                 else:
                     pen = QPen(QColor("#2AD25E"))
+                    color = "#2AD25E"
 
-                pen.setWidth(0)  # 设置线条宽度为3像素
+                pen.setWidth(0)  # 设置线条宽度为 3 像素
                 test_series.setPen(pen)  # 应用这个笔刷到线条系列
 
                 test_series.append(xset, -self.max_amp)
@@ -584,6 +607,10 @@ class AudioViewer(QWidget):
                 self._chart.addSeries(test_series)
                 self._chart.setAxisX(self._axis_x, test_series)
                 self._chart.setAxisY(self._axis_y, test_series)
+                
+                # 使用原始时间值创建标签
+                original_time = time_map.get(xset, (xset * (self.interval_ms / 1000) / self.resolution) + stime)
+                self.createTimeLabel(xset, original_time, color)
 
 
         try:
@@ -599,7 +626,7 @@ class AudioViewer(QWidget):
     def sliderValueChanged(self):
         """滑块值变化事件处理
         
-        当时间滑块值改变时，更新图表和Xset显示
+        当时间滑块值改变时，更新图表和 Xset 显示
         """
         self.updateChart()
         self.updateXset(self.tg_dict_tp)
@@ -624,7 +651,7 @@ class AudioViewer(QWidget):
                 # 计算每像素对应的时间（毫秒）
                 pixel_to_ms = (self.interval_ms) / chart_width
                 # 计算滑块需要移动的值（取反，因为鼠标向右移动时，音频应该向前播放）
-                # 增加拖动速度，并设置最小拖动速度，确保在interval_ms很小时也能正常拖动
+                # 增加拖动速度，并设置最小拖动速度，确保在 interval_ms 很小时也能正常拖动
                 base_speed = 1.5
                 min_speed = 20  # 最小拖动速度（毫秒/像素）
                 # 计算实际速度，取设定的最小速度和计算速度的最大值
@@ -637,6 +664,9 @@ class AudioViewer(QWidget):
                 new_value = max(0, min(new_value, self.maximum - self.interval_ms))
                 self.slider_timerange.setValue(new_value)
                 
+                # 更新时间标签的位置
+                self.updateTimeLabelsPosition()
+                
                 # 更新最后鼠标位置
                 self.last_mouse_pos = current_pos
     
@@ -644,6 +674,87 @@ class AudioViewer(QWidget):
         """处理图表鼠标释放事件"""
         if event.button() == Qt.LeftButton:
             self.is_dragging = False
+    
+    def chart_enter_event(self, event):
+        """处理图表鼠标进入事件"""
+        self.time_labels_visible = True
+        # 显示所有时间标签
+        for label in self.time_labels.values():
+            label.show()
+    
+    def chart_leave_event(self, event):
+        """处理图表鼠标离开事件"""
+        self.time_labels_visible = False
+        # 隐藏所有时间标签
+        for label in self.time_labels.values():
+            label.hide()
+    
+    def createTimeLabel(self, xset, time_value, color):
+        """创建时间标签
+        
+        Args:
+            xset: xset 的 x 坐标（降采样后的值）
+            time_value: 原始时间值（秒），直接从 TextGrid 读取
+            color: 标签颜色
+        """
+        if not self.audio_samplerate:
+            return
+            
+        time_str = f"{time_value:.3f}"
+        
+        label = QLabel(time_str)
+        label.setStyleSheet(f"color: {color}; font-weight: bold; background: transparent;")
+        label.setAlignment(Qt.AlignCenter)
+        label.setFixedWidth(60)
+        label.setFixedHeight(20)
+        
+        chart_width = self.chart_view.width()
+        if chart_width > 0:
+            x_ratio = xset / self.resolution
+            label_x = int(x_ratio * chart_width) - 30
+            
+            chart_container = self.chart_view.parent().parent()
+            if chart_container:
+                chart_view_global_pos = self.chart_view.mapTo(chart_container, self.chart_view.rect().bottomLeft())
+                label_y = chart_view_global_pos.y() + 5
+                
+                label.setParent(chart_container)
+                label.move(label_x, label_y)
+                # 根据 time_labels_visible 控制初始显示状态
+                if self.time_labels_visible:
+                    label.show()
+                else:
+                    label.hide()
+                
+                self.time_labels[xset] = label
+    
+    def clearTimeLabels(self):
+        """清除所有时间标签"""
+        for xset, label in self.time_labels.items():
+            label.deleteLater()
+        self.time_labels.clear()
+    
+    def updateTimeLabelsPosition(self):
+        """更新时间标签的位置"""
+        stime = self.slider_timerange.sliderPosition() / 1000
+        chart_width = self.chart_view.width()
+        
+        if chart_width <= 0 or not self.audio_samplerate:
+            return
+        
+        chart_container = self.chart_view.parent().parent()
+        if not chart_container:
+            return
+            
+        chart_view_global_pos = self.chart_view.mapTo(chart_container, self.chart_view.rect().bottomLeft())
+        label_y = chart_view_global_pos.y() + 5
+        
+        # 遍历所有时间标签，更新它们的 x 坐标
+        for xset, label in list(self.time_labels.items()):
+            # 计算新的 x 坐标
+            x_ratio = xset / self.resolution
+            label_x = int(x_ratio * chart_width) - 30
+            label.move(label_x, label_y)
 
 
 
