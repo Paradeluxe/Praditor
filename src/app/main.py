@@ -592,7 +592,7 @@ class MainWindow(QMainWindow):
             popup_window = QMessageBox()
             # popup_window.setWindowIcon(QMessageBox.Icon.Warning)
             popup_window.setWindowIcon(QIcon(get_resource_path('resources/icons/icon.png')))
-            popup_window.setText(f"No onset(s) or offset(s) was found. Try tuning down Threshold (or other param).")
+            popup_window.setText(f"No onset(s) or offset(s) was found. Try smaller Threshold (or other param).")
             popup_window.exec()
             return
 

@@ -511,10 +511,10 @@ class AudioViewer(QWidget):
 
 
     def hideXset(self, xsets=[], isVisible=True):
-        """隐藏或显示Xset检测结果
+        """隐藏或显示 Xset 检测结果
         
         Args:
-            xsets: Xset检测结果列表
+            xsets: Xset 检测结果列表
             isVisible: 是否可见
         """
         stime = self.slider_timerange.sliderPosition() / 1000
@@ -525,6 +525,9 @@ class AudioViewer(QWidget):
                 # print(point.x())
                 if point.x() in xsets:
                     line.setVisible(isVisible)
+        
+        # 统一更新时间标签的可见性
+        self.updateTimeLabelsVisibility()
 
 
     def removeXset(self, xsets=[]):
@@ -678,9 +681,8 @@ class AudioViewer(QWidget):
     def chart_enter_event(self, event):
         """处理图表鼠标进入事件"""
         self.time_labels_visible = True
-        # 显示所有时间标签
-        for label in self.time_labels.values():
-            label.show()
+        # 只显示当前启用的时间标签
+        self.updateTimeLabelsVisibility()
     
     def chart_leave_event(self, event):
         """处理图表鼠标离开事件"""
@@ -688,6 +690,25 @@ class AudioViewer(QWidget):
         # 隐藏所有时间标签
         for label in self.time_labels.values():
             label.hide()
+    
+    def updateTimeLabelsVisibility(self):
+        """更新时间标签的可见性，只显示当前启用的类型（onset/offset）的时间标签"""
+        # 获取当前可见的 xset 位置（从图表中的线条推断）
+        visible_xsets = set()
+        for line in self._chart.series():
+            if len(line.points()) == 2 and line.isVisible():
+                point = line.points()[0]
+                visible_xsets.add(point.x())
+        
+        # 只显示可见 xset 对应的时间标签
+        for xset, label in self.time_labels.items():
+            if xset in visible_xsets:
+                if self.time_labels_visible:
+                    label.show()
+                else:
+                    label.hide()
+            else:
+                label.hide()
     
     def createTimeLabel(self, xset, time_value, color):
         """创建时间标签
