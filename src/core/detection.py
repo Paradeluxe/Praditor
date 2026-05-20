@@ -90,8 +90,9 @@ def segment_audio(audio_obj, segment_duration=10, min_pause=0.2, params="folder"
         # print(start, end)
         # print(onsets, offsets, audio_len * 1000)
         if not onsets or not offsets:
-            segments[-1][1] = end
-            # continue
+            if segments:
+                segments[-1][1] = end
+            # 首个窗口没检测到语音，跳过继续往后搜索
         else:
 
             ################
