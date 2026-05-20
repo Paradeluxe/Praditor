@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #eef1f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    padding: 45px 50px;
+    gap: 40px;
+  }
+  .panel {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .arrow-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .panel-praditor { width: 1125px; }
+  .panel-praat { width: 1395px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="panel panel-praditor">
+    <img src="gui.png" alt="Praditor GUI">
+  </div>
+  <div class="arrow-zone">
+    <svg width="70" height="60" viewBox="0 0 70 60">
+      <defs>
+        <marker id="hd" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 9 3.5, 0 7" fill="#6b7f94"/>
+        </marker>
+      </defs>
+      <line x1="8" y1="30" x2="56" y2="30" stroke="#6b7f94" stroke-width="3.2" marker-end="url(#hd)" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="panel panel-praat">
+    <img src="praat.png" alt="Praat TextGrid">
+  </div>
+</div>
+</body>
+</html>
