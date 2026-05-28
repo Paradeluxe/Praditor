@@ -42,6 +42,10 @@ Praditor
 <br/>
 
 
+> [!TIP]
+> 需要**自动**标注时间和内容？试试 **[Praasper](https://github.com/Paradeluxe/Praasper)**。
+
+
 # 功能
 
 Praditor 是一款**语音起始时间（Onset）检测器**，能自动标定语音信号的 onset 和 offset，支持两种检测模式，输出 `.TextGrid` 文件，可直接在 Praat 中使用。

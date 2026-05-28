@@ -40,6 +40,8 @@ A DBSCAN-Based Automation for Speech Onset Detection and Voice Activity Detectio
 
 <br/>
 
+> [!TIP]
+> Need **automatic** time & content annotation? Check out **[Praasper](https://github.com/Paradeluxe/Praasper)**.
 
 # Features
 
