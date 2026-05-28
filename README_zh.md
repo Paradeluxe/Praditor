@@ -47,7 +47,7 @@ Praditor
 Praditor 是一款**语音起始时间（Onset）检测器**，能自动标定语音信号的 onset 和 offset，支持两种检测模式，输出 `.TextGrid` 文件，可直接在 Praat 中使用。
 
 > [!TIP]
-> 需要**自动**标注时间和内容？试试 **[Praasper](https://github.com/Paradeluxe/Praasper)** — 一个面向心理语言学研究的 VAD 增强自动语音标注流水线。
+> 需要**自动**标注时间和内容？试试 **[Praasper](https://github.com/Paradeluxe/Praasper)** — **一个面向心理语言学研究的 VAD 增强自动语音标注流水线**。
 
 - **起始/结束检测（默认模式）** — 利用 DBSCAN 聚类和一阶导数阈值法检测语音事件边界，输出 `PointTier` 格式的 onset（蓝色）和 offset（绿色）标注。
 - **语音活动检测（VAD 模式）** — 检测有声片段，输出 `IntervalTier` 格式的 "sound" 区间。VAD 模式固定部分参数，以 15 秒分段智能处理。

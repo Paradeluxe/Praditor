@@ -46,7 +46,7 @@ A DBSCAN-Based Automation for Speech Onset Detection and Voice Activity Detectio
 Praditor is a **speech onset detector** that automatically finds boundaries between silence and sound. It supports two detection modes and generates output in `.TextGrid` format — ready for use in Praat.
 
 > [!TIP]
-> Need **automatic** time & content annotation? Check out **[Praasper](https://github.com/Paradeluxe/Praasper)** — a VAD-Enhanced Automatic Speech Annotation pipeline for Psycholinguistic Research.
+> Need **automatic** time & content annotation? Check out **[Praasper](https://github.com/Paradeluxe/Praasper)** — **a VAD-Enhanced Automatic Speech Annotation pipeline for Psycholinguistic Research**.
 
 - **Onset/Offset Detection** (Default Mode) — Detects the start and end of sound events using DBSCAN clustering and first-derivative thresholding. Outputs `PointTier` layers for onsets (blue) and offsets (green).
 - **Voice Activity Detection** (VAD Mode) — Detects speech segments and outputs an `IntervalTier` with "sound" intervals. VAD mode uses fixed kernel parameters and processes audio in 15-second segments with intelligent boundary detection.
