@@ -1,6 +1,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
+[![DOI](https://img.shields.io/badge/DOI-10.3758%2Fs13428--025--02776--2-blue)](https://doi.org/10.3758/s13428-025-02776-2)
 
 
 <h3>
