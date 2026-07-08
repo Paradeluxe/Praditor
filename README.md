@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![License: Custom (source-available, Commercial License required)](https://img.shields.io/badge/License-Custom%20%28source--available%29-blue.svg)](./LICENSE)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 [![DOI](https://img.shields.io/badge/DOI-10.3758%2Fs13428--025--02776--2-blue)](https://doi.org/10.3758/s13428-025-02776-2)
@@ -41,6 +41,16 @@ A DBSCAN-Based Automation for Speech Onset Detection and Voice Activity Detectio
 
 <br/>
 
+
+## License
+
+This project uses a **Custom (source-available) license** ([LICENSE](./LICENSE)):
+
+- ✅ **Free for non-commercial use**: personal / academic / research / non-profit /
+  small organizations (revenue < USD 1M/year AND headcount < 10)
+- ❌ **Commercial License required for**: commercial products / SaaS services /
+  organizations above the size threshold / paid client work
+- 💼 **Commercial licensing**: open a GitHub issue tagged `commercial-license`
 
 # Features
 

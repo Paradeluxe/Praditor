@@ -1,21 +1,95 @@
-MIT License
-
+# Praditor License (Custom)
+v1.0 — 2026-07-08
 Copyright (c) 2024 Tony, Liu Zhengyhuan
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+---
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 1. Grant Without Fee (Free Uses)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+You may use, copy, modify, and distribute this software **without paying** the
+author, **provided all of the following are true**:
+
+(a) **Non-commercial use**. You are not charging money, in any form, for any
+product or service that incorporates this software. Examples still considered
+free-of-charge:
+  - Personal projects, portfolios, blogs
+  - Academic / research / teaching use
+  - Non-profit organizations
+  - Organizations with revenue < USD $1M/year AND headcount < 10 employees,
+    using Mentor as an internal tool
+  - Public forks for learning, demo, issue submissions, PR contributions
+
+(b) **Preserve attribution**. Every copy or derivative work must include:
+  - This LICENSE file in full
+  - The original copyright line above
+  - A clear notice of any modifications you made
+
+(c) **Source-visible**. If you distribute a binary or hosted version, you must
+also make the corresponding source code (your modified version) available free
+of charge, with the same attribution.
+
+---
+
+## 2. Restricted Uses (Commercial License Required)
+
+The following uses **require a paid Commercial License** obtained from the
+author before deployment:
+
+- Integration into a commercial product (SaaS / desktop / mobile / embedded)
+  sold for revenue, or distributed as part of a paid bundle
+- Operating a paid service built on Praditor ("VAD-as-a-service", hosted voice-activity-detection
+  API access, audio boundary detection processing for fee)
+- Use by organizations with revenue >= USD $1M/year OR headcount >= 10,
+  internally
+- Re-distribution into any paid package, paid installer, or commercial
+  container image
+- Use in client work performed for compensation (consulting / hourly / fixed-
+  fee work where the deliverable incorporates Praditor)
+
+---
+
+## 3. Commercial Licensing
+
+> **Contact**: open an issue on GitHub tagged `commercial-license`, or message
+> GitHub user `Paradeluxe`.
+> GitHub user `Paradeluxe`.
+
+Commercial licenses typically include:
+- Unlimited commercial use of the current and prior 12 months of versions
+- All minor + patch releases for 6 months from purchase
+- Priority GitHub issue response (within 24 hours)
+- One-time fee, **amount negotiated by company size and use case** (typical
+  range for small-to-medium businesses: US$ 200–5,000)
+
+Reply window: 7 business days.
+
+---
+
+## 4. Contributions
+
+Submitting a Pull Request indicates you agree your contribution will be
+released under this same license. Contributors retain attribution rights but
+are NOT granted any additional rights over other parts of the project.
+
+---
+
+## 5. Disclaimer
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+
+- Sentry: Business Source License (BSL) — non-production free, production paid
+- HashiCorp Terraform: BSL since 2023
+- MariaDB MaxScale: BSL
+- Many AGPL projects: dual-licensed under commercial terms
+
+This license is a **source-available** license (visibly distinct from OSI-
+approved open-source definitions). It intentionally uses simpler language than
+BSL for clarity to non-lawyers.
