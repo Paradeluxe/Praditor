@@ -1,4 +1,4 @@
-[![License: Custom (source-available, Commercial License required)](https://img.shields.io/badge/License-Custom%20%28source--available%29-blue.svg)](./LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](./LICENSE)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 [![DOI](https://img.shields.io/badge/DOI-10.3758%2Fs13428--025--02776--2-blue)](https://doi.org/10.3758/s13428-025-02776-2)
@@ -44,13 +44,16 @@ A DBSCAN-Based Automation for Speech Onset Detection and Voice Activity Detectio
 
 ## License
 
-This project uses a **Custom (source-available) license** ([LICENSE](./LICENSE)):
+Praditor is **dual-licensed** under AGPL v3 + a commercial license ([LICENSE](./LICENSE)):
 
-- ✅ **Free for non-commercial use**: personal / academic / research / non-profit /
-  small organizations (revenue < USD 1M/year AND headcount < 10)
-- ❌ **Commercial License required for**: commercial products / SaaS services /
-  organizations above the size threshold / paid client work
-- 💼 **Commercial licensing**: open a GitHub issue tagged `commercial-license`
+- **AGPL v3** (default): free, open source. Academic / personal / non-profit /
+  small orgs can use it directly. Only requirement: if you offer Praditor as a
+  network service, you must make the source available.
+- **Commercial License**: if you cannot accept AGPL copyleft obligations (e.g.
+  commercial products, SaaS, large org internal use), purchase a commercial
+  license to waive AGPL terms.
+
+See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
 
 # Features
 

@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](./LICENSE)
 ![GitHub Release](https://img.shields.io/github/v/release/Paradeluxe/Praditor)
 ![Downloads](https://img.shields.io/github/downloads/Paradeluxe/Praditor/total)
 
@@ -231,6 +231,18 @@ Liu, Z., Yu, X., Hu, W.C. et al. Praditor: A DBSCAN-based automation for speech 
 同时感谢以下资助：
 
 - 国家自然科学基金（32200845），澳门特别行政区科学技术发展基金（FDCT, 0153/2022/A），澳门大学多年研究基金（MYRG2022-00148-ICI）。
+
+
+# 许可协议
+
+Praditor 采用 **AGPL v3 + 商业许可** 双许可模式（[LICENSE](./LICENSE)）：
+
+- **AGPL v3**（默认）：开源、免费。学术 / 个人 / 非营利 / 小团队均可直接使用。
+  唯一要求：如果你将 Praditor 作为网络服务提供，必须公开源码。
+- **商业许可**：如果不接受 AGPL 的 copyleft 要求（例如商业产品集成、SaaS 服务、
+  大公司内部使用），可购买商业许可来免除 AGPL 义务。
+
+详见 [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md)。
 
 
 # 作者
