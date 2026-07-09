@@ -41,20 +41,6 @@ A DBSCAN-Based Automation for Speech Onset Detection and Voice Activity Detectio
 
 <br/>
 
-
-## License
-
-Praditor is **dual-licensed** under AGPL v3 + a commercial license ([LICENSE](./LICENSE)):
-
-- **AGPL v3** (default): free, open source. Academic / personal / non-profit /
-  small orgs can use it directly. Only requirement: if you offer Praditor as a
-  network service, you must make the source available.
-- **Commercial License**: if you cannot accept AGPL copyleft obligations (e.g.
-  commercial products, SaaS, large org internal use), purchase a commercial
-  license to waive AGPL terms.
-
-See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
-
 # Features
 
 Praditor is a **speech onset detector** that automatically finds boundaries between silence and sound. It supports two detection modes and generates output in `.TextGrid` format — ready for use in Praat.
@@ -200,3 +186,17 @@ Also, the funding:
 **Praditor** is written and maintained by **Tony, Liu Zhengyuan** from the Centre for Cognitive and Brain Sciences, University of Macau.
 
 If you have questions about using **Praditor**, its algorithm details, or need custom scripts (audio export, Excel tables, etc.), feel free to contact me at `zhengyuan.liu@connect.um.edu.mo` or `paradeluxe3726@gmail.com`.
+
+
+## License
+
+Praditor is **dual-licensed** under AGPL v3 + a commercial license ([LICENSE](./LICENSE)):
+
+- **AGPL v3** (default): free, open source. Academic / personal / non-profit /
+  small orgs can use it directly. Only requirement: if you offer Praditor as a
+  network service, you must make the source available.
+- **Commercial License**: if you cannot accept AGPL copyleft obligations (e.g.
+  commercial products, SaaS, large org internal use), purchase a commercial
+  license to waive AGPL terms.
+
+See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
